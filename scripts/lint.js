@@ -13,12 +13,13 @@ const FIXTURE_PREFIX = `cli${sep}fixtures${sep}`;
 /** Files allowed to spawn processes (with the reason recorded in SECURITY.md). */
 const CHILD_PROCESS_ALLOW = new Set([
   'scripts/verify-package.js',
+  'cli/src/audit.js',
   'evals/triggers/run.js',
   'scripts/test/package.test.js'
 ]);
-/** Files allowed to import network modules. None in v0.1. */
+/** Files allowed to import network modules: tests that start a loopback server only. */
 /** @type {Set<string>} */
-const NETWORK_ALLOW = new Set([]);
+const NETWORK_ALLOW = new Set(['cli/test/shoot.test.js']);
 
 /** @type {string[]} */
 const problems = [];

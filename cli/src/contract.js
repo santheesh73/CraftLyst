@@ -124,8 +124,9 @@ export function checkContract(projectRoot) {
   const findings = [];
   /** @type {string[]} */
   const files = [];
-  if (!existsSync(dir)) {
-    findings.push(finding('.craft/', 'No design contract found (.craft/ is missing).', 'Run `craft init` to scaffold one, or `craft init --from-repo` (v0.2) when the project already has a design system.'));
+  // A .craft/ holding only reports (written by craft report) is still "no contract".
+  if (!['DESIGN.md', 'tokens.json', 'decisions.md', 'craft.config.json'].some((f) => existsSync(join(dir, f)))) {
+    findings.push(finding('.craft/', 'No design contract found (.craft/ has no DESIGN.md, tokens.json, or config).', 'Run `craft init` to scaffold one, or `craft init --from-repo` (v0.2) when the project already has a design system.'));
     return { findings, files };
   }
 

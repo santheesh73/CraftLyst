@@ -41,7 +41,7 @@ test('over-long DESIGN.md is blocking', () => {
 
 test('checkContract on a project directory', () => {
   const dir = mkdtempSync(join(tmpdir(), 'craft-contract-'));
-  assert.match(checkContract(dir).findings[0].message, /\.craft\/ is missing/);
+  assert.match(checkContract(dir).findings[0].message, /No design contract found/);
   mkdirSync(join(dir, '.craft'));
   writeFileSync(join(dir, '.craft', 'DESIGN.md'), fill(template));
   copyFileSync(new URL('../../templates/tokens.json', import.meta.url), join(dir, '.craft', 'tokens.json'));
