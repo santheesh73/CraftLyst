@@ -25,24 +25,40 @@ export default {
     // one informational summary per kind replaces a warning per declaration.
     // A token kind exists when tokens.json has it or the CSS defines a scale (3+ custom
     // properties whose values are of that kind).
-    /** @type {[string, string][]} */
+    // Each directory with its own index.html is a separate site (a repo of demos or examples);
+    // its tokens are judged on their own. Everything else belongs to the project root.
+    const siteRoots = ctx.docs.filter((d) => /(^|\/)index\.html?$/.test(d.file)).map((d) => d.file.replace(/(^|\/)?index\.html?$/, '')).filter(Boolean);
+    const scopeOf = (/** @type {string} */ file) => siteRoots.filter((r) => file.startsWith(`${r}/`)).sort((a, b) => b.length - a.length)[0] ?? '';
+    /** @type {[string, string, string][]} */
     const defs = [];
-    for (const d of ctx.docs) for (const c of d.css) for (const x of c.decls) if (x.prop.startsWith('--')) defs.push([x.prop, x.value.trim()]);
+    for (const d of ctx.docs) for (const c of d.css) for (const x of c.decls) if (x.prop.startsWith('--')) defs.push([x.prop, x.value.trim(), scopeOf(d.file)]);
     const isLength = (/** @type {string} */ v) => /^-?[\d.]+(px|rem|em)$|^clamp\(/.test(v);
-    const count = (/** @type {(n: string, v: string) => boolean} */ test) => new Set(defs.filter(([n, v]) => test(n, v)).map(([n]) => n)).size >= 3;
-    const has = {
-      color: Boolean(ctx.tokens?.primitive?.color) || count((_n, v) => colorLiterals(v).length > 0 && withoutVars(v).trim() === v),
-      space: Boolean(ctx.tokens?.primitive?.space) || count((n, v) => STEP_SPACE.test(n) && isLength(v)),
-      size: Boolean(ctx.tokens?.primitive?.fontSize) || count((n, v) => STEP_SIZE.test(n) && isLength(v))
+    /** @param {string} scope @param {(n: string, v: string) => boolean} test */
+    const count = (scope, test) => new Set(defs.filter(([n, v, s]) => (s === scope || s === '') && test(n, v)).map(([n]) => n)).size >= 3;
+    /** @type {Map<string, Record<'color' | 'space' | 'size', boolean>>} */
+    const hasByScope = new Map();
+    const hasIn = (/** @type {string} */ scope) => {
+      let h = hasByScope.get(scope);
+      if (!h) {
+        h = {
+          color: Boolean(ctx.tokens?.primitive?.color) || count(scope, (_n, v) => colorLiterals(v).length > 0 && withoutVars(v).trim() === v),
+          space: Boolean(ctx.tokens?.primitive?.space) || count(scope, (n, v) => STEP_SPACE.test(n) && isLength(v)),
+          size: Boolean(ctx.tokens?.primitive?.fontSize) || count(scope, (n, v) => STEP_SIZE.test(n) && isLength(v))
+        };
+        hasByScope.set(scope, h);
+      }
+      return h;
     };
     /** @type {Record<'color' | 'space' | 'size', { count: number, file: string, line: number } | null>} */
     const untokened = { color: null, space: null, size: null };
     /**
      * @param {string} prop
      * @param {string} value
+     * @param {string} file
      * @returns {{ flagged: string[], skipped: ('color' | 'space' | 'size')[] }}
      */
-    const literals = (prop, value) => {
+    const literals = (prop, value, file) => {
+      const has = hasIn(scopeOf(file));
       /** @type {string[]} */
       const flagged = [];
       /** @type {('color' | 'space' | 'size')[]} */
@@ -76,7 +92,7 @@ export default {
           if (d.prop.startsWith('--')) continue;
           if (d.rule && /^@(theme|font-face|property|keyframes)/.test(d.rule.selector)) continue;
           if (d.rule?.media.some((m) => /print/.test(m))) continue;
-          const { flagged, skipped } = literals(d.prop, d.value);
+          const { flagged, skipped } = literals(d.prop, d.value, doc.file);
           note(skipped, doc.file, d.line);
           if (flagged.length) {
             out.push({
@@ -90,7 +106,7 @@ export default {
       for (const el of doc.all) {
         for (const d of el.styleDecls) {
           if (d.prop.startsWith('--')) continue;
-          const { flagged, skipped } = literals(d.prop, d.value);
+          const { flagged, skipped } = literals(d.prop, d.value, doc.file);
           note(skipped, doc.file, d.line);
           if (flagged.length) {
             out.push({ file: doc.file, line: d.line, message: `Inline style ${d.prop}: ${d.value} uses a literal value.`, remediation: 'Move the value to a token and reference it with var(--...) or a token-backed class.', confidence: 0.9 });

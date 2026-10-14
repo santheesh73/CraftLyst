@@ -38,6 +38,8 @@ export default {
           // or :focus selectors. :hover/:active-only rules and links without href are not focus.
           if (!/:focus/.test(r.selector) && /:(hover|active|checked|disabled)\b/.test(r.selector)) continue;
           if (r.selector.split(',').every((sel) => /a:not\(\[href\]\)/.test(sel))) continue;
+          // A :focus rule that swaps in another visible change (background, border, shadow, underline) replaces the outline.
+          if (/:focus/.test(r.selector) && r.decls.some((x) => /^(background|background-color|border|border-color|border-bottom|box-shadow|text-decoration|color)$/.test(x.prop) && !/^(none|0|transparent|inherit)$/.test(x.value.trim()))) continue;
           if (/:focus:not\(:focus-visible\)/.test(r.selector)) continue;
           const sameRuleReplacement = r.decls.some((d) => (d.prop === 'box-shadow' && d.value.trim() !== 'none') || /^border(-color)?$/.test(d.prop));
           if (sameRuleReplacement && /:focus/.test(r.selector)) continue;

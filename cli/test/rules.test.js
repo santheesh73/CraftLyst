@@ -2,7 +2,7 @@
 // (must not fire at warn or block). Fixtures live in cli/fixtures/rules/<prefix>/<name>/.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -48,6 +48,39 @@ test('tok/hardcoded only summarizes literals when the project has no tokens of t
   const r = runLint(dir, { rules: ['tok/hardcoded'] });
   assert.deepEqual(r.findings.map((f) => f.severity), ['info', 'info']);
   assert.match(r.findings.find((f) => /color/.test(f.message))?.message ?? '', /^2 literal color value/);
+});
+
+/**
+ * Lint a throwaway project made of the given files.
+ * @param {Record<string, string>} files
+ * @param {string[]} rules
+ */
+function lintFiles(files, rules) {
+  const dir = mkdtempSync(join(tmpdir(), 'craft-case-'));
+  for (const [name, text] of Object.entries(files)) {
+    mkdirSync(dirname(join(dir, name)), { recursive: true });
+    writeFileSync(join(dir, name), text);
+  }
+  return runLint(dir, { rules }).findings.filter((f) => f.severity !== 'info');
+}
+
+const PAGE = (body) => `<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width"><title>t</title></head><body><main>${body}</main></body></html>`;
+const CARD_CSS = '.card, .menu, .badge { border: 1px solid #ccc; border-radius: 8px; padding: 8px; background: #fff; box-shadow: 0 1px 2px #0002; }';
+
+// Cases found while measuring false positives on open-source repos (docs/evals/false-positives.md).
+test('false-positive cases from open-source repos stay quiet', () => {
+  assert.deepEqual(lintFiles({ 'index.html': PAGE('<div class="card"><div id="dropdown" class="menu">Menu</div><span class="badge">New</span></div>'), 'a.css': CARD_CSS }, ['lay/card-depth']), []);
+  assert.deepEqual(lintFiles({ 'index.html': PAGE('<div><div><h3>Q1</h3><p>A1</p></div><div><h3>Q2</h3><p>A2</p></div><div><h3>Q3</h3><p>A3</p></div></div>') }, ['lay/clone-grid']), []);
+  assert.deepEqual(lintFiles({ 'index.html': PAGE('<button>Go</button>'), 'a.css': 'button:focus { outline: none; background-color: #5e3370; }' }, ['a11y/focus']), []);
+  assert.deepEqual(lintFiles({ 'base.html': '<!doctype html><html lang="en"><head>{{ partial "header" . }}</head><body>{{ block "main" . }}{{ end }}</body></html>' }, ['rsp/viewport', 'a11y/semantics']), []);
+  assert.deepEqual(lintFiles({ 'pricing.html': PAGE('<ul><li>Team size: <span>100+ developers</span></li></ul>') }, ['con/fabricated']), []);
+  assert.deepEqual(lintFiles({ 'a.css': 'html { transition: all 0.5s ease-in; }' }, ['mot/no-reduced']), []);
+  // Two demo sites in one repo: only the one with a color scale is held to it.
+  const demos = lintFiles({
+    'one/index.html': PAGE('<p>1</p>'), 'one/style.css': ':root { --a: #111; --b: #222; --c: #333; }\n.x { color: #444; }',
+    'two/index.html': PAGE('<p>2</p>'), 'two/style.css': '.y { color: #555; }'
+  }, ['tok/hardcoded']);
+  assert.deepEqual(demos.map((f) => f.file), ['one/style.css']);
 });
 
 test('a reasoned craft-allow suppresses the finding and is listed as an exception', () => {

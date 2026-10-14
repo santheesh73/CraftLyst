@@ -171,6 +171,9 @@ export function visualTraits(el, classes) {
 }
 
 /** Files that render images (Open Graph cards via satori/next/og), not interface. */
+/** Server-side template includes (Hugo, Go, Jinja, Liquid, Nunjucks, Handlebars, PHP): the page is assembled from other files. */
+export const TEMPLATE_INCLUDE = /\{\{-?\s*(block|partial|template|include|yield)\b|\{%-?\s*(include|extends|block|render)\b|\{\{>\s*[\w/]|<\?php[^?]*\b(include|require)(_once)?\b/;
+
 export const OG_IMAGE_FILE = /(^|\/)(opengraph-image|twitter-image|og-image|og)(\.[a-z]+)?\.(tsx|jsx|ts|js)$|(^|\/)api\/og(\/|\.)/;
 
 /** Syntax-highlighting themes carry their own palette (Prism, highlight.js, Shiki). */

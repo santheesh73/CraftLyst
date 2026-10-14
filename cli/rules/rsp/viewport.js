@@ -1,4 +1,4 @@
-import { tailwindArbitrary } from '../../src/rule-helpers.js';
+import { tailwindArbitrary, TEMPLATE_INCLUDE } from '../../src/rule-helpers.js';
 
 /** @type {import('../types.js').Rule} */
 export default {
@@ -14,7 +14,8 @@ export default {
       if (doc.isTest) continue;
       if (doc.kind === 'html' && doc.isDocument) {
         const meta = doc.all.find((e) => e.tag === 'meta' && e.attrs.name?.value === 'viewport');
-        if (!meta) out.push({ file: doc.file, line: 1, message: 'No <meta name="viewport">.', remediation: 'Add <meta name="viewport" content="width=device-width, initial-scale=1">.', confidence: 0.95 });
+        // A template that pulls its <head> from a partial may define the viewport there.
+        if (!meta && !TEMPLATE_INCLUDE.test(doc.source)) out.push({ file: doc.file, line: 1, message: 'No <meta name="viewport">.', remediation: 'Add <meta name="viewport" content="width=device-width, initial-scale=1">.', confidence: 0.95 });
       }
       for (const el of doc.all) {
         if (el.tag === 'meta' && el.attrs.name?.value === 'viewport' && /user-scalable\s*=\s*(no|0)|maximum-scale\s*=\s*1(\.0)?\b/.test(el.attrs.content?.value ?? '')) {

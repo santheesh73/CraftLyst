@@ -31,7 +31,8 @@ export default {
       const fileSignal = REDUCED_SIGNAL.test(doc.source);
       for (const css of doc.css) {
         if (globalReset || fileSignal) break;
-        const moving = css.decls.find((d) => (/^(animation|animation-name)$/.test(d.prop) && !/^(none|initial|unset)$/.test(d.value.trim()) && !onlyFades(d.value)) || (/^transition(-property)?$/.test(d.prop) && /transform|all|translate|scale|rotate|top|left|margin|width|height/.test(d.value)));
+        // A transition on html/body/:root is a theme color fade, not movement.
+        const moving = css.decls.find((d) => (/^(animation|animation-name)$/.test(d.prop) && !/^(none|initial|unset)$/.test(d.value.trim()) && !onlyFades(d.value)) || (/^transition(-property)?$/.test(d.prop) && /transform|all|translate|scale|rotate|top|left|margin|width|height/.test(d.value) && !/^(html|body|:root)$/.test(d.rule?.selector.trim() ?? '')));
         if (moving) out.push({ file: doc.file, line: moving.line, message: `${moving.prop}: ${moving.value} with no prefers-reduced-motion handling in this file or a global reset.`, remediation: 'Wrap motion in @media (prefers-reduced-motion: no-preference), or add a global reduced-motion reset.' });
       }
       for (const css of doc.css) {
