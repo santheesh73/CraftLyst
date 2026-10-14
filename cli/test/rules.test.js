@@ -96,6 +96,10 @@ test('false-positive cases from open-source repos stay quiet', () => {
   assert.deepEqual(lintFiles({ 'a.css': '.pop { box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px; }' }, ['vis/gradient-text']), []);
   assert.deepEqual(lintFiles({ 'a.css': '.bar, .item { border: 1px solid #ccc; border-radius: 4px; padding: 4px; background: #fff; }', 'a.jsx': 'export const T = () => <div className="bar"><Toolbar.ToggleItem className="item">B</Toolbar.ToggleItem></div>;' }, ['lay/card-depth']), []);
   assert.equal(lintFiles({ 'a.css': ':root { --accent-9: #00f; }\n.a { color: var(--accent-a3); }', 'main.jsx': 'import "@radix-ui/themes/styles.css";' }, ['tok/unknown-var']).length, 0);
+  assert.deepEqual(lintFiles({ 'admin/index.html': '<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width"><title>CMS</title></head><body><script src="cms.js"></script></body></html>' }, ['a11y/semantics']), []);
+  assert.deepEqual(lintFiles({ 'Img.astro': '---\nconst a = 1;\n---\n{a ? <img alt="" src="x" /> : (\n  /* the native <img /> typing is strict */\n  null\n)}' }, ['a11y/alt']), []);
+  assert.deepEqual(lintFiles({ 'theme.css': `.a{color:#123}${'.b{color:#456}'.repeat(2000)}` }, ['tok/hardcoded', 'a11y/contrast']).filter((f) => f.file === 'theme.css'), []);
+  assert.deepEqual(lintFiles({ 'g.jsx': 'export const G = ({ focus }) => <div role="group" onClick={focus}><input /></div>;' }, ['a11y/semantics']), []);
   // Custom property names are case-sensitive.
   assert.deepEqual(lintFiles({ 'a.css': '.a { --text-GRAD: 1; } .b { font-weight: var(--text-GRAD); }' }, ['tok/unknown-var']), []);
 });

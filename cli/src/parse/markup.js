@@ -163,6 +163,8 @@ export function parseSfc(text) {
   if (fm) {
     extraScripts.push(fm[0]);
     src = fm[0].replace(/[^\n]/g, ' ') + src.slice(fm[0].length);
+    // Astro template expressions hold JS comments ({/* <Image /> */}); blank them outside <style>/<script>.
+    src = src.replace(/(<(style|script)\b[\s\S]*?<\/\2>)|\/\*[\s\S]*?\*\//g, (m, block) => block ?? m.replace(/[^\n]/g, ' '));
   }
   const model = parseHtml(src, { fragment: true, keepCase: true });
   model.scripts.push(...extraScripts);
