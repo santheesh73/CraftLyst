@@ -37,6 +37,8 @@ function walk(dir) {
   for (const name of readdirSync(dir)) {
     if (SKIP_DIRS.has(name)) continue;
     const p = join(dir, name);
+    // Bundled conformance demo pages (gitignored build output, see contracts/conformance/targets/README.md).
+    if (name === 'build' && relative(root, dir).split(sep).join('/').startsWith('contracts/conformance/targets/')) continue;
     if (statSync(p).isDirectory()) out.push(...walk(p));
     else out.push(p);
   }

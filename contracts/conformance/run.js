@@ -72,6 +72,7 @@ export async function cli(argv, io) {
     else io.stderr(`${r.message}\n`);
     return 3;
   }
+  if (r.status !== 'ok') return 3;
   io.stdout(values.json ? JSON.stringify(r.result, null, 2) + '\n' : toMarkdown(r.result));
   return r.result.summary.fail ? 1 : 0;
 }

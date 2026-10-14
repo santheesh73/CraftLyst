@@ -232,7 +232,7 @@ export const SUITES = [
     checks: {
       'dialog/opens': 'The trigger opens the dialog with Enter.',
       'dialog/role': 'The dialog has role dialog or alertdialog (or is a native <dialog>).',
-      'dialog/modal': 'A modal dialog is exposed as modal (aria-modal="true" or native showModal).',
+      'dialog/modal': 'A modal dialog is exposed as modal (aria-modal="true", native showModal, or all content outside it aria-hidden/inert).',
       'dialog/name': 'The dialog has an accessible name (aria-labelledby a visible title, or aria-label).',
       'dialog/initial-focus': 'Opening moves focus inside the dialog.',
       'dialog/focus-trap': 'Tab and Shift+Tab keep focus inside the dialog.',
@@ -264,7 +264,7 @@ export const SUITES = [
       await page.waitForTimeout(150);
       const inside = await hasFocus(dlg, true);
       ctx.result('dialog/initial-focus', inside ? 'pass' : 'fail', `focus on ${await activeDescription(page)}`);
-      await axeCheck(ctx, 'dialog/axe', sel.split(',').map((s) => s.trim()));
+      await axeCheck(ctx, 'dialog/axe', String(sel).split(',').map((/** @type {string} */ s) => s.trim()));
       const focusables = await dlg.evaluate((/** @type {Element} */ el) => el.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])').length);
       const steps = Math.max(3, focusables + 2);
       /** @type {string[]} */
@@ -369,9 +369,9 @@ export const SUITES = [
       ctx.result('tabs/roles', listRole === 'tablist' && n >= 2 ? 'pass' : 'fail', `role=${listRole}, ${n} tab(s)`);
       if (n < 2) return;
       const state = await tabs.evaluateAll((/** @type {Element[]} */ els) => els.map((el) => ({ selected: el.getAttribute('aria-selected'), controls: el.getAttribute('aria-controls'), tabindex: /** @type {HTMLElement} */ (el).tabIndex, id: el.id })));
-      const sel = state.filter((s) => s.selected === 'true');
+      const sel = state.filter((/** @type {any} */ s) => s.selected === 'true');
       ctx.result('tabs/selected', sel.length === 1 ? 'pass' : 'fail', `${sel.length} tab(s) with aria-selected="true"`);
-      const selIdx = Math.max(0, state.findIndex((s) => s.selected === 'true'));
+      const selIdx = Math.max(0, state.findIndex((/** @type {any} */ s) => s.selected === 'true'));
       const ctl = await idrefs(tabs.nth(selIdx), 'aria-controls');
       const panelOk = ctl.present && !ctl.missing.length && (await page.locator(`[id="${ctl.ids[0]}"][role="tabpanel"]`).count()) > 0;
       ctx.result('tabs/controls', panelOk ? 'pass' : 'fail', ctl.present ? `aria-controls=${ctl.ids.join(' ')}${ctl.missing.length ? ' (missing)' : ''}` : 'selected tab has no aria-controls');
@@ -582,7 +582,7 @@ export const SUITES = [
       const trigger = await need(ctx, 'trigger', 'toast/live-region');
       if (!trigger) return;
       // Track every live region from now on, remembering the text it had when first seen.
-      await page.evaluate((sel) => {
+      await page.evaluate((/** @type {string} */ sel) => {
         /** @type {any} */ const w = window;
         w.__craftLive = new Map();
         let initial = true;

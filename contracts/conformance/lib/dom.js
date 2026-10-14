@@ -18,6 +18,7 @@ export const SETTLE_MS = 120;
 export async function waitFor(fn, timeout = 1500) {
   const end = Date.now() + timeout;
   for (;;) {
+    /** @type {any} */
     let v;
     try {
       v = await fn();
@@ -98,7 +99,7 @@ export function activeDescription(page) {
  * @returns {Promise<boolean>}
  */
 export function hasFocus(loc, within = false) {
-  return loc.evaluate((el, w) => {
+  return loc.evaluate((/** @type {Element} */ el, /** @type {boolean} */ w) => {
     const a = document.activeElement;
     return a === el || (w && a !== null && el.contains(a));
   }, within);
@@ -127,12 +128,12 @@ export function currentItem(page) {
  * @returns {Promise<{ present: boolean, ids: string[], missing: string[], text: string }>}
  */
 export function idrefs(loc, attr) {
-  return loc.evaluate((el, a) => {
+  return loc.evaluate((/** @type {Element} */ el, /** @type {string} */ a) => {
     const value = el.getAttribute(a);
     if (value === null) return { present: false, ids: [], missing: [], text: '' };
     const ids = value.trim().split(/\s+/).filter(Boolean);
-    const missing = ids.filter((id) => !document.getElementById(id));
-    const text = ids.map((id) => document.getElementById(id)?.textContent ?? '').join(' ').trim().replace(/\s+/g, ' ');
+    const missing = ids.filter((/** @type {string} */ id) => !document.getElementById(id));
+    const text = ids.map((/** @type {string} */ id) => document.getElementById(id)?.textContent ?? '').join(' ').trim().replace(/\s+/g, ' ');
     return { present: true, ids, missing, text };
   }, attr);
 }
@@ -142,7 +143,7 @@ export function idrefs(loc, attr) {
  * @param {Locator} loc
  */
 export async function countClicks(loc) {
-  await loc.evaluate((el) => {
+  await loc.evaluate((/** @type {Element} */ el) => {
     /** @type {any} */ (window).__craftClicks = 0;
     el.addEventListener('click', () => { /** @type {any} */ (window).__craftClicks++; });
   });
@@ -188,7 +189,7 @@ export async function tabTo(page, loc) {
 export async function axeScan(page, axeSource, selectors) {
   const has = await page.evaluate(() => typeof (/** @type {any} */ (window).axe) !== 'undefined');
   if (!has) await page.addScriptTag({ content: axeSource });
-  return page.evaluate(async (sels) => {
+  return page.evaluate(async (/** @type {string[]} */ sels) => {
     const include = sels.filter((s) => document.querySelector(s)).map((s) => [s]);
     if (!include.length) return [];
     // @ts-ignore axe is injected above
