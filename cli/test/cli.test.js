@@ -34,7 +34,7 @@ test('usage errors exit 2', async () => {
 });
 
 test('planned commands exit 3 and name their version', async () => {
-  for (const cmd of ['search', 'index', 'catalog', 'tokens']) {
+  for (const cmd of ['tokens']) {
     const r = await run([cmd, '--json']);
     assert.equal(r.code, EXIT.UNAVAILABLE, cmd);
     assert.equal(r.json().status, 'unavailable');

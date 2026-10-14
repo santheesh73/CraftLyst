@@ -15,14 +15,12 @@ import { shoot } from './shoot.js';
 import { extractTokens } from './extract.js';
 import { loadConfig } from './lint.js';
 import { buildReport, writeReport, checkReport, saveTierResult } from './report.js';
+import { BUNDLED_CATALOG, LOCAL_ENTRIES_DIR, LOCAL_INDEX_FILE, buildIndex, digestEntries, loadCatalog, locateIndex, parseFilters, search, serializeIndex, validateCatalog } from './catalog.js';
 
 export const EXIT = { OK: 0, FINDINGS: 1, USAGE: 2, UNAVAILABLE: 3 };
 
 /** Commands planned in the spec and the version that adds them. */
 const PLANNED = {
-  index: '0.4.0',
-  search: '0.4.0',
-  catalog: '0.4.0',
   tokens: '0.5.0'
 };
 
@@ -42,6 +40,12 @@ Commands available in this version:
                     RTL, 200% zoom, forced colors (needs Playwright + axe-core in the project)
   report            Run Tier 0, fold in fresh Tier 1/2 results, write .craft/reports/latest.{json,md}
   report --check    Exit 0 if latest.json still matches the files, 1 if stale, missing, or invalid
+  catalog validate  Validate catalog entries (bundled + .craft/catalog/): schema, trust, lifecycle,
+                    license allowlist; stale verified_on dates are warnings
+  index build       Build .craft/catalog-index.json from the bundled entries plus .craft/catalog/*.json
+  search "<intent>" Offline catalog search: 3-5 compact cards (id, trust, intent, file to read).
+                    Filters: --axes density=compact,... --stack react,tailwind-v4 --trust L1,L2
+                    --category component --limit 5 (1-10)
 
 Planned (exit 3 until released): ${Object.entries(PLANNED).map(([c, v]) => `${c} (${v})`).join(', ')}
 
@@ -58,6 +62,14 @@ Options:
   --file <path>     shoot: local HTML file, repeatable
   --allow-network   Allow non-loopback hosts and requests (off by default)
   --check           report: check freshness instead of writing
+  --axes <k=v,...>  search: entries that fit these axis positions (entries silent on an axis pass)
+  --stack <list>    search: frameworks and/or styling (any, react, next, vue, svelte, astro, html,
+                    css, tailwind-v3, tailwind-v4, css-modules, scss, css-in-js)
+  --trust <levels>  search: L0, L1, L2, L3 (comma-separated)
+  --category <c>    search: page-composition, component, motion, specialized-product, design-system
+  --limit <n>       search: number of cards (default 5, clamped to 1-10)
+  --today <date>    catalog validate: evaluate staleness as of YYYY-MM-DD (deterministic runs)
+  --catalog <dir>   catalog root with entries/ and index/ (default: the catalog shipped with craft)
   -v, --version     Print version
   -h, --help        Print this help
 
@@ -94,6 +106,13 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
         file: { type: 'string', multiple: true },
         'from-repo': { type: 'boolean', default: false },
         'allow-network': { type: 'boolean', default: false },
+        axes: { type: 'string' },
+        stack: { type: 'string' },
+        trust: { type: 'string' },
+        category: { type: 'string' },
+        limit: { type: 'string' },
+        today: { type: 'string' },
+        catalog: { type: 'string' },
         version: { type: 'boolean', short: 'v', default: false },
         help: { type: 'boolean', short: 'h', default: false }
       }
@@ -327,6 +346,101 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
       ].filter(Boolean).join('\n');
       out({ command, ok: counts.fail === 0, ruleId: 'a11y/contrast', counts, results }, text + '\n');
       return counts.fail ? EXIT.FINDINGS : EXIT.OK;
+    }
+
+    case 'catalog': {
+      if (rest[0] !== 'validate') {
+        io.stderr(`craft catalog: unknown or missing subcommand${rest[0] ? ` "${rest[0]}"` : ''}. Use "craft catalog validate".\n`);
+        return EXIT.USAGE;
+      }
+      const today = values.today === undefined ? undefined : String(values.today);
+      if (today !== undefined && !(/^\d{4}-\d{2}-\d{2}$/.test(today) && !Number.isNaN(Date.parse(today + 'T00:00:00Z')))) {
+        io.stderr(`craft catalog validate: --today must be a date as YYYY-MM-DD, got "${today}".\n`);
+        return EXIT.USAGE;
+      }
+      const catalogRoot = values.catalog ? resolve(root, String(values.catalog)) : BUNDLED_CATALOG;
+      const loaded = loadCatalog({ catalogRoot, projectRoot: root });
+      if (!loaded.length) {
+        const msg = `No catalog entries found in ${join(catalogRoot, 'entries')} or ${LOCAL_ENTRIES_DIR}/. Pass --catalog <dir> or reinstall the skill.`;
+        out({ command, ok: false, status: 'unavailable', message: msg }, msg + '\n');
+        return EXIT.UNAVAILABLE;
+      }
+      const r = validateCatalog(loaded, { today });
+      const failOn = failOnArg ?? 'block';
+      const failing = r.errors.length + (failOn === 'warn' ? r.warnings.length : 0);
+      const text = [
+        ...r.errors.map((e) => `ERROR ${e.file} [${e.rule}] ${e.message}\n      fix: ${e.remediation}`),
+        ...r.warnings.map((w) => `WARN  ${w.file} [${w.rule}] ${w.message}\n      fix: ${w.remediation}`),
+        `${loaded.length} entries (${loaded.filter((l) => l.origin === 'local').length} local): ${r.errors.length} error(s), ${r.warnings.length} warning(s)`
+      ].join('\n');
+      out({ command: 'catalog validate', ok: failing === 0, entries: loaded.length, valid: r.valid.length, errors: r.errors, warnings: r.warnings }, text + '\n');
+      return failing ? EXIT.FINDINGS : EXIT.OK;
+    }
+
+    case 'index': {
+      if (rest[0] !== 'build') {
+        io.stderr(`craft index: unknown or missing subcommand${rest[0] ? ` "${rest[0]}"` : ''}. Use "craft index build".\n`);
+        return EXIT.USAGE;
+      }
+      const catalogRoot = values.catalog ? resolve(root, String(values.catalog)) : BUNDLED_CATALOG;
+      const loaded = loadCatalog({ catalogRoot, projectRoot: root });
+      if (!loaded.length) {
+        const msg = `No catalog entries found in ${join(catalogRoot, 'entries')} or ${LOCAL_ENTRIES_DIR}/. Pass --catalog <dir> or reinstall the skill.`;
+        out({ command: 'index build', ok: false, status: 'unavailable', message: msg }, msg + '\n');
+        return EXIT.UNAVAILABLE;
+      }
+      const r = validateCatalog(loaded);
+      const bundledDigest = digestEntries(validateCatalog(loaded.filter((l) => l.origin === 'bundled')).valid);
+      const index = buildIndex(r.valid, { bundledDigest });
+      mkdirSync(join(root, '.craft'), { recursive: true });
+      writeFileSync(join(root, LOCAL_INDEX_FILE), serializeIndex(index));
+      const text = [
+        ...r.errors.map((e) => `SKIP  ${e.file} [${e.rule}] ${e.message}\n      fix: ${e.remediation}`),
+        `Wrote ${LOCAL_INDEX_FILE}: ${index.entryCount} entries (${r.valid.filter((l) => l.origin === 'local').length} local), ${Object.keys(index.terms).length} terms.${r.errors.length ? ` ${new Set(r.errors.map((e) => e.file)).size} invalid entr(ies) left out.` : ''}`
+      ].join('\n');
+      out({ command: 'index build', ok: r.errors.length === 0, file: LOCAL_INDEX_FILE, entries: index.entryCount, terms: Object.keys(index.terms).length, skipped: r.errors }, text + '\n');
+      return r.errors.length ? EXIT.FINDINGS : EXIT.OK;
+    }
+
+    case 'search': {
+      const query = rest.join(' ').trim();
+      if (!query) {
+        io.stderr('craft search: give an intent to search for, for example: craft search "sortable data table" --limit 5\n');
+        return EXIT.USAGE;
+      }
+      const parsedFilters = parseFilters({
+        axes: /** @type {string | undefined} */ (values.axes),
+        stack: /** @type {string | undefined} */ (values.stack),
+        trust: /** @type {string | undefined} */ (values.trust),
+        category: /** @type {string | undefined} */ (values.category),
+        limit: /** @type {string | undefined} */ (values.limit)
+      });
+      if ('error' in parsedFilters) {
+        io.stderr(`craft search: ${parsedFilters.error}\n`);
+        return EXIT.USAGE;
+      }
+      const catalogRoot = values.catalog ? resolve(root, String(values.catalog)) : BUNDLED_CATALOG;
+      const loc = locateIndex({ catalogRoot, projectRoot: root });
+      if (loc.status !== 'ok') {
+        out({ command, ok: false, status: 'unavailable', message: loc.message }, loc.message + '\n');
+        return EXIT.UNAVAILABLE;
+      }
+      const r = search(loc.index, query, parsedFilters.filters);
+      const results = r.results.map((x) => ({ ...x, file: x.origin === 'local' ? join(root, x.path) : join(loc.catalogRoot, x.path) }));
+      const staleNote = loc.stale ? `Note: ${LOCAL_INDEX_FILE} was built from an older bundled catalog; run craft index build.` : '';
+      const text = [
+        ...results.map((x, i) => `${i + 1}. ${x.id}  [${x.trust} ${x.status} ${x.category}]  score ${x.score}\n   ${x.title}: ${x.intent}\n   read: ${x.file}`),
+        results.length
+          ? `${results.length} of ${r.matched} matching entries${r.filteredOut ? ` (${r.filteredOut} removed by filters)` : ''}. Read only the entry files you will use.`
+          : `No entries matched${r.filteredOut ? ` after filters (${r.filteredOut} matched the words but not the filters; relax --axes, --stack, --trust, or --category)` : '; try other words for the intent'}.`,
+        staleNote
+      ].filter(Boolean).join('\n');
+      out({
+        command, ok: true, query, terms: r.terms, filters: parsedFilters.filters,
+        index: { file: loc.file, origin: loc.origin, entries: loc.index.entryCount, stale: loc.stale },
+        matched: r.matched, filteredOut: r.filteredOut, results
+      }, text + '\n');
+      return EXIT.OK;
     }
 
     default:

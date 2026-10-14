@@ -34,7 +34,7 @@ test('no command opens a socket without --allow-network', async () => {
   writeFileSync(join(project, 'page.html'), '<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width, initial-scale=1"><title>x</title><link rel="stylesheet" href="https://fonts.example.invalid/a.css"><script src="https://cdn.example.invalid/a.js"></script></head><body><main><h1>x</h1><img src="https://images.example.invalid/a.png" alt="x"></main></body></html>');
   const commands = [
     ['--version'], ['--help'], ['doctor'], ['init', '--from-repo'], ['init'], ['lint'], ['lint', '--json'], ['contrast'],
-    ['audit', '--dry-run'], ['report'], ['report', '--check'], ['search', 'x'], ['tokens']
+    ['audit', '--dry-run'], ['report'], ['report', '--check'], ['search', 'x'], ['catalog', 'validate'], ['index', 'build'], ['search', 'table', '--json'], ['tokens']
   ];
   /** @type {string[]} */
   const problems = [];
