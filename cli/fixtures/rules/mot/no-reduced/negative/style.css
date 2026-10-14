@@ -1,0 +1,5 @@
+@media (prefers-reduced-motion: no-preference) {
+  .toast {
+    transition: transform 300ms ease;
+  }
+}

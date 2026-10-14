@@ -1,0 +1,6 @@
+.toast {
+  transition: transform 300ms ease;
+}
+.hero {
+  background-attachment: fixed;
+}

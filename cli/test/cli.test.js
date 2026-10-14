@@ -70,15 +70,16 @@ test('init creates the contract, never overwrites, and writes only inside .craft
   assert.equal(readFileSync(join(dir, '.craft', 'DESIGN.md'), 'utf8'), 'mine');
 });
 
-test('lint: missing contract blocks; template warns; fail-on warn fails', async () => {
+test('lint: missing contract is info; template warns; fail-on warn fails', async () => {
   const dir = tmp();
   const missing = await run(['lint', '--json', '--cwd', dir]);
-  assert.equal(missing.code, EXIT.FINDINGS);
-  assert.equal(missing.json().summary.block, 1);
+  assert.equal(missing.code, EXIT.OK);
+  assert.deepEqual(missing.json().summary, { block: 0, warn: 0, info: 1 });
+  assert.equal(missing.json().findings[0].ruleId, 'ctr/contract');
   await run(['init', '--cwd', dir]);
   const template = await run(['lint', '--json', '--cwd', dir]);
   assert.equal(template.code, EXIT.OK);
-  assert.deepEqual(template.json().rulesRun, ['ctr/contract']);
+  assert.ok(template.json().rulesRun.includes('ctr/contract'));
   assert.ok(template.json().summary.warn > 0);
   assert.equal((await run(['lint', '--fail-on', 'warn', '--cwd', dir])).code, EXIT.FINDINGS);
 });
@@ -86,9 +87,13 @@ test('lint: missing contract blocks; template warns; fail-on warn fails', async 
 test('lint output is deterministic', async () => {
   const dir = tmp();
   await run(['init', '--cwd', dir]);
-  const a = (await run(['lint', '--json', '--cwd', dir])).stdout;
-  const b = (await run(['lint', '--json', '--cwd', dir])).stdout;
-  assert.equal(a, b);
+  writeFileSync(join(dir, 'index.html'), '<img src="a.png"><div onclick="x()">Go</div>');
+  writeFileSync(join(dir, 'a.css'), '.a { color: #123456; outline: none; }');
+  /** Timing is the only field allowed to differ between runs. */
+  const once = async () => ({ ...(await run(['lint', '--json', '--cwd', dir])).json(), durationMs: 0 });
+  const a = await once();
+  assert.ok(a.findings.length > 3);
+  assert.deepEqual(await once(), a);
 });
 
 test('contrast passes the template and fails a bad pair', async () => {

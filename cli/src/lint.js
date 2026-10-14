@@ -1,0 +1,204 @@
+// Slop Lint engine (Tier 0): discover files, parse, build project context, run rules,
+// apply reasoned exceptions, and return deterministic findings.
+import { existsSync, readFileSync, statSync } from 'node:fs';
+import { join, relative, sep } from 'node:path';
+import { listFiles } from './files.js';
+import { parseDocument } from './document.js';
+import { inlineExceptions, configMatcher } from './exceptions.js';
+import { validateAgainst } from './schemas.js';
+import { resolve as resolveToken } from './tokens.js';
+import { classIndex } from './rule-helpers.js';
+import { AXES } from './contract.js';
+import { RULES, RULE_IDS } from '../rules/index.js';
+
+/**
+ * @typedef {{ ruleId: string, file: string, line?: number, column?: number, severity: 'block' | 'warn' | 'info', confidence: number, message: string, remediation: string, tier: 'T0' | 'T2' }} Finding
+ * @typedef {{ ruleId: string, file: string, line?: number, reason: string, source: 'inline' | 'config' }} UsedException
+ * @typedef {{ files: string[], findings: Finding[], exceptions: UsedException[], summary: { block: number, warn: number, info: number }, rulesRun: string[], rulesRenderedOnly: string[], parseErrors: { file: string, error: string }[], durationMs: number, config: Record<string, any> }} LintResult
+ */
+
+export const DEFAULT_THRESHOLDS = { cardShare: 0.6, cardDepth: 1, cloneGridMin: 3, defaultStackShare: 0.8, touchTarget: 44, touchTargetMin: 24, glowBlurPx: 24 };
+
+/**
+ * Read and validate .craft/craft.config.json; invalid or missing config falls back to defaults
+ * (ctr/contract reports the invalid config).
+ * @param {string} root
+ * @returns {Record<string, any>}
+ */
+export function loadConfig(root) {
+  const p = join(root, '.craft', 'craft.config.json');
+  if (!existsSync(p)) return {};
+  try {
+    const cfg = JSON.parse(readFileSync(p, 'utf8'));
+    return validateAgainst('config', cfg).valid ? cfg : {};
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * @param {string} root
+ * @returns {any}
+ */
+function loadTokens(root) {
+  const p = join(root, '.craft', 'tokens.json');
+  if (!existsSync(p)) return null;
+  try {
+    const t = JSON.parse(readFileSync(p, 'utf8'));
+    return validateAgainst('tokens', t).valid ? t : null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Axis values from the DESIGN.md direction table, lowercased: { shape: "soft", ... }.
+ * @param {string | null} design
+ * @returns {Record<string, string>}
+ */
+export function readAxes(design) {
+  /** @type {Record<string, string>} */
+  const axes = {};
+  if (!design) return axes;
+  for (const line of design.split('\n')) {
+    if (!line.trim().startsWith('|')) continue;
+    const cells = line.split('|').map((c) => c.trim()).filter(Boolean);
+    if (cells.length < 2) continue;
+    const axis = AXES.find((a) => a.match.test(cells[0]));
+    if (axis && !/\{\{/.test(cells[1])) axes[axis.key] = cells[1].toLowerCase();
+  }
+  return axes;
+}
+
+/**
+ * @param {string} root project root
+ * @param {{ paths?: string[], rules?: string[], configOverride?: Record<string, any> }} [opts]
+ * @returns {LintResult}
+ */
+export function runLint(root, opts = {}) {
+  const started = performance.now();
+  const config = opts.configOverride ?? loadConfig(root);
+  const thresholds = { ...DEFAULT_THRESHOLDS, ...(config.thresholds ?? {}) };
+  let files = listFiles(root, { ignore: config.ignore ?? [], maxFileBytes: 1_000_000 });
+  if (opts.paths?.length) {
+    const wanted = opts.paths.map((p) => relative(root, join(root, p)).split(sep).join('/').replace(/\/$/, ''));
+    files = files.filter((f) => wanted.some((w) => w === '' || w === '.' || f === w || f.startsWith(w + '/')));
+  }
+
+  /** @type {{ file: string, error: string }[]} */
+  const parseErrors = [];
+  const docs = files.map((f) => {
+    const d = parseDocument(f, readFileSync(join(root, f), 'utf8'));
+    for (const e of d.errors) parseErrors.push({ file: f, error: e });
+    return d;
+  });
+
+  const tokens = loadTokens(root);
+  /** @type {Set<string>} */
+  const tokenValues = new Set();
+  /** @type {Set<string>} */
+  const tokenVars = new Set();
+  if (tokens) {
+    for (const layer of ['primitive', 'semantic', 'component']) {
+      for (const [group, entries] of Object.entries(tokens[layer] ?? {})) {
+        for (const name of Object.keys(/** @type {object} */ (entries))) {
+          tokenVars.add(`--${group}-${name}`);
+          tokenVars.add(`--${name}`);
+          for (const theme of tokens.themes) {
+            try {
+              tokenValues.add(String(resolveToken(tokens, `${layer}.${group}.${name}`, theme)).trim().toLowerCase());
+            } catch {
+              // Unresolvable references are reported by ctr/contract.
+            }
+          }
+        }
+      }
+    }
+  }
+  /** @type {Set<string>} */
+  const definedVars = new Set();
+  for (const d of docs) {
+    for (const c of d.css) for (const decl of c.decls) if (decl.prop.startsWith('--')) definedVars.add(decl.prop);
+    for (const el of d.all) for (const s of el.styleDecls) if (s.prop.startsWith('--')) definedVars.add(s.prop);
+  }
+  const designPath = join(root, '.craft', 'DESIGN.md');
+  const design = existsSync(designPath) ? readFileSync(designPath, 'utf8') : null;
+  /** @type {string | null} */
+  let textCache = null;
+
+  /** @type {import('../rules/types.js').RuleContext} */
+  const ctx = {
+    root, docs, config, thresholds, tokens, tokenValues, tokenVars, definedVars,
+    classes: classIndex(docs), design, axes: readAxes(design),
+    text: () => (textCache ??= docs.map((d) => d.source).join('\n'))
+  };
+
+  const overrides = config.rules ?? {};
+  const selected = RULES.filter((r) => !opts.rules || opts.rules.includes(r.id));
+  /** @type {Finding[]} */
+  let findings = [];
+  const rulesRun = [];
+  const rulesRenderedOnly = [];
+  for (const rule of selected) {
+    const override = overrides[rule.id]?.severity;
+    if (override === 'off') continue;
+    if (!rule.check) {
+      if (rule.tier === 'T2') rulesRenderedOnly.push(rule.id);
+      continue;
+    }
+    rulesRun.push(rule.id);
+    for (const raw of rule.check(ctx)) {
+      /** @type {Finding} */
+      const f = {
+        ruleId: rule.id,
+        file: raw.file,
+        severity: override ?? raw.severity ?? rule.severity,
+        confidence: raw.confidence ?? rule.confidence,
+        message: raw.message,
+        remediation: raw.remediation,
+        tier: 'T0'
+      };
+      if (raw.line) f.line = raw.line;
+      if (raw.column) f.column = raw.column;
+      findings.push(f);
+    }
+  }
+
+  // Exceptions.
+  const inline = docs.flatMap((d) => inlineExceptions(d, RULE_IDS));
+  if (!opts.rules || opts.rules.includes('exc/unreasoned')) {
+    rulesRun.push('exc/unreasoned');
+    for (const ex of inline.filter((e) => !e.valid)) {
+      findings.push({ ruleId: 'exc/unreasoned', file: ex.file, line: ex.line, severity: overrides['exc/unreasoned']?.severity ?? 'block', confidence: 1, message: ex.problem ?? 'Invalid craft-allow comment.', remediation: 'Write: craft-allow <rule-id>: <reason this is right for the product>.', tier: 'T0' });
+    }
+  }
+  const matchConfig = configMatcher(config.exceptions ?? []);
+  /** @type {Map<string, UsedException>} */
+  const used = new Map();
+  findings = findings.filter((f) => {
+    if (f.ruleId === 'exc/unreasoned' || f.ruleId === 'ctr/contract') return true;
+    const ex = inline.find((e) => e.valid && e.ruleId === f.ruleId && e.file === f.file && f.line !== undefined && f.line >= e.line && f.line <= e.endLine);
+    if (ex) {
+      used.set(`${ex.file}:${ex.line}:${ex.ruleId}`, { ruleId: ex.ruleId, file: ex.file, line: ex.line, reason: ex.reason, source: 'inline' });
+      return false;
+    }
+    const cfg = matchConfig(f.ruleId, f.file);
+    if (cfg) {
+      used.set(`config:${cfg.glob}:${cfg.rule}`, { ruleId: cfg.rule, file: cfg.glob, reason: cfg.reason, source: 'config' });
+      return false;
+    }
+    return true;
+  });
+
+  findings.sort((a, b) => a.file.localeCompare(b.file) || (a.line ?? 0) - (b.line ?? 0) || a.ruleId.localeCompare(b.ruleId) || a.message.localeCompare(b.message));
+  const summary = { block: 0, warn: 0, info: 0 };
+  for (const f of findings) summary[f.severity]++;
+  const exceptions = [...used.values()].sort((a, b) => a.file.localeCompare(b.file) || (a.line ?? 0) - (b.line ?? 0));
+  return { files, findings, exceptions, summary, rulesRun, rulesRenderedOnly, parseErrors, durationMs: Math.round(performance.now() - started), config };
+}
+
+/**
+ * Is the path a directory? (Small helper for the CLI.)
+ * @param {string} p
+ */
+export const isDir = (p) => existsSync(p) && statSync(p).isDirectory();

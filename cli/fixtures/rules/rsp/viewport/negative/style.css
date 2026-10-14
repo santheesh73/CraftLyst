@@ -1,0 +1,9 @@
+.wide {
+  width: 100%;
+  max-width: 980px;
+}
+@media (min-width: 1024px) {
+  .rail {
+    width: 400px;
+  }
+}

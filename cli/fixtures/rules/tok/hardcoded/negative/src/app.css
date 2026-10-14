@@ -1,0 +1,4 @@
+.panel {
+  color: var(--color-text);
+  padding: var(--space-3);
+}

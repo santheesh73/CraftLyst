@@ -6,7 +6,8 @@ import { join, resolve } from 'node:path';
 import { VERSION } from './version.js';
 import { detect } from './doctor.js';
 import { init } from './init.js';
-import { checkContract, RULE_ID as CONTRACT_RULE } from './contract.js';
+import { runLint } from './lint.js';
+import { RULE_IDS } from '../rules/index.js';
 import { checkPairs } from './tokens.js';
 import { validateAgainst } from './schemas.js';
 
@@ -30,7 +31,7 @@ Usage: craft <command> [path] [options]
 Commands available in this version:
   doctor            Detect Node, package manager, framework, styling, Playwright, axe
   init              Scaffold .craft/ from templates (never overwrites existing files)
-  lint [path]       Tier 0 checks. Rules in this version: ${CONTRACT_RULE}
+  lint [paths]      Tier 0 Slop Lint (all static rules; --rules a,b to select)
   contrast          WCAG 2.x AA contrast for token pairs in .craft/tokens.json
 
 Planned (exit 3 until released): ${Object.entries(PLANNED).map(([c, v]) => `${c} (${v})`).join(', ')}
@@ -67,6 +68,7 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
         'fail-on': { type: 'string' },
         cwd: { type: 'string' },
         tokens: { type: 'string' },
+        rules: { type: 'string' },
         'from-repo': { type: 'boolean', default: false },
         'allow-network': { type: 'boolean', default: false },
         version: { type: 'boolean', short: 'v', default: false },
@@ -145,24 +147,26 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
     }
 
     case 'lint': {
-      if (rest.length > 1) {
-        io.stderr('craft lint takes at most one path.\n');
+      const target = root;
+      const failOn = failOnArg ?? readFailOn(target) ?? 'block';
+      const rules = values.rules ? String(values.rules).split(',').map((r) => r.trim()).filter(Boolean) : undefined;
+      const unknown = (rules ?? []).filter((r) => !RULE_IDS.has(r));
+      if (unknown.length) {
+        io.stderr(`craft lint: unknown rule id(s): ${unknown.join(', ')}. Known: ${[...RULE_IDS].join(', ')}\n`);
         return EXIT.USAGE;
       }
-      const target = rest[0] ? resolve(root, rest[0]) : root;
-      const failOn = failOnArg ?? readFailOn(target) ?? 'block';
-      const { findings, files } = checkContract(target);
-      findings.sort((a, b) => a.file.localeCompare(b.file) || (a.line ?? 0) - (b.line ?? 0) || a.message.localeCompare(b.message));
-      const summary = { block: 0, warn: 0, info: 0 };
-      for (const f of findings) summary[f.severity]++;
+      const result = runLint(target, { paths: rest, rules });
+      const { findings, summary } = result;
       const failing = failOn === 'warn' ? summary.block + summary.warn : summary.block;
       const text = [
-        `craft lint ${VERSION}: rules run: ${CONTRACT_RULE} (other Slop Lint rules arrive in 0.2.0 and are not checked here)`,
-        `Files: ${files.length ? files.join(', ') : 'none'}`,
-        ...findings.map((f) => `${f.severity.toUpperCase().padEnd(5)} ${f.ruleId} ${f.file}${f.line ? `:${f.line}` : ''}  ${f.message}\n      fix: ${f.remediation}`),
-        `${summary.block} block, ${summary.warn} warn, ${summary.info} info (fail on: ${failOn})`
+        `craft lint ${VERSION}: ${result.files.length} files, ${result.rulesRun.length} rules, ${result.durationMs} ms`,
+        ...findings.map((f) => `${f.severity.toUpperCase().padEnd(5)} ${f.ruleId} ${f.file}${f.line ? `:${f.line}` : ''}  ${f.message}${f.confidence < 0.7 ? ` (heuristic, confidence ${f.confidence})` : ''}\n      fix: ${f.remediation}`),
+        ...result.exceptions.map((e) => `ALLOW ${e.ruleId} ${e.file}${e.line ? `:${e.line}` : ''}  ${e.reason}`),
+        ...result.parseErrors.map((e) => `PARSE ${e.file}: ${e.error} (file checked partially)`),
+        `Rendered-only rules not run by lint: ${result.rulesRenderedOnly.join(', ') || 'none'} (use craft shoot)`,
+        `${summary.block} block, ${summary.warn} warn, ${summary.info} info, ${result.exceptions.length} exception(s) (fail on: ${failOn})`
       ].join('\n');
-      out({ command, ok: failing === 0, rulesRun: [CONTRACT_RULE], failOn, files, summary, findings }, text + '\n');
+      out({ command, ok: failing === 0, failOn, files: result.files.length, durationMs: result.durationMs, rulesRun: result.rulesRun, rulesRenderedOnly: result.rulesRenderedOnly, summary, findings, exceptions: result.exceptions, parseErrors: result.parseErrors }, text + '\n');
       return failing ? EXIT.FINDINGS : EXIT.OK;
     }
 

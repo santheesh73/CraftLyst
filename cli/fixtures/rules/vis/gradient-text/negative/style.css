@@ -1,0 +1,7 @@
+.hero-title {
+  color: var(--color-accent);
+  font-weight: 700;
+}
+.raised {
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+}

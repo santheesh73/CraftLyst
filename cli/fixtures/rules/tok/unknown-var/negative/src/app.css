@@ -1,0 +1,7 @@
+:root {
+  --color-ink: #222;
+}
+.panel {
+  color: var(--color-ink);
+  background: var(--color-paper, white);
+}
