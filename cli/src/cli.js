@@ -1,7 +1,7 @@
 // craft command-line interface. Exit codes: 0 ok, 1 findings at/above --fail-on,
 // 2 usage error, 3 environment or tool unavailable (including commands not in this version).
 import { parseArgs } from 'node:util';
-import { existsSync, readFileSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { VERSION } from './version.js';
 import { detect } from './doctor.js';
@@ -12,6 +12,8 @@ import { checkPairs } from './tokens.js';
 import { validateAgainst } from './schemas.js';
 import { audit, DEFAULT_TIMEOUT_MS } from './audit.js';
 import { shoot } from './shoot.js';
+import { extractTokens } from './extract.js';
+import { loadConfig } from './lint.js';
 import { buildReport, writeReport, checkReport, saveTierResult } from './report.js';
 
 export const EXIT = { OK: 0, FINDINGS: 1, USAGE: 2, UNAVAILABLE: 3 };
@@ -31,6 +33,7 @@ Usage: craft <command> [path] [options]
 Commands available in this version:
   doctor            Detect Node, package manager, framework, styling, Playwright, axe
   init              Scaffold .craft/ from templates (never overwrites existing files)
+  init --from-repo  Same, with tokens.json drafted from the project's custom properties and Tailwind config
   lint [paths]      Tier 0 Slop Lint (all static rules; --rules a,b to select)
   contrast          WCAG 2.x AA contrast for token pairs in .craft/tokens.json
   audit             Tier 1: run the project's lint/typecheck/test/build scripts (--scripts a,b; --dry-run)
@@ -152,9 +155,31 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
 
     case 'init': {
       if (values['from-repo']) {
-        const msg = `craft init --from-repo is planned for 0.2.0. Until then, extract the contract by hand (Direction Engine step 6).`;
-        out({ command, ok: false, status: 'unavailable', availableIn: '0.2.0', message: msg }, msg + '\n');
-        return EXIT.UNAVAILABLE;
+        const ex = extractTokens(root, loadConfig(root).ignore ?? []);
+        const tokensExists = existsSync(join(root, '.craft', 'tokens.json'));
+        const valid = ex.tokens ? validateAgainst('tokens', ex.tokens) : null;
+        if (valid && !valid.valid) {
+          io.stderr(`craft init --from-repo: extracted tokens do not match the schema (please report this): ${valid.errors.slice(0, 3).map((e) => `${e.path} ${e.message}`).join('; ')}\n`);
+          return EXIT.UNAVAILABLE;
+        }
+        const r = init(root, ex.tokens && !tokensExists ? { tokens: ex.tokens } : {});
+        mkdirSync(join(root, '.craft', 'reports'), { recursive: true });
+        if (ex.tokens && tokensExists) writeFileSync(join(root, '.craft', 'reports', 'tokens.extracted.json'), JSON.stringify(ex.tokens, null, 2) + '\n');
+        const note = [
+          '# Token extraction (craft init --from-repo)',
+          '',
+          ...ex.summary.map((l) => `- ${l}`),
+          '',
+          ex.tokens
+            ? tokensExists ? 'tokens.json already existed and was kept; the draft is in .craft/reports/tokens.extracted.json.' : 'The draft is in .craft/tokens.json (meta.source: extracted).'
+            : 'Nothing usable was found; .craft/tokens.json is the starter template.',
+          'Review every semantic role and pair, then run craft contrast. Fill DESIGN.md from what the product already does.',
+          ''
+        ].join('\n');
+        writeFileSync(join(root, '.craft', 'reports', 'extraction.md'), note);
+        const text = [...r.created.map((f) => `created ${f}`), ...r.skipped.map((f) => `kept    ${f} (already exists)`), '', ...ex.summary, '', 'Summary: .craft/reports/extraction.md. Next: review the extracted roles, run craft contrast, fill DESIGN.md.'].join('\n');
+        out({ command, ok: true, created: r.created, skipped: r.skipped, extracted: Boolean(ex.tokens), summary: ex.summary }, text + '\n');
+        return EXIT.OK;
       }
       const r = init(root);
       const text = [

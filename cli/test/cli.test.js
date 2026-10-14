@@ -40,8 +40,6 @@ test('planned commands exit 3 and name their version', async () => {
     assert.equal(r.json().status, 'unavailable');
     assert.match(r.json().availableIn, /^\d+\.\d+\.\d+$/);
   }
-  const fromRepo = await run(['init', '--from-repo', '--cwd', tmp()]);
-  assert.equal(fromRepo.code, EXIT.UNAVAILABLE);
 });
 
 test('doctor detects a Next + Tailwind v4 project from files', async () => {

@@ -32,7 +32,9 @@ export default {
       if (doc.isDocument || doc.all.some((e) => e.tag === 'html')) {
         const html = doc.all.find((e) => e.tag === 'html');
         if (html && !('lang' in html.attrs)) out.push({ file: doc.file, line: html.line, message: '<html> has no lang attribute.', remediation: 'Add lang (for example lang="en") so assistive technology uses the right pronunciation.', confidence: 0.95 });
-        if (doc.kind === 'html' && !doc.all.some((e) => e.tag === 'main' || e.attrs.role?.value === 'main')) {
+        // An SPA shell (<div id="root"></div> and nothing else) gets its landmarks from the app.
+        const shell = doc.all.some((e) => /^(root|app|__next|__nuxt|svelte|q-app)$/.test(e.attrs.id?.value ?? '') && e.children.length === 0);
+        if (doc.kind === 'html' && !shell && !doc.all.some((e) => e.tag === 'main' || e.attrs.role?.value === 'main')) {
           out.push({ file: doc.file, line: html?.line ?? 1, message: 'Page has no <main> landmark.', remediation: 'Wrap the primary content in <main>.', confidence: 0.8 });
         }
       }
