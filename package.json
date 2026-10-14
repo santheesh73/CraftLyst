@@ -15,7 +15,7 @@
     "lint": "node scripts/lint.js",
     "typecheck": "tsc -p tsconfig.json",
     "test": "node scripts/run-tests.js",
-    "validate": "node scripts/validate-schemas.js",
+    "validate": "node scripts/validate-schemas.js && node scripts/validate-skill.js",
     "package": "node scripts/package.js",
     "verify-package": "node scripts/verify-package.js",
     "check": "npm run lint && npm run typecheck && npm test && npm run validate"
