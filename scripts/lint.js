@@ -15,11 +15,12 @@ const CHILD_PROCESS_ALLOW = new Set([
   'scripts/verify-package.js',
   'cli/src/audit.js',
   'evals/triggers/run.js',
-  'scripts/test/package.test.js'
+  'scripts/test/package.test.js',
+  'scripts/test/no-network.test.js'
 ]);
 /** Files allowed to import network modules: tests that start a loopback server only. */
 /** @type {Set<string>} */
-const NETWORK_ALLOW = new Set(['cli/test/shoot.test.js']);
+const NETWORK_ALLOW = new Set(['cli/test/shoot.test.js', 'scripts/test/no-network-guard.js']);
 
 /** @type {string[]} */
 const problems = [];
@@ -69,7 +70,7 @@ for (const file of files) {
       if (/from\s+['"]node:child_process['"]|require\(['"](node:)?child_process['"]\)/.test(code) && !CHILD_PROCESS_ALLOW.has(posix)) {
         report(posix, i + 1, 'child_process is only allowed in files listed in SECURITY.md and scripts/lint.js');
       }
-      if (/from\s+['"](node:)?(http|https|net|dgram|tls|http2)['"]/.test(code) && !NETWORK_ALLOW.has(posix)) {
+      if (/from\s+['"](node:)?(http|https|net|dgram|dns|tls|http2)['"]/.test(code) && !NETWORK_ALLOW.has(posix)) {
         report(posix, i + 1, 'network modules are not allowed (ADR-0007: no network without --allow-network)');
       }
     });
