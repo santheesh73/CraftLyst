@@ -77,7 +77,37 @@ only requires that gate before P3).
 - M2.6 no-network CI test; fixture projects; 500-file speed test
 - M2.7 false-positive measurement on held-out OSS repos (`docs/evals/false-positives.md`)
 
-**P3–P6**: milestones are planned at the start of each phase and appended here.
+**P1 human gate: waived by the user (2026-10-14).** The user replied on 2026-10-14 at 14:56 UTC:
+"Start the implementation and complete it as soon as possible / I have very less time for building
+this skill". This is recorded as a waiver for lack of time, not as a pass: the three-project check
+was never run, and `docs/human-gates/p1-real-projects.md` stays available if they want to run it later.
+From P3 on, each HUMAN GATE is built up to the human step, marked **pending**, and collected in
+`docs/human-gates/README.md`; work continues past it at the user's request. No human result is faked.
+
+**P3**
+- M3.1 12 briefs (`evals/briefs/`) and the 10-dimension rubric (`evals/rubric.md`)
+- M3.2 paired harness: configurable agent command, with/without skill, workspace per run
+- M3.3 anonymized A/B bundles with randomized order, screenshots, generated blind ranking form
+- M3.4 automated metrics (axe, Slop Lint, build/type, claims-vs-receipts) and aggregation script
+- M3.5 dry run on ≥ 2 briefs end to end; HUMAN GATE (blind ranking) marked pending
+
+**P4**
+- M4.1 `craft catalog validate` (schema + cross-field rules, staleness, license allowlist)
+- M4.2 `craft index build` and offline `craft search` (ADR-0014 index format)
+- M4.3 30 independently authored entries (mostly L1; L0 only with verified URLs)
+- M4.4 `NOTICE.md` generator from provenance; CI validation
+- M4.5 precision spot-check on 20 queries (`docs/evals/catalog-precision.md`)
+
+**P5**
+- M5.1 12 component contracts (`contracts/components/`)
+- M5.2 conformance kit with adapter harness (ADR-0015)
+- M5.3 `craft tokens build`: CSS custom properties, Tailwind v3 and v4 adapters
+- M5.4 run the kit against ≥ 2 external libraries; report results including failures
+
+**P6**
+- M6.1 adapters and install docs for Codex, Cursor, and other agents (labeled untested unless verified)
+- M6.2 security review, docs pass, release notes, `SHA256SUMS`
+- M6.3 `v1.0.0` tag: held until the user decides on the pending human gates
 
 ## 4. Risks
 
@@ -134,4 +164,4 @@ Recorded in `docs/decisions/`. Status in brackets.
 - [x] P1 packaging + install script
 - [x] P1 trigger tests
 - [x] P1 automatic gate
-- [ ] P1 HUMAN GATE (user: 3 real projects)
+- [x] P1 HUMAN GATE: waived by the user for lack of time (2026-10-14), not run
