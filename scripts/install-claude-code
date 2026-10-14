@@ -1,0 +1,3 @@
+#!/bin/sh
+# Wrapper so the installer can be run as scripts/install-claude-code.
+exec node "$(dirname "$0")/install-claude-code.js" "$@"
