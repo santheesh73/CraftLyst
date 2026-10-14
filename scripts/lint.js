@@ -12,7 +12,6 @@ const FIXTURE_PREFIX = `cli${sep}fixtures${sep}`;
 
 /** Files allowed to spawn processes (with the reason recorded in SECURITY.md). */
 const CHILD_PROCESS_ALLOW = new Set([
-  'cli/src/doctor.js',
   'scripts/verify-package.js',
   'scripts/install-claude-code.js',
   'evals/triggers/run.js',
