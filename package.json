@@ -14,7 +14,7 @@
   "scripts": {
     "lint": "node scripts/lint.js",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "node --test --test-reporter=spec \"cli/test/**/*.test.js\" \"scripts/test/**/*.test.js\"",
+    "test": "node scripts/run-tests.js",
     "validate": "node scripts/validate-schemas.js",
     "package": "node scripts/package.js",
     "verify-package": "node scripts/verify-package.js",
