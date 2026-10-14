@@ -105,3 +105,15 @@ test('audit without package.json is not verified, not failed', async () => {
   assert.equal(r.code, EXIT.OK);
   assert.equal(r.json().checks[0].status, 'not_verified');
 });
+
+test('audit honors tier1.commands from craft.config.json', async () => {
+  const dir = tmp();
+  await run(['init', '--cwd', dir]);
+  const cfgPath = join(dir, '.craft', 'craft.config.json');
+  const cfg = JSON.parse(readFileSync(cfgPath, 'utf8'));
+  cfg.tier1 = { commands: { typecheck: 'node -e "process.exit(0)"' } };
+  writeFileSync(cfgPath, JSON.stringify(cfg));
+  const r = await run(['audit', '--json', '--cwd', dir]);
+  assert.equal(r.code, EXIT.OK, r.stdout);
+  assert.deepEqual(r.json().checks.map((/** @type {any} */ c) => [c.id, c.status]), [['t1.typecheck', 'verified']]);
+});

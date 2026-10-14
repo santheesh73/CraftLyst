@@ -222,9 +222,10 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
         io.stderr(`craft audit: --timeout must be a positive number of seconds.\n`);
         return EXIT.USAGE;
       }
-      const r = audit(root, { scripts, dryRun: Boolean(values['dry-run']), timeoutMs: timeoutSec ? timeoutSec * 1000 : undefined });
+      const r = audit(root, { scripts, commands: loadConfig(root).tier1?.commands, dryRun: Boolean(values['dry-run']), timeoutMs: timeoutSec ? timeoutSec * 1000 : undefined });
       if (values['dry-run']) {
-        const text = r.planned.length ? `Would run with ${r.packageManager}: ${r.planned.map((x) => `${r.packageManager} run ${x}`).join(', ')}` : `No Tier 1 scripts to run (${r.skipped ?? 'none detected'}).`;
+        const cmds = loadConfig(root).tier1?.commands ?? {};
+        const text = r.planned.length ? `Would run: ${r.planned.map((x) => cmds[x] ?? `${r.packageManager} run ${x}`).join(', ')}` : `No Tier 1 scripts to run (${r.skipped ?? 'none detected'}).`;
         out({ command, ok: true, dryRun: true, packageManager: r.packageManager, planned: r.planned }, text + '\n');
         return EXIT.OK;
       }
@@ -240,7 +241,11 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
     }
 
     case 'shoot': {
-      const r = await shoot(root, { urls: /** @type {string[] | undefined} */ (values.url), files: /** @type {string[] | undefined} */ (values.file), allowNetwork: Boolean(values['allow-network']) });
+      const tier2 = loadConfig(root).tier2 ?? {};
+      /** @type {string[] | undefined} */
+      let urls = /** @type {string[] | undefined} */ (values.url);
+      if (!urls && !values.file && tier2.url) urls = (tier2.routes?.length ? tier2.routes : ['/']).map((/** @type {string} */ r) => new URL(r, tier2.url).href);
+      const r = await shoot(root, { urls, files: /** @type {string[] | undefined} */ (values.file), allowNetwork: Boolean(values['allow-network']), viewports: tier2.viewports });
       if (r.status === 'usage') {
         io.stderr(`craft shoot: ${r.message}\n`);
         return EXIT.USAGE;
