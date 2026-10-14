@@ -195,6 +195,19 @@ export const OG_IMAGE_FILE = /(^|\/)(opengraph-image|twitter-image|og-image|og)(
 /** Syntax-highlighting themes carry their own palette (Prism, highlight.js, Shiki). */
 export const SYNTAX_THEME_FILE = /(^|\/)[\w.-]*(prism|highlight|hljs|shiki|syntax|code-theme)[\w.-]*\.(css|scss)$/i;
 
+/** Selectors of syntax-highlighting themes (Prism, highlight.js, Shiki, CodeMirror). */
+export const SYNTAX_SELECTOR = /\.(token|hljs|shiki|cm-|prism)/;
+
+/**
+ * Is this document a syntax-highlighting theme (by name, or because most of its rules style code tokens)?
+ * @param {import('./document.js').Document} doc
+ */
+export function isSyntaxTheme(doc) {
+  if (SYNTAX_THEME_FILE.test(doc.file)) return true;
+  const rules = doc.css.flatMap((c) => c.rules);
+  return rules.length >= 3 && rules.filter((r) => SYNTAX_SELECTOR.test(r.selector)).length / rules.length >= 0.5;
+}
+
 /**
  * Card-like: a boundary (border or shadow) plus radius, padding, and a background.
  * @param {ReturnType<typeof visualTraits>} t

@@ -54,7 +54,8 @@ function parseStyleAttr(styleText, line) {
 
 /**
  * @param {string} text
- * @param {{ fragment?: boolean }} [opts]
+ * @param {{ fragment?: boolean, keepCase?: boolean }} [opts]
+ *   keepCase: keep the source casing of tag names (Vue/Svelte/Astro components such as <Input>)
  * @returns {MarkupModel}
  */
 export function parseHtml(text, opts = {}) {
@@ -93,7 +94,9 @@ export function parseHtml(text, opts = {}) {
         if (node.content) for (const c of node.content.childNodes ?? []) visit(c, parent);
         return;
       }
-      const el = makeElement(node.tagName.toLowerCase(), loc.startLine, loc.endLine ?? loc.startLine, loc.startCol, parent);
+      const written = opts.keepCase ? text.slice(loc.startOffset + 1, loc.startOffset + 1 + node.tagName.length) : '';
+      const tag = written.toLowerCase() === node.tagName.toLowerCase() && /^[A-Z]/.test(written) ? written : node.tagName.toLowerCase();
+      const el = makeElement(tag, loc.startLine, loc.endLine ?? loc.startLine, loc.startCol, parent);
       for (const a of node.attrs ?? []) {
         const name = a.name;
         const aloc = loc.attrs?.[name];
@@ -161,7 +164,7 @@ export function parseSfc(text) {
     extraScripts.push(fm[0]);
     src = fm[0].replace(/[^\n]/g, ' ') + src.slice(fm[0].length);
   }
-  const model = parseHtml(src, { fragment: true });
+  const model = parseHtml(src, { fragment: true, keepCase: true });
   model.scripts.push(...extraScripts);
   for (const s of extraScripts) for (const m of s.matchAll(/import\s+(?:[^'"]*?\sfrom\s+)?['"]([^'"]+)['"]/g)) model.imports.push(m[1]);
   return model;

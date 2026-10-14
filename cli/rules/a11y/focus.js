@@ -41,8 +41,6 @@ export default {
           // A :focus rule that swaps in another visible change (background, border, shadow, underline) replaces the outline.
           if (/:focus/.test(r.selector) && r.decls.some((x) => /^(background|background-color|border|border-color|border-bottom|box-shadow|text-decoration|color)$/.test(x.prop) && !/^(none|0|transparent|inherit)$/.test(x.value.trim()))) continue;
           if (/:focus:not\(:focus-visible\)/.test(r.selector)) continue;
-          const sameRuleReplacement = r.decls.some((d) => (d.prop === 'box-shadow' && d.value.trim() !== 'none') || /^border(-color)?$/.test(d.prop));
-          if (sameRuleReplacement && /:focus/.test(r.selector)) continue;
           if (replacements) continue;
           out.push({ file: doc.file, line: kill.line, message: `"${r.selector}" removes the focus outline and the project defines no :focus-visible replacement.`, remediation: 'Add a visible :focus-visible style (outline: 2px solid var(--color-focus); outline-offset: 2px).' });
         }
@@ -55,7 +53,9 @@ export default {
         // Any visible change on focus (or on the highlighted state menus use for keyboard focus) counts.
         const replaced = cls.some((c) => REPLACEMENT.test(c) && !/outline-(none|hidden|0)$/.test(c));
         if (!replaced && !replacements) {
-          out.push({ file: doc.file, line: el.line, message: `<${el.tag}> uses ${kill} without a focus-visible ring or outline.`, remediation: 'Add focus-visible:ring-2 (or an outline) using the focus color token.', confidence: 0.75 });
+          // A component (<Input>, <Button>) may add its own focus ring internally, which lint cannot see.
+          const component = !/^[a-z]/.test(el.tag.split('.').pop() ?? '');
+          out.push({ file: doc.file, line: el.line, message: `<${el.tag}> uses ${kill} without a focus-visible ring or outline${component ? ' here (the component may add its own)' : ''}.`, remediation: 'Add focus-visible:ring-2 (or an outline) using the focus color token.', confidence: component ? 0.4 : 0.75, ...(component ? { severity: /** @type {const} */ ('info') } : {}) });
         }
       }
     }

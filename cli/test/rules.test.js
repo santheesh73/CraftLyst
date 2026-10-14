@@ -90,6 +90,9 @@ test('false-positive cases from open-source repos stay quiet', () => {
   assert.deepEqual(lintFiles({ 'a.jsx': 'export const A = () => <div><div aria-hidden className="absolute w-[1800px]" /><div className="max-md:overflow-x-auto"><table className="min-w-[720px]" /></div></div>;' }, ['rsp/viewport']), []);
   assert.deepEqual(lintFiles({ 'a.jsx': 'export const B = ({ close }) => <div className="fixed inset-0 bg-black/50" onClick={close} />;' }, ['a11y/semantics']), []);
   assert.deepEqual(lintFiles({ 'a.css': ':root { --background: #fff; }', 'a.jsx': 'export const D = () => <div className="[--peek:1rem] translate-y-[var(--peek)]" style={{ marginTop: "var(--peek)" }} />;' }, ['tok/unknown-var']), []);
+  assert.deepEqual(lintFiles({ 'styles/nebula.css': '.hljs { color: #a4a6a9; background: #5a8380; }\n.hljs-tag { color: #000; }\n.hljs-name { color: #111; }' }, ['a11y/contrast']), []);
+  // A Svelte <Input> component keeps its casing; its own focus ring is invisible to lint, so this is info only.
+  assert.deepEqual(lintFiles({ 'a.svelte': '<Input class="border outline-none" />' }, ['a11y/focus']), []);
   // Custom property names are case-sensitive.
   assert.deepEqual(lintFiles({ 'a.css': '.a { --text-GRAD: 1; } .b { font-weight: var(--text-GRAD); }' }, ['tok/unknown-var']), []);
 });

@@ -1,4 +1,4 @@
-import { COLOR_PROPS, SPACING_PROPS, FONT_SIZE_PROPS, colorLiterals, lengthLiterals, tailwindArbitrary, TW_COLOR_UTILS, TW_SPACING_UTILS, hasColorLiteral, withoutVars, OG_IMAGE_FILE, SYNTAX_THEME_FILE } from '../../src/rule-helpers.js';
+import { COLOR_PROPS, SPACING_PROPS, FONT_SIZE_PROPS, colorLiterals, lengthLiterals, tailwindArbitrary, TW_COLOR_UTILS, TW_SPACING_UTILS, hasColorLiteral, withoutVars, OG_IMAGE_FILE, isSyntaxTheme, SYNTAX_SELECTOR } from '../../src/rule-helpers.js';
 
 /** Files that define tokens are allowed to contain literals. */
 const TOKEN_FILE = /(^|\/)(tokens?|theme|variables|design-tokens)\.(css|scss|pcss)$|tailwind\.config\./;
@@ -95,7 +95,7 @@ export default {
       }
     };
     for (const doc of ctx.docs) {
-      if (TOKEN_FILE.test(doc.file) || doc.isTest || doc.isFixture || OG_IMAGE_FILE.test(doc.file) || SYNTAX_THEME_FILE.test(doc.file) || /(^|\/)print\.(css|scss)$/.test(doc.file)) continue;
+      if (TOKEN_FILE.test(doc.file) || doc.isTest || doc.isFixture || OG_IMAGE_FILE.test(doc.file) || isSyntaxTheme(doc) || /(^|\/)print\.(css|scss)$/.test(doc.file)) continue;
       // Inline SVG artwork (logos, illustrations) carries its own fill and stroke colors.
       /** @type {[number, number][]} */
       const svgs = doc.all.filter((e) => e.tag === 'svg').map((e) => [e.line, e.endLine]);
@@ -106,7 +106,7 @@ export default {
           if (d.rule && /^@(theme|font-face|property|keyframes)/.test(d.rule.selector)) continue;
           if (d.rule?.media.some((m) => /print/.test(m))) continue;
           // Syntax-highlighting palettes (Prism .token, highlight.js, Shiki, CodeMirror) are their own color system.
-          if (d.rule && /\.(token|hljs|shiki|cm-)/.test(d.rule.selector)) continue;
+          if (d.rule && SYNTAX_SELECTOR.test(d.rule.selector)) continue;
           const { flagged, skipped } = literals(d.prop, d.value, doc.file);
           note(skipped, doc.file, d.line);
           if (flagged.length) {
