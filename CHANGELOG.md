@@ -7,6 +7,10 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-10-14
+
+P2 (CLI). Built and CI-green; not yet released.
+
 ### Added
 
 - Build plan (`PLAN.md`) and ADRs 0001–0011.

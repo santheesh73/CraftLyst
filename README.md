@@ -20,7 +20,7 @@ This project is built in gated phases. Nothing below is claimed beyond what is m
 |---|---|---|
 | P0 Foundation | plan, ADRs, schemas, CI skeleton | done (CI green on Node 20 and 22) |
 | P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | built; waiting on the human gate (use on 3 real projects) |
-| P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | built; gate report pending |
+| P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | built, CI green, gate items met (FP rate judged by Claude) |
 | P3 Evaluation (v0.3) | briefs, rubric, paired harness | not started |
 | P4 Catalog (v0.4) | pattern catalog and offline search | not started |
 | P5 Contracts and tokens (v0.5) | component contracts, conformance kit, token adapters | not started |
@@ -28,7 +28,7 @@ This project is built in gated phases. Nothing below is claimed beyond what is m
 
 See [PLAN.md](PLAN.md) for gates and [docs/decisions/](docs/decisions/README.md) for ADRs.
 
-## Install (v0.1)
+## Install (v0.2)
 
 ```sh
 npm ci && npm run package
