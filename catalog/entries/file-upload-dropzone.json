@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0",
+  "id": "file-upload-dropzone",
+  "title": "File upload with drop zone and progress",
+  "category": "component",
+  "description": "An upload control that works with a regular file button first and adds drag-and-drop as an enhancement: states accepted types and size limits up front, shows per-file progress, validation errors per file, retry and remove actions, and a final summary.",
+  "intent": "Let users add files reliably, understand limits before they try, and recover from failed uploads per file.",
+  "tags": [
+    "upload",
+    "file",
+    "dropzone",
+    "drag-and-drop",
+    "progress",
+    "form",
+    "attachments"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "native file input as the base, drop zone as an enhancement",
+    "accepted types and max size stated before selection",
+    "per-file row with name, size, progress, and status",
+    "retry and remove per file",
+    "client-side checks repeated on the server"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "subtle"
+    ],
+    "shape": [
+      "soft",
+      "mixed"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Clicking or pressing Enter on the zone opens the file picker; dropping highlights the zone; uploads start immediately or on submit (state which); cancelling an in-flight upload is possible.",
+  "responsive": "Drop zone shrinks to a button on touch devices, where drag-and-drop is rarely available; file list stays a single column.",
+  "accessibility": "Real button or label for the file input; progress uses progress elements with labels; status changes (done, failed) announced politely; error text per file linked to the row.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Large files need resumable or chunked uploads, which this spec does not cover.",
+    "Folder upload and paste-to-upload behave differently across browsers."
+  ]
+}

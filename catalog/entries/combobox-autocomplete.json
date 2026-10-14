@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "id": "combobox-autocomplete",
+  "title": "Combobox with autocomplete suggestions",
+  "category": "component",
+  "description": "A text input that suggests matching options as the user types (places, people, tags, products), with keyboard navigation through suggestions, highlighted matches, loading and no-match states, and support for free text when the domain allows it.",
+  "intent": "Help users enter a value from a large set quickly and correctly, while still allowing typing.",
+  "tags": [
+    "combobox",
+    "autocomplete",
+    "typeahead",
+    "search",
+    "select",
+    "input",
+    "form"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "input plus popup listbox of suggestions",
+    "matched substring highlighted in each option",
+    "loading, no-match, and error states inside the popup",
+    "clear distinction between free text and selected option",
+    "debounced remote queries with result caching"
+  ],
+  "axes": {
+    "density": [
+      "balanced",
+      "compact"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Down arrow opens and moves through options, Enter selects, Escape closes then clears; selecting fills the input and closes the popup; Tab leaves without forcing a selection.",
+  "responsive": "Popup width matches the input; on narrow screens the popup can expand to a full-width sheet with the input pinned at the top so the keyboard does not cover suggestions.",
+  "accessibility": "Follow the WAI-ARIA Authoring Practices combobox pattern: role=\"combobox\", aria-expanded, aria-controls, aria-activedescendant; result counts announced politely; options readable without the highlight.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Hard to get right across screen readers; test with at least two.",
+    "For fewer than about 10 fixed options a native select is better."
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "schemaVersion": "1.0",
+  "id": "pricing-plan-comparison",
+  "title": "Pricing plan comparison",
+  "category": "page-composition",
+  "description": "A plan selection page with 2-4 plan columns, a billing-period switch, a recommended plan marked with a reason, and a full feature comparison table below grouped by capability. Prices show currency, period, and what is billed per seat or usage.",
+  "intent": "Help a buyer pick the right plan quickly and verify the details before paying, without hidden conditions.",
+  "tags": [
+    "pricing",
+    "plans",
+    "billing",
+    "comparison",
+    "saas",
+    "checkout"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "plan columns with name, price, billing basis, and one-line audience",
+    "monthly/annual switch with the saving stated as a number",
+    "one recommended plan with a reason, not just a badge",
+    "grouped comparison table with sticky plan header",
+    "FAQ for billing questions under the table"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "shape": [
+      "mixed",
+      "soft"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Billing switch is a segmented control that updates all prices at once. Plan actions are links or buttons with the plan name in their accessible name. Comparison rows can expand to explain a feature.",
+  "responsive": "Plan columns stack on narrow screens with the recommended plan first; the comparison table switches to one plan at a time with a plan picker rather than horizontal scroll of all columns.",
+  "accessibility": "Comparison is a real table with row and column headers; included/excluded marks have text alternatives; price changes from the switch are announced politely; no information conveyed by strike-through alone.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "More than four plans needs a different pattern (configurator or contact sales).",
+    "Requires actual prices and terms; never invent discounts or customer counts."
+  ]
+}

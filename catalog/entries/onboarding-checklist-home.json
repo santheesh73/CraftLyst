@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "id": "onboarding-checklist-home",
+  "title": "Onboarding checklist home",
+  "category": "page-composition",
+  "description": "A first-run home screen organized around a short checklist of 3-6 setup tasks, each with why it matters, an estimated effort, and a direct action. Progress persists across sessions; completed items collapse; the checklist can be dismissed once the core tasks are done and the regular home takes over.",
+  "intent": "Get a new user to the first meaningful result with clear next steps instead of an empty dashboard or a product tour.",
+  "tags": [
+    "onboarding",
+    "first-run",
+    "checklist",
+    "setup",
+    "activation",
+    "saas"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "3-6 tasks ordered by dependency, first one already actionable",
+    "each task: title, reason, effort, primary action",
+    "progress shown as count (\"2 of 5 done\"), not only a bar",
+    "completed tasks collapse with a way to revisit",
+    "dismissable after the essential tasks"
+  ],
+  "axes": {
+    "density": [
+      "balanced",
+      "airy"
+    ],
+    "temperature": [
+      "warm",
+      "neutral"
+    ],
+    "formality": [
+      "approachable",
+      "playful"
+    ],
+    "motion": [
+      "subtle"
+    ],
+    "shape": [
+      "soft",
+      "mixed"
+    ],
+    "imagery": [
+      "type-led",
+      "balanced"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Tasks complete from real product events, not from clicking a checkbox; actions deep-link to the right screen and return; progress persists server-side.",
+  "responsive": "Checklist is a single column at all sizes; secondary panels (help, sample data) move below it on narrow screens.",
+  "accessibility": "Checklist is a list with each item status in text; progress has a text equivalent; collapse/expand uses disclosure buttons with aria-expanded; celebration motion respects reduced motion.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Only works if task completion can be detected; otherwise users tick boxes without doing the work.",
+    "Adds maintenance: tasks must change when the product changes."
+  ]
+}

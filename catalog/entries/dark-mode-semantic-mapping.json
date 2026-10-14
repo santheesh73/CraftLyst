@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "id": "dark-mode-semantic-mapping",
+  "title": "Dark mode via semantic color mapping",
+  "category": "design-system",
+  "description": "A theming approach where components use semantic color roles (surface, surface-raised, text, text-muted, border, accent, danger) that map to different palette steps in light and dark themes, instead of inverting colors. Elevation in dark mode uses lighter surfaces rather than shadows, and saturated accents are adjusted for dark backgrounds.",
+  "intent": "Support light and dark themes from one component codebase with every text and UI pair meeting contrast in both.",
+  "tags": [
+    "dark-mode",
+    "theming",
+    "color",
+    "tokens",
+    "semantic-colors",
+    "contrast",
+    "design-system"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "components reference roles only, never palette steps",
+    "each theme maps roles to palette steps explicitly",
+    "raised surfaces get lighter in dark mode",
+    "accents desaturated or lightened for dark surfaces",
+    "contrast pairs declared and checked for each theme"
+  ],
+  "axes": {
+    "contrast": [
+      "low",
+      "medium",
+      "high"
+    ],
+    "temperature": [
+      "warm",
+      "neutral",
+      "cool"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "css",
+      "tailwind-v3",
+      "tailwind-v4",
+      "css-modules",
+      "scss",
+      "css-in-js"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Follows prefers-color-scheme by default with an explicit user override persisted; theme switches without a flash of the wrong theme on load.",
+  "responsive": "Independent of viewport.",
+  "accessibility": "Every declared foreground/background pair meets WCAG AA in both themes; focus indicators visible in both; images and charts checked on dark surfaces; forced-colors mode not broken by custom properties.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Brand colors may not have an accessible dark-mode equivalent; the brand team must sign off on the adjusted values.",
+    "Third-party embeds often ignore the theme."
+  ]
+}

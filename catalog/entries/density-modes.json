@@ -1,0 +1,68 @@
+{
+  "schemaVersion": "1.0",
+  "id": "density-modes",
+  "title": "Density modes (comfortable and compact)",
+  "category": "design-system",
+  "description": "A system-level density setting that switches spacing, control heights, and table row heights between comfortable and compact through a small set of density tokens, so data-heavy users can see more rows without a separate component library. Type size stays readable in both modes.",
+  "intent": "Let expert users trade whitespace for information density without degrading touch targets or readability.",
+  "tags": [
+    "density",
+    "compact",
+    "tokens",
+    "spacing",
+    "tables",
+    "settings",
+    "design-system"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "density tokens: control height, row height, inline and block padding",
+    "two modes, possibly three, never per-component ad hoc values",
+    "body text size unchanged or reduced at most one step",
+    "touch targets kept at 24px minimum (44px on touch-first surfaces)",
+    "setting persisted per user"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "css",
+      "tailwind-v3",
+      "tailwind-v4",
+      "css-modules",
+      "scss",
+      "css-in-js"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Users switch density in settings or a table toolbar; the change applies immediately and persists.",
+  "responsive": "Compact mode is ignored or limited on coarse-pointer devices (pointer: coarse) to keep touch targets usable.",
+  "accessibility": "Target size meets WCAG 2.5.8 in both modes; text spacing overrides (WCAG 1.4.12) must not clip content in compact mode.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Doubles the visual QA matrix; test both modes in every state.",
+    "Not every component benefits; limit to tables, lists, and forms."
+  ]
+}

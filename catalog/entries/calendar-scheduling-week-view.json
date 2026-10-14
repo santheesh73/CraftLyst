@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0",
+  "id": "calendar-scheduling-week-view",
+  "title": "Calendar scheduling week view",
+  "category": "specialized-product",
+  "description": "A week grid for booking or arranging time: days as columns, time as rows, existing events as blocks, free slots selectable, time zone shown explicitly, and an alternative list of available slots for users who cannot use the grid. Handles overlapping events and all-day items.",
+  "intent": "Let users see availability over a week and book or move time reliably, including across time zones.",
+  "tags": [
+    "calendar",
+    "scheduling",
+    "booking",
+    "week-view",
+    "time-zone",
+    "appointments",
+    "availability"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "day columns with time rows at 15-30 minute granularity",
+    "explicit time zone label and switcher",
+    "overlapping events laid out side by side",
+    "all-day row separate from the time grid",
+    "list-of-slots alternative view"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "temperature": [
+      "neutral",
+      "cool"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Click or keyboard-select a free slot to start booking; drag to move or resize only as an enhancement with a form-based alternative; Today, previous, and next week controls; current time line.",
+  "responsive": "Below tablet width switch to a single-day view with day tabs or to the slot list; never a seven-column grid on a phone.",
+  "accessibility": "Slots and events have accessible names with full date, time, and time zone; drag operations have keyboard and form alternatives (WCAG 2.5.7); color-coded calendars also carry text labels.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Recurring events and daylight-saving transitions need careful date logic, not covered here.",
+    "Grid keyboard navigation is complex; the slot list is the dependable path."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "id": "destructive-action-confirmation",
+  "title": "Destructive action confirmation",
+  "category": "component",
+  "description": "A confirmation pattern scaled to risk: reversible actions use undo instead of a dialog; irreversible ones use a modal dialog that names the object and the consequence, with the destructive button labeled by the action; the highest-risk actions require typing the object name.",
+  "intent": "Prevent accidental data loss without adding friction to routine, reversible actions.",
+  "tags": [
+    "dialog",
+    "modal",
+    "confirm",
+    "delete",
+    "destructive",
+    "undo",
+    "danger"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "risk ladder: undo, then confirm dialog, then type-to-confirm",
+    "dialog title and button name the action (\"Delete project\")",
+    "consequence stated concretely (what is lost, who is affected)",
+    "cancel is the default focus for irreversible actions",
+    "danger color plus text, never color alone"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "contrast": [
+      "medium",
+      "high"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Dialog opens on the trigger, traps focus, Escape cancels, and focus returns to the trigger; type-to-confirm enables the action only on an exact match; success is confirmed and the user lands somewhere sensible.",
+  "responsive": "Dialog fits narrow screens with buttons stacked, destructive action last; never relies on hover.",
+  "accessibility": "Native dialog element or role=\"alertdialog\" with aria-labelledby and aria-describedby; initial focus on the least destructive control; button labels are explicit verbs, not \"OK\".",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Overused confirmations train users to click through; reserve them for irreversible actions.",
+    "Undo needs backend support for delayed deletion."
+  ]
+}

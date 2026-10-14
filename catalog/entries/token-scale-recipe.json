@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0",
+  "id": "token-scale-recipe",
+  "title": "Token scale recipe for spacing and type",
+  "category": "design-system",
+  "description": "A recipe for deriving spacing and type tokens from a few decisions: a base unit (4 or 8px), a spacing scale built from that unit, a modular type scale from a base size and ratio chosen by density, fluid sizes via clamp() for display text, and semantic aliases (space-inline-sm, text-body) mapped onto the raw scale.",
+  "intent": "Give a project a small, consistent spacing and type scale that components reference by name instead of literal values.",
+  "tags": [
+    "tokens",
+    "design-tokens",
+    "spacing",
+    "type-scale",
+    "typography",
+    "scale",
+    "design-system"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "two layers: raw scale tokens and semantic aliases",
+    "spacing from a 4px or 8px base with 8-10 steps",
+    "type scale from base size and ratio (1.125-1.333)",
+    "clamp() for display sizes only, fixed sizes for UI text",
+    "line height and letter spacing tokens paired with sizes"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced",
+      "airy"
+    ],
+    "voice": [
+      "neutral-sans",
+      "humanist",
+      "geometric",
+      "editorial-serif",
+      "technical-mono",
+      "display"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "css",
+      "tailwind-v3",
+      "tailwind-v4",
+      "css-modules",
+      "scss",
+      "css-in-js"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Not interactive. Components consume only semantic aliases; changing the ratio or base unit updates the system.",
+  "responsive": "Spacing tokens can step up at a breakpoint for section spacing only; component internal spacing stays constant.",
+  "accessibility": "Body text at least 16px for reading surfaces; sizes in rem so user font settings apply; line height at least 1.5 for body text.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "A scale is a starting point; optical adjustments for specific fonts still matter.",
+    "Fluid type can break zoom expectations if min and max are too close; test 200% zoom."
+  ]
+}

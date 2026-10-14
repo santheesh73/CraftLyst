@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0",
+  "id": "inline-validation-form",
+  "title": "Form with inline validation and error summary",
+  "category": "component",
+  "description": "A form pattern that validates each field after the user leaves it (not on every keystroke), shows the error next to the field with how to fix it, and on submit shows an error summary at the top that links to each invalid field. Hint text sits under labels; required and optional are both stated.",
+  "intent": "Help users complete a form correctly on the first submit and recover quickly from errors.",
+  "tags": [
+    "form",
+    "validation",
+    "errors",
+    "input",
+    "checkout",
+    "signup",
+    "settings"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "visible labels above fields, hints between label and input",
+    "validate on blur, re-validate on input once a field has shown an error",
+    "error message states the fix, not just \"invalid\"",
+    "error summary on submit with links to fields",
+    "submit button never disabled as the only feedback"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "contrast": [
+      "medium",
+      "high"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "On submit with errors, focus moves to the summary; each summary link moves focus to its field. Server errors map back to fields. Successful submit shows a clear confirmation.",
+  "responsive": "Single column at all sizes; inputs size to expected content length on wide screens; buttons full width on narrow screens.",
+  "accessibility": "Errors linked with aria-describedby and aria-invalid; summary uses role=\"alert\" or receives focus with a heading; correct input types and autocomplete tokens; error state not shown by color alone (icon plus text).",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Asynchronous checks (username taken) need debounce and a pending state.",
+    "Long multi-section forms need the stepper pattern as well."
+  ]
+}

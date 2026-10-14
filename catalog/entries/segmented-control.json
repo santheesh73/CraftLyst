@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "id": "segmented-control",
+  "title": "Segmented control",
+  "category": "component",
+  "description": "A compact control for choosing one of 2-5 mutually exclusive options that switch a view or mode immediately (list/grid, monthly/annual, day/week/month). Segments have equal visual weight, a clear selected state, and text labels.",
+  "intent": "Switch between a few views or modes in one click, with the current choice obvious.",
+  "tags": [
+    "segmented-control",
+    "toggle",
+    "switch",
+    "view-mode",
+    "radio-group",
+    "tabs"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "2-5 segments with short text labels (icons only with labels)",
+    "selected state differs by more than color (fill plus weight or indicator)",
+    "changes apply immediately",
+    "width fits content, or equal widths in a constrained toolbar"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "shape": [
+      "soft",
+      "mixed",
+      "sharp"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Behaves as a single-select radio group: Tab enters at the selected segment, arrow keys move and select. If segments switch panels of content, use the tabs pattern instead.",
+  "responsive": "Stays one row; when labels do not fit at narrow widths, switch to a select element rather than truncating.",
+  "accessibility": "Native radio inputs styled as segments, or role=\"radiogroup\" with role=\"radio\" and aria-checked; group has a visible or aria label; selected state meets 3:1 non-text contrast.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Not for more than five options or for options that need explanation.",
+    "Not for actions; use buttons for things that do something rather than select something."
+  ]
+}

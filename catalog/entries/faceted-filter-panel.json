@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "1.0",
+  "id": "faceted-filter-panel",
+  "title": "Faceted filter panel",
+  "category": "component",
+  "description": "A filter panel for narrowing listings by several attributes: grouped facets with counts, multi-select checkboxes, ranges, and toggles; a row of active-filter chips with one-click removal and a clear-all; and counts that update to show the effect before or after applying.",
+  "intent": "Let users narrow a large set by several attributes and always see and undo what is applied.",
+  "tags": [
+    "filters",
+    "facets",
+    "search",
+    "listing",
+    "ecommerce",
+    "chips",
+    "refine"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "facet groups as fieldsets with legends and result counts",
+    "active filter chips above results with remove buttons",
+    "clear-all action visible when any filter is active",
+    "long facets show top values with a show-more control",
+    "range facets accept typed values, not only sliders"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Desktop applies immediately; mobile sheet batches changes with an Apply button that shows the resulting count; filters live in the URL; zero-count options are disabled or hidden consistently.",
+  "responsive": "Side panel on wide screens; full-height sheet behind a \"Filters (3)\" button on narrow screens.",
+  "accessibility": "Checkboxes and radios with native semantics inside fieldsets; chips are buttons named \"Remove filter: Blue\"; result count changes announced politely; sheet is a modal dialog.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Counts per facet need backend support.",
+    "Too many facets overwhelm; order by usage and collapse the rest."
+  ]
+}

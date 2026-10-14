@@ -1,0 +1,82 @@
+{
+  "schemaVersion": "1.0",
+  "id": "dashboard-overview-kpi-table",
+  "title": "Dashboard overview with KPI row and table",
+  "category": "page-composition",
+  "description": "An operational overview screen: a short row of 3-5 KPIs that each show value, unit, comparison period, and direction; one primary chart for the trend that matters most; and a sortable table of the items that need action. The period selector and filters sit in one toolbar that scopes everything below it.",
+  "intent": "Let a returning user see what changed since last time and jump to the rows that need action, within one screen.",
+  "tags": [
+    "dashboard",
+    "kpi",
+    "metrics",
+    "analytics",
+    "admin",
+    "overview",
+    "saas"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "3-5 KPI tiles with value, delta, and comparison period stated in words",
+    "one primary chart, not a wall of equal charts",
+    "action table below the fold line with sorting and row links",
+    "single scope toolbar (period, segment) for the whole page",
+    "tabular numerals and right-aligned numbers"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "temperature": [
+      "neutral",
+      "cool"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "contrast": [
+      "medium",
+      "high"
+    ],
+    "voice": [
+      "neutral-sans",
+      "technical-mono"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Changing the period or segment updates KPIs, chart, and table together and is reflected in the URL. KPI tiles link to the filtered table. Loading keeps layout stable with skeletons.",
+  "responsive": "KPIs wrap to two columns, then one; the chart keeps a minimum height; the table becomes horizontally scrollable inside its own region with the first column sticky, never the page.",
+  "accessibility": "KPI deltas state direction in text (\"up 4% vs last week\"), not color alone; the chart has a text summary or data table alternative; the table uses th with scope and aria-sort.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Needs real metrics with defined comparison periods; invented numbers are worse than an empty state.",
+    "More than five KPIs dilutes the row; split into a second view instead."
+  ]
+}
