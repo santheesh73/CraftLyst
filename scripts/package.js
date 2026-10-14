@@ -23,6 +23,7 @@ const INCLUDE = [
   ['tokens/recipes.json', 'tokens/recipes.json'],
   ['cli/bin', 'cli/bin'],
   ['cli/src', 'cli/src'],
+  ['cli/rules', 'cli/rules'],
   ['cli/schemas/tokens.schema.json', 'cli/schemas/tokens.schema.json'],
   ['cli/schemas/config.schema.json', 'cli/schemas/config.schema.json'],
   ['cli/schemas/report.schema.json', 'cli/schemas/report.schema.json'],
@@ -32,6 +33,14 @@ const INCLUDE = [
   ['scripts/install-claude-code', 'scripts/install-claude-code'],
   ['scripts/validate-skill.js', 'scripts/validate-skill.js']
 ];
+/**
+ * Runtime packages vendored into cli/node_modules so the skill runs without npm install
+ * (ADR-0005). @babel/types and its helpers are declared by @babel/parser but never loaded
+ * by its bundle, so they are left out; the package test proves the CLI works without them.
+ */
+const VENDOR = ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js'];
+/** Files inside vendored packages that are not needed at runtime. */
+const VENDOR_SKIP = /\.(map|d\.ts|d\.mts|d\.cts|md)$|(^|\/)(bin)\//i;
 const EXECUTABLE = new Set(['cli/bin/craft.js', 'scripts/install-claude-code', 'scripts/install-claude-code.js']);
 
 /**
@@ -68,13 +77,40 @@ rmSync(dist, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 for (const [from, to] of INCLUDE) copy(join(root, from), join(out, to));
 
+const lock = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8'));
+/** @type {string[]} */
+const thirdParty = [];
+for (const name of VENDOR) {
+  const entry = lock.packages[`node_modules/${name}`];
+  if (!entry || entry.dev) throw new Error(`${name} is not a locked runtime dependency`);
+  const src = join(root, 'node_modules', name);
+  const meta = JSON.parse(readFileSync(join(src, 'package.json'), 'utf8'));
+  if (meta.version !== entry.version) throw new Error(`${name}: installed ${meta.version}, locked ${entry.version}; run npm ci`);
+  for (const f of list(src)) {
+    if (VENDOR_SKIP.test(f) && !/^licen[cs]e/i.test(f.split('/').pop() ?? '')) continue;
+    mkdirSync(dirname(join(out, 'cli', 'node_modules', name, f)), { recursive: true });
+    copyFileSync(join(src, f), join(out, 'cli', 'node_modules', name, f));
+  }
+  thirdParty.push(`| ${name} | ${meta.version} | ${meta.license} | cli/node_modules/${name}/ |`);
+}
+writeFileSync(join(out, 'cli', 'THIRD-PARTY.md'), `# Third-party runtime packages
+
+Vendored unmodified (build artifacts only; source maps, type declarations, and docs removed).
+Each package's license file is kept in its directory.
+
+| Package | Version | License | Location |
+|---|---|---|---|
+${thirdParty.join('\n')}
+`);
+
 writeFileSync(join(out, 'cli', 'package.json'), JSON.stringify({
   name: 'frontend-craft-cli',
   version: pkg.version,
   private: true,
   license: 'Apache-2.0',
   type: 'module',
-  engines: { node: '>=20' },
+  engines: { node: '>=20.19' },
+  dependencies: Object.fromEntries(VENDOR.filter((n) => pkg.dependencies[n]).map((n) => [n, pkg.dependencies[n]])),
   bin: { craft: 'bin/craft.js' }
 }, null, 2) + '\n');
 

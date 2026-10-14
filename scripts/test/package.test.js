@@ -53,7 +53,11 @@ test('package contains the skill and no repo-only files', () => {
     assert.ok(files.includes(required), `missing ${required}`);
   }
   assert.equal(files.filter((f) => f.startsWith('references/')).length, 16);
-  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs|node_modules)\//.test(f)), []);
+  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs)\//.test(f) && !f.startsWith('cli/node_modules/')), []);
+  assert.ok(files.includes('cli/rules/index.js'), 'rules ship with the CLI');
+  const vendored = new Set(files.filter((f) => f.startsWith('cli/node_modules/')).map((f) => f.split('/').slice(2, f.split('/')[2].startsWith('@') ? 4 : 3).join('/')));
+  assert.deepEqual([...vendored].sort(), ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js']);
+  assert.ok(!files.some((f) => f.startsWith('node_modules/')), 'no top-level node_modules');
 });
 
 test('extracted zip installs into a clean project and the CLI works there', () => {
