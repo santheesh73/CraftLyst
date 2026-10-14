@@ -6,6 +6,7 @@ import { join, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { createZip } from './lib/zip.js';
+import { buildShippedIndex } from './build-index.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
@@ -29,6 +30,7 @@ const INCLUDE = [
   ['cli/schemas/report.schema.json', 'cli/schemas/report.schema.json'],
   ['cli/schemas/recipes.schema.json', 'cli/schemas/recipes.schema.json'],
   ['catalog/catalog-schema.json', 'cli/schemas/catalog-schema.json'],
+  ['catalog/entries', 'catalog/entries'],
   ['adapters/claude-code', 'adapters/claude-code'],
   ['scripts/install-claude-code.js', 'scripts/install-claude-code.js'],
   ['scripts/install-claude-code', 'scripts/install-claude-code'],
@@ -77,6 +79,12 @@ const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 for (const [from, to] of INCLUDE) copy(join(root, from), join(out, to));
+
+// Prebuilt offline search index (ADR-0014), built fresh from the entries being shipped.
+const catalogIndex = buildShippedIndex(join(root, 'catalog'));
+if (catalogIndex.errors.length) throw new Error(`catalog entries are invalid; run craft catalog validate:\n${catalogIndex.errors.join('\n')}`);
+mkdirSync(join(out, 'catalog', 'index'), { recursive: true });
+writeFileSync(join(out, 'catalog', 'index', 'index.json'), catalogIndex.text);
 
 const lock = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8'));
 /** @type {string[]} */
