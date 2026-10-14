@@ -81,6 +81,13 @@ test('false-positive cases from open-source repos stay quiet', () => {
     'two/index.html': PAGE('<p>2</p>'), 'two/style.css': '.y { color: #555; }'
   }, ['tok/hardcoded']);
   assert.deepEqual(demos.map((f) => f.file), ['one/style.css']);
+  // Copied-in libraries (own LICENSE, no package.json) and compiled framework CSS are not linted.
+  assert.deepEqual(lintFiles({ 'lib/cm/LICENSE': 'MIT', 'lib/cm/cm.css': '.cm:focus { outline: none; }', 'out.css': '/*! tailwindcss v3.1.4 | MIT License */\n.a:focus { outline: none; }' }, ['a11y/focus']), []);
+  assert.deepEqual(lintFiles({ 'index.html': PAGE('<div class="hidden w-[572px] lg:block">Side</div><div aria-hidden="true"><div class="w-[480px]"></div></div>') }, ['rsp/viewport']), []);
+  assert.deepEqual(lintFiles({ 'index.html': PAGE('<svg><style>.st0{fill:#0acf83}</style></svg>'), 'a.css': ':root { --a: #111; --b: #222; --c: #333; }' }, ['tok/hardcoded']), []);
+  assert.deepEqual(lintFiles({ 'index.html': PAGE('<pre><code>&lt;p&gt;Lorem ipsum dolor sit amet&lt;/p&gt;</code></pre>') }, ['con/fabricated']), []);
+  // Custom property names are case-sensitive.
+  assert.deepEqual(lintFiles({ 'a.css': '.a { --text-GRAD: 1; } .b { font-weight: var(--text-GRAD); }' }, ['tok/unknown-var']), []);
 });
 
 test('a reasoned craft-allow suppresses the finding and is listed as an exception', () => {

@@ -38,8 +38,11 @@ export default {
       /** @type {Set<string>} */
       const seen = new Set();
       const lines = doc.source.split('\n');
+      // Markup shown as a code sample is documentation, not page copy.
+      /** @type {[number, number][]} */
+      const samples = doc.all.filter((e) => /^(pre|code|textarea|xmp)$/.test(e.tag)).map((e) => [e.line, e.endLine]);
       for (const s of doc.strings) {
-        if (SKIP_CONTEXT.test(s.context) || isIllustrative(s.line)) continue;
+        if (samples.some(([a, b]) => s.line >= a && s.line <= b) || SKIP_CONTEXT.test(s.context) || isIllustrative(s.line)) continue;
         if (/^(\.|\/|@|https?:|[\w-]+\/[\w-]+$)/.test(s.value.trim())) continue;
         for (const p of PLACEHOLDERS) {
           const key = `${s.line}|${p.what}`;

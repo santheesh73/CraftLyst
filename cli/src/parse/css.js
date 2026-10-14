@@ -82,7 +82,7 @@ export function parseCss(text, opts = {}) {
     }
     if (node.type === 'decl') {
       /** @type {CssDecl} */
-      const d = { prop: node.prop.toLowerCase(), value: node.value, important: Boolean(node.important), line, column: node.source?.start?.column ?? 1, rule };
+      const d = { prop: node.prop.startsWith('--') ? node.prop : node.prop.toLowerCase(), value: node.value, important: Boolean(node.important), line, column: node.source?.start?.column ?? 1, rule };
       model.decls.push(d);
       if (rule) rule.decls.push(d);
       return;

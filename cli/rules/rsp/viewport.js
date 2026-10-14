@@ -1,4 +1,4 @@
-import { tailwindArbitrary, TEMPLATE_INCLUDE } from '../../src/rule-helpers.js';
+import { tailwindArbitrary, TEMPLATE_INCLUDE, isHiddenOrDecorative } from '../../src/rule-helpers.js';
 
 /** @type {import('../types.js').Rule} */
 export default {
@@ -25,7 +25,8 @@ export default {
           const tw = tailwindArbitrary(c);
           if (tw && tw.variants.length === 0 && /^(w|min-w)$/.test(tw.utility)) {
             const n = /^(\d+)px$/.exec(tw.value);
-            if (n && Number(n[1]) > 360) out.push({ file: doc.file, line: el.line, message: `Fixed width ${c} exceeds a 320px viewport.`, remediation: 'Use max-w-[...] with w-full, or a responsive variant (md:w-[...]).', confidence: 0.55 });
+            // Hidden below a breakpoint (hidden lg:block) or decorative (aria-hidden) boxes cannot overflow the small viewport's content.
+            if (n && Number(n[1]) > 360 && !isHiddenOrDecorative(el)) out.push({ file: doc.file, line: el.line, message: `Fixed width ${c} exceeds a 320px viewport.`, remediation: 'Use max-w-[...] with w-full, or a responsive variant (md:w-[...]).', confidence: 0.55 });
           }
         }
       }

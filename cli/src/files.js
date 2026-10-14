@@ -72,6 +72,8 @@ export function listFiles(root, opts = {}) {
   const walk = (rel, inherited) => {
     const abs = rel ? join(root, rel) : root;
     let rules = inherited;
+    // A nested folder with its own LICENSE and no package.json is a copied-in third-party library.
+    if (rel && !existsSync(join(abs, 'package.json')) && readdirSync(abs).some((n) => /^(licen[cs]e|copying)(\.\w+)?$/i.test(n))) return;
     const gi = join(abs, '.gitignore');
     if (existsSync(gi)) rules = [...inherited, ...parseGitignore(readFileSync(gi, 'utf8'), rel)];
     for (const name of readdirSync(abs).sort()) {

@@ -171,6 +171,18 @@ export function visualTraits(el, classes) {
 }
 
 /** Files that render images (Open Graph cards via satori/next/og), not interface. */
+/**
+ * Is the element (or an ancestor) hidden at the smallest viewport or marked decorative?
+ * Covers aria-hidden="true", an unprefixed Tailwind hidden/invisible class, and the hidden attribute.
+ * @param {Element} el
+ */
+export function isHiddenOrDecorative(el) {
+  for (let e = /** @type {Element | null} */ (el); e; e = e.parent) {
+    if (e.attrs['aria-hidden']?.value === 'true' || 'hidden' in e.attrs || e.classes.some((c) => c === 'hidden' || c === 'invisible')) return true;
+  }
+  return false;
+}
+
 /** Server-side template includes (Hugo, Go, Jinja, Liquid, Nunjucks, Handlebars, PHP): the page is assembled from other files. */
 export const TEMPLATE_INCLUDE = /\{\{-?\s*(block|partial|template|include|yield)\b|\{%-?\s*(include|extends|block|render)\b|\{\{>\s*[\w/]|<\?php[^?]*\b(include|require)(_once)?\b/;
 

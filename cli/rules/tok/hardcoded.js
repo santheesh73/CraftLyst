@@ -8,6 +8,15 @@ const STEP = '(\\d+|[0-9]*x?[sml]|xs|sm|base|md|lg|\\d*xl)$';
 const STEP_SPACE = new RegExp(`(^--|-)(space|spacing|gap|gutter|size)-${STEP}`);
 const STEP_SIZE = new RegExp(`(^--|-)(font-size|text|fs|step|type)-(${STEP.slice(0, -1)}|h[1-6]|body|small|lead|display)$`);
 
+/**
+ * Inside an aria-hidden subtree (background glows, illustrations positioned with one-off offsets)?
+ * @param {import('../types.js').Element} el
+ */
+const decorative = (el) => {
+  for (let e = /** @type {import('../types.js').Element | null} */ (el); e; e = e.parent) if (e.attrs['aria-hidden']?.value === 'true') return true;
+  return false;
+};
+
 /** @type {import('../types.js').Rule} */
 export default {
   id: 'tok/hardcoded',
@@ -87,9 +96,13 @@ export default {
     };
     for (const doc of ctx.docs) {
       if (TOKEN_FILE.test(doc.file) || doc.isTest || doc.isFixture || OG_IMAGE_FILE.test(doc.file) || SYNTAX_THEME_FILE.test(doc.file) || /(^|\/)print\.(css|scss)$/.test(doc.file)) continue;
+      // Inline SVG artwork (logos, illustrations) carries its own fill and stroke colors.
+      /** @type {[number, number][]} */
+      const svgs = doc.all.filter((e) => e.tag === 'svg').map((e) => [e.line, e.endLine]);
+      const inSvg = (/** @type {number} */ line) => svgs.some(([a, b]) => line >= a && line <= b);
       for (const css of doc.css) {
         for (const d of css.decls) {
-          if (d.prop.startsWith('--')) continue;
+          if (d.prop.startsWith('--') || inSvg(d.line)) continue;
           if (d.rule && /^@(theme|font-face|property|keyframes)/.test(d.rule.selector)) continue;
           if (d.rule?.media.some((m) => /print/.test(m))) continue;
           const { flagged, skipped } = literals(d.prop, d.value, doc.file);
@@ -104,6 +117,7 @@ export default {
         }
       }
       for (const el of doc.all) {
+        if (inSvg(el.line) || decorative(el)) continue;
         for (const d of el.styleDecls) {
           if (d.prop.startsWith('--')) continue;
           const { flagged, skipped } = literals(d.prop, d.value, doc.file);
