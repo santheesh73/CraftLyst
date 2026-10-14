@@ -5,3 +5,4 @@ coverage/
 evals/triggers/.work/
 *.log
 .DS_Store
+evals/harness/runs/
