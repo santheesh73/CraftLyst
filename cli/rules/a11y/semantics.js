@@ -52,7 +52,8 @@ export default {
         const html = doc.all.find((e) => e.tag === 'html');
         if (html && !('lang' in html.attrs)) out.push({ file: doc.file, line: html.line, message: '<html> has no lang attribute.', remediation: 'Add lang (for example lang="en") so assistive technology uses the right pronunciation.', confidence: 0.95 });
         // An SPA shell (<div id="root"></div> and nothing else) gets its landmarks from the app.
-        const shell = doc.all.some((e) => /^(root|app|__next|__nuxt|svelte|q-app)$/.test(e.attrs.id?.value ?? '') && e.children.length === 0) || /%[\w.]+%|<!--\s*(app-html|ssr-outlet)\s*-->/.test(doc.source) || TEMPLATE_INCLUDE.test(doc.source)
+        // The mount point may hold a loading placeholder that the app replaces.
+        const shell = doc.all.some((e) => /^(root|app|__next|__nuxt|svelte|q-app)$/.test(e.attrs.id?.value ?? '') && (e.children.length === 0 || doc.all.some((x) => x.tag === 'script' && ('src' in x.attrs || x.attrs.type?.value === 'module')))) || /%[\w.]+%|<!--\s*(app-html|ssr-outlet)\s*-->/.test(doc.source) || TEMPLATE_INCLUDE.test(doc.source)
           // A body holding only scripts is filled in by an app (a CMS admin page, a widget host).
           || (doc.all.some((e) => e.tag === 'body') && doc.all.filter((e) => e.parent?.tag === 'body').every((e) => /^(script|noscript|template)$/.test(e.tag)));
         if (doc.kind === 'html' && !shell && !doc.all.some((e) => e.tag === 'main' || e.attrs.role?.value === 'main')) {

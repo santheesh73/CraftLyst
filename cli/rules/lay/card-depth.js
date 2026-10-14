@@ -24,10 +24,10 @@ export default {
       /** @type {Map<import('../types.js').Element, boolean>} */
       const card = new Map();
       // Controls (buttons, links, inputs) have borders and padding but are not containers.
-      // Inline badges are not containers, and menus, popovers, tooltips, and dialogs float above the card they sit in.
+      // Inline badges and media (a rounded, shadowed <img>) are not containers, and menus, popovers, tooltips, and dialogs float above the card they sit in.
       for (const el of doc.all) {
         const name = el.tag.split('.').pop() ?? '';
-        const control = /^(button|a|input|select|textarea|label|summary|span|small|em|strong|code|kbd|mark|abbr|td|th|dialog|Badge)$/.test(name) || (/^[A-Z]/.test(name) && INTERACTIVE_COMPONENT.test(name)) || /^motion\.(button|a|input)$/.test(el.tag);
+        const control = /^(button|a|input|select|textarea|label|summary|span|small|em|strong|code|kbd|mark|abbr|td|th|dialog|img|picture|video|iframe|svg|canvas|Badge|Image|Img|Avatar)$/.test(name) || (/^[A-Z]/.test(name) && INTERACTIVE_COMPONENT.test(name)) || /^motion\.(button|a|input)$/.test(el.tag);
         card.set(el, !control && !isOverlay(el) && isCardLike(visualTraits(el, ctx.classes)));
       }
       for (const el of doc.all) {

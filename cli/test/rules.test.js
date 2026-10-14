@@ -100,6 +100,8 @@ test('false-positive cases from open-source repos stay quiet', () => {
   assert.deepEqual(lintFiles({ 'Img.astro': '---\nconst a = 1;\n---\n{a ? <img alt="" src="x" /> : (\n  /* the native <img /> typing is strict */\n  null\n)}' }, ['a11y/alt']), []);
   assert.deepEqual(lintFiles({ 'theme.css': `.a{color:#123}${'.b{color:#456}'.repeat(2000)}` }, ['tok/hardcoded', 'a11y/contrast']).filter((f) => f.file === 'theme.css'), []);
   assert.deepEqual(lintFiles({ 'g.jsx': 'export const G = ({ focus }) => <div role="group" onClick={focus}><input /></div>;' }, ['a11y/semantics']), []);
+  assert.deepEqual(lintFiles({ 'index.html': PAGE('<div class="card"><img class="card" src="a.png" alt="A"></div>'), 'a.css': CARD_CSS }, ['lay/card-depth']), []);
+  assert.deepEqual(lintFiles({ 'index.html': '<!doctype html><html lang="en"><head><meta name="viewport" content="width=device-width"><title>t</title></head><body><div id="app"><div id="loading">Loading</div></div><script type="module" src="/src/main.js"></script></body></html>' }, ['a11y/semantics']), []);
   // Custom property names are case-sensitive.
   assert.deepEqual(lintFiles({ 'a.css': '.a { --text-GRAD: 1; } .b { font-weight: var(--text-GRAD); }' }, ['tok/unknown-var']), []);
 });
