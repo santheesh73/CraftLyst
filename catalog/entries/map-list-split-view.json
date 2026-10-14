@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "1.0",
+  "id": "map-list-split-view",
+  "title": "Map and list split view",
+  "category": "specialized-product",
+  "description": "A location-browsing layout with a result list and an interactive map side by side, kept in sync: hovering or focusing a list item highlights its marker, selecting a marker scrolls to and highlights the item, and moving the map can update the list (\"search this area\").",
+  "intent": "Let users compare places both by details and by location without switching views.",
+  "tags": [
+    "map",
+    "list",
+    "location",
+    "split-view",
+    "listings",
+    "store-locator",
+    "real-estate",
+    "travel"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "list and map share one selection state",
+    "markers numbered or labeled to match list items",
+    "explicit \"search this area\" instead of auto-refresh on every pan",
+    "list is the accessible primary view; the map is a supplement",
+    "clustered markers at low zoom"
+  ],
+  "axes": {
+    "density": [
+      "balanced",
+      "compact"
+    ],
+    "temperature": [
+      "neutral",
+      "warm"
+    ],
+    "formality": [
+      "approachable"
+    ],
+    "motion": [
+      "subtle"
+    ],
+    "imagery": [
+      "imagery-led",
+      "balanced"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Selection syncs both ways; map pan/zoom never steals page scroll on touch (two-finger or explicit activate); filters apply to both views.",
+  "responsive": "On narrow screens, a List/Map segmented toggle replaces the split; selected item shows as a bottom card over the map.",
+  "accessibility": "Everything available on the map is also in the list (address, distance); map has a label and is skippable; markers that are focusable have names matching list items; do not trap keyboard focus in the map.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Requires a map provider whose license and API terms you must check separately.",
+    "Thousands of markers need clustering and server-side bounds queries."
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0",
+  "id": "empty-state-first-workspace",
+  "title": "Empty-state-first workspace",
+  "category": "page-composition",
+  "description": "A workspace screen designed from its empty state outward: before any data exists it explains what the area is for, offers the one action that creates the first item, and optionally an import or sample data path. The same layout then fills with content without a jarring switch.",
+  "intent": "Make the first visit to an empty area useful and show the user how to fill it, instead of a blank table or a decorative illustration.",
+  "tags": [
+    "empty-state",
+    "first-run",
+    "zero-data",
+    "workspace",
+    "onboarding",
+    "saas"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "empty state uses the real layout skeleton of the filled state",
+    "one sentence on purpose, one primary action, one secondary path (import or sample)",
+    "distinct states for empty, no results for filter, and error",
+    "illustration optional and never the main message"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "temperature": [
+      "neutral",
+      "warm"
+    ],
+    "formality": [
+      "approachable"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "imagery": [
+      "type-led",
+      "balanced"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Primary action opens creation in place; importing shows progress and lands on the filled view; \"no results\" offers to clear filters rather than create.",
+  "responsive": "Message and actions stay centered in the content region, not the viewport; on narrow screens actions stack full width.",
+  "accessibility": "Empty message is real text in the content region, reachable by screen readers after the heading; decorative illustrations have empty alt; focus moves to the created item after creation.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Requires designing three distinct empty states; a single generic one is the common failure.",
+    "Sample data must be clearly labeled and removable."
+  ]
+}

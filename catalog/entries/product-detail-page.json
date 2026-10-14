@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "id": "product-detail-page",
+  "title": "Product detail page",
+  "category": "page-composition",
+  "description": "A commerce product page: media gallery and purchase panel side by side above the fold, then details, specifications, delivery and returns, and reviews. The purchase panel holds price, variant selection, stock status, quantity, and the add-to-cart action, and stays reachable while scrolling on wide screens.",
+  "intent": "Give a shopper everything needed to decide and buy, with the price, options, and delivery terms visible before they commit.",
+  "tags": [
+    "ecommerce",
+    "product",
+    "shop",
+    "pdp",
+    "gallery",
+    "checkout",
+    "retail"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "gallery and purchase panel in a two-column split",
+    "price, stock, and delivery estimate next to the buy action",
+    "sticky purchase panel on wide screens only",
+    "specification table and returns policy as real content, not tooltips",
+    "reviews summarized with distribution, then individual reviews"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "temperature": [
+      "warm",
+      "neutral"
+    ],
+    "formality": [
+      "approachable"
+    ],
+    "motion": [
+      "subtle"
+    ],
+    "shape": [
+      "soft",
+      "mixed"
+    ],
+    "imagery": [
+      "imagery-led",
+      "balanced"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Variant changes update price, stock, media, and URL; add to cart gives inline confirmation and keeps the user on the page; gallery supports keyboard and swipe; zoom is optional and dismissible.",
+  "responsive": "Single column on narrow screens with gallery first and a compact sticky buy bar at the bottom that never covers content or focus; sections below become disclosures.",
+  "accessibility": "Gallery thumbnails are buttons with labels; selected variant is exposed (aria-pressed or radio semantics); stock and price changes announced politely; sticky bar leaves room so focused elements are not obscured (WCAG 2.4.11).",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Assumes real product photography; illustration placeholders mislead buyers.",
+    "Review data must come from the product; never fabricate ratings."
+  ]
+}

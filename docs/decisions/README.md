@@ -18,3 +18,4 @@ Each ADR records one decision: context, decision, consequences. Status is one of
 | [0011](0011-minimal-cli-in-v0-1.md) | Minimal CLI in v0.1 | accepted |
 | [0012](0012-loopback-for-rendered-checks.md) | Loopback connections for rendered checks | accepted |
 | [0013](0013-tier2-dev-dependencies.md) | Playwright and axe-core as dev dependencies | accepted |
+| [0014](0014-catalog-index-format.md) | Catalog index format and offline search | accepted |

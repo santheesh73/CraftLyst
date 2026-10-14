@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0",
+  "id": "ecommerce-variant-picker",
+  "title": "E-commerce variant picker",
+  "category": "specialized-product",
+  "description": "A picker for product options (size, color, material) that shows all values, marks unavailable combinations without hiding them, explains why (out of stock, not offered), updates price, image, and stock on selection, and includes a size guide link next to sizes.",
+  "intent": "Help shoppers pick a valid, in-stock combination and understand unavailable ones before adding to cart.",
+  "tags": [
+    "ecommerce",
+    "variants",
+    "options",
+    "size",
+    "color",
+    "swatches",
+    "product",
+    "retail"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "one radio group per option with visible labels",
+    "color swatches carry the color name in text",
+    "unavailable values shown as disabled with a reason, not removed",
+    "selected values summarized near the add-to-cart button",
+    "size guide link adjacent to the size group"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "temperature": [
+      "warm",
+      "neutral"
+    ],
+    "formality": [
+      "approachable"
+    ],
+    "motion": [
+      "subtle",
+      "still"
+    ],
+    "shape": [
+      "soft",
+      "mixed"
+    ],
+    "imagery": [
+      "imagery-led",
+      "balanced"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Selecting a value updates other groups' availability; add to cart without a full selection points to the missing option instead of failing silently; selection persists in the URL.",
+  "responsive": "Options wrap onto multiple rows; long option lists (many sizes) become a select on narrow screens.",
+  "accessibility": "fieldset/legend per option with native radios; swatches have text names and meet non-text contrast for the selected ring; unavailable values exposed as disabled or with a description, plus an availability message.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Products with many option dimensions (more than three) need a configurator instead.",
+    "Real-time stock requires backend support; stale stock data erodes trust."
+  ]
+}

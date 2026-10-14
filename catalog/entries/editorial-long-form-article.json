@@ -1,0 +1,76 @@
+{
+  "schemaVersion": "1.0",
+  "id": "editorial-long-form-article",
+  "title": "Editorial long-form article",
+  "category": "page-composition",
+  "description": "A reading page for essays, reports, and case studies: one centered text column held to a 60-72ch measure, a strong headline block with standfirst and byline, pull quotes and figures that break out wider than the text column, and footnotes or sidenotes that never interrupt the line of reading.",
+  "intent": "Make long text comfortable to read start to finish and give figures and quotes room without breaking the reading rhythm.",
+  "tags": [
+    "article",
+    "blog",
+    "essay",
+    "reading",
+    "typography",
+    "long-form",
+    "case-study"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "single text column with 60-72ch measure",
+    "named grid lines for text, wide, and full-bleed figures",
+    "headline block: kicker, title, standfirst, byline, date",
+    "pull quotes set larger in the display face, never repeated body text",
+    "sidenotes in the margin at wide widths, inline footnotes on narrow"
+  ],
+  "axes": {
+    "density": [
+      "airy",
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "voice": [
+      "editorial-serif",
+      "humanist"
+    ],
+    "imagery": [
+      "type-led",
+      "balanced"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Mostly static. Optional reading-progress indicator and in-page anchors for headings; footnote references jump to the note and back.",
+  "responsive": "Grid collapses to one column with side padding at narrow widths; wide figures become full width; sidenotes turn into numbered notes after the paragraph.",
+  "accessibility": "One h1 and an ordered heading outline; body text at least 16px with 1.5+ line height; figures use figure/figcaption; footnote links have back-links with accessible names; images have alt text written for the argument they support.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Wrong for scannable reference docs; use the docs layout instead.",
+    "Sidenotes need enough viewport width; plan the narrow fallback first.",
+    "Depends on real long-form content; placeholder text hides measure and rhythm problems."
+  ]
+}

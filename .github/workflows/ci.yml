@@ -34,6 +34,8 @@ jobs:
         run: npm test
       - name: Validate schemas, SKILL.md frontmatter and line count
         run: npm run validate
+      - name: Catalog validation, license gate, index and NOTICE.md up to date
+        run: npm run catalog
       - name: Build package and verify checksums
         run: |
           npm run package

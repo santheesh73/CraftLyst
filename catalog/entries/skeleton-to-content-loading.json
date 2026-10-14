@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "1.0",
+  "id": "skeleton-to-content-loading",
+  "title": "Skeleton-to-content loading",
+  "category": "motion",
+  "description": "Loading placeholders that mirror the final layout (same heights, columns, and spacing) for content expected within a couple of seconds, replaced by real content without layout shift. A subtle shimmer or pulse is optional and disabled under reduced motion; long or failed loads switch to explicit progress or error states.",
+  "intent": "Make loading feel predictable and avoid layout shift, while still telling the truth when loading is slow or fails.",
+  "tags": [
+    "skeleton",
+    "loading",
+    "placeholder",
+    "layout-shift",
+    "cls",
+    "shimmer",
+    "performance"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "skeleton geometry matches the loaded layout to avoid layout shift",
+    "shown only after a short delay (about 200-300ms) to avoid flashes",
+    "switch to a progress message after a few seconds",
+    "error state replaces skeleton with retry",
+    "pulse or shimmer disabled under reduced motion"
+  ],
+  "axes": {
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Purely presentational while loading; interactive controls that do not depend on the data stay usable; content swaps in place.",
+  "responsive": "Skeleton follows the same responsive rules as the content it stands in for.",
+  "accessibility": "Container has aria-busy=\"true\" while loading; skeleton blocks are hidden from assistive technology; completion or failure announced politely; no infinite animation under reduced motion.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Misleading when the final layout is unknown; use a simple spinner with text then.",
+    "Skeletons for slow loads (more than about 10s) frustrate; show real progress instead."
+  ]
+}

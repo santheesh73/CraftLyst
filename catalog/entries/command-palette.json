@@ -1,0 +1,77 @@
+{
+  "schemaVersion": "1.0",
+  "id": "command-palette",
+  "title": "Command palette",
+  "category": "component",
+  "description": "A keyboard-first overlay for finding and running actions or navigating: opens with a shortcut and a visible button, shows a search field with a filtered list of commands grouped by type, highlights matched characters, shows shortcuts, and supports nested steps for commands that take an argument.",
+  "intent": "Give frequent users a fast way to reach any action or page by typing, without hunting through menus.",
+  "tags": [
+    "command-palette",
+    "search",
+    "keyboard",
+    "shortcuts",
+    "navigation",
+    "productivity",
+    "combobox"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "modal dialog containing a combobox and listbox",
+    "grouped results (actions, pages, recent) with headings",
+    "fuzzy match with highlighted characters",
+    "keyboard shortcut hints aligned right",
+    "recent commands shown before typing"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "temperature": [
+      "neutral",
+      "cool"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ],
+    "motion": [
+      "subtle"
+    ],
+    "voice": [
+      "neutral-sans",
+      "technical-mono"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Opens with a platform-appropriate shortcut and a visible trigger; arrow keys move the active option, Enter runs it, Escape closes or steps back; focus returns to the trigger on close.",
+  "responsive": "Full-width sheet on narrow screens anchored to the top so the on-screen keyboard does not hide results; touch users get the visible trigger since shortcuts are unavailable.",
+  "accessibility": "Combobox with aria-controls and aria-activedescendant on the input; options have role option and group labels; result count announced politely; shortcut must not override browser or screen reader keys.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Discoverability is low for occasional users; it complements menus, it does not replace them.",
+    "Shortcut conflicts vary by keyboard layout and assistive technology."
+  ]
+}

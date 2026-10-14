@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "1.0",
+  "id": "scroll-linked-reveal-reduced-motion",
+  "title": "Scroll-linked reveal with reduced-motion fallback",
+  "category": "motion",
+  "description": "Content sections that ease into view as they enter the viewport (short opacity and translate change), implemented with CSS scroll-driven animations where supported and IntersectionObserver otherwise. Content is visible by default; the animation is an enhancement and is removed entirely under reduced motion.",
+  "intent": "Add a sense of sequence to a long marketing or story page without hiding content or making anyone wait.",
+  "tags": [
+    "scroll",
+    "reveal",
+    "animation",
+    "reduced-motion",
+    "landing",
+    "storytelling",
+    "intersection-observer"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "visible-by-default content; animation only adds polish",
+    "small distance (8-24px) and short duration (200-400ms)",
+    "runs once per element, never on scroll back",
+    "prefers-reduced-motion: no transform, content simply present",
+    "transform and opacity only, no layout properties"
+  ],
+  "axes": {
+    "motion": [
+      "subtle",
+      "expressive"
+    ],
+    "density": [
+      "airy",
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "playful"
+    ],
+    "imagery": [
+      "imagery-led",
+      "balanced"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Triggered by scroll position only; never delays links or form controls; no scroll hijacking or snapping.",
+  "responsive": "Same behavior at all sizes; reduce distance on small screens; skip entirely for content above the fold on load.",
+  "accessibility": "Content must never stay invisible if JavaScript fails or the observer never fires; honor prefers-reduced-motion; avoid animating text that users are trying to read (WCAG 2.3.3 for interaction-triggered motion).",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Scroll-driven CSS animations are not available in every browser; the observer fallback is required.",
+    "On dense app screens this adds noise; use it on narrative pages only."
+  ]
+}

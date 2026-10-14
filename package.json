@@ -16,9 +16,10 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "node scripts/run-tests.js",
     "validate": "node scripts/validate-schemas.js && node scripts/validate-skill.js",
+    "catalog": "node cli/bin/craft.js catalog validate && node scripts/check-licenses.js && node scripts/build-index.js --check && node scripts/generate-notice.js --check",
     "package": "node scripts/package.js",
     "verify-package": "node scripts/verify-package.js",
-    "check": "npm run lint && npm run typecheck && npm test && npm run validate",
+    "check": "npm run lint && npm run typecheck && npm test && npm run validate && npm run catalog",
     "coverage": "node --test --experimental-test-coverage cli/test/*.test.js",
     "triggers": "node evals/triggers/run.js"
   },

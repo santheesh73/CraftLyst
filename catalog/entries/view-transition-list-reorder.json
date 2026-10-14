@@ -1,0 +1,66 @@
+{
+  "schemaVersion": "1.0",
+  "id": "view-transition-list-reorder",
+  "title": "View-transition list reorder",
+  "category": "motion",
+  "description": "Animates items moving to their new positions when a list is sorted, filtered, or reordered, using the View Transitions API with per-item view-transition-name, so users can track where an item went. Falls back to an instant update without the API or under reduced motion.",
+  "intent": "Help users follow items through a sort or reorder instead of losing their place when the list jumps.",
+  "tags": [
+    "view-transitions",
+    "animation",
+    "reorder",
+    "sort",
+    "list",
+    "flip",
+    "reduced-motion"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "each item gets a stable, unique view-transition-name",
+    "duration 150-300ms with a standard easing",
+    "feature-detect document.startViewTransition and update instantly otherwise",
+    "reduced motion: skip the transition, keep the state change",
+    "keyboard focus stays on the same item after reorder"
+  ],
+  "axes": {
+    "motion": [
+      "subtle"
+    ],
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Triggered by sort, filter, or drag-and-drop reorder; during the transition the page remains interactive after it finishes (keep it short); rapid repeated sorts skip to the final state.",
+  "responsive": "Identical behavior across sizes; cap the number of named elements on long lists (only visible items) to keep it smooth on low-end devices.",
+  "accessibility": "Announce the new order or sort state in text (aria-sort or a live region); focus does not move unexpectedly; respects prefers-reduced-motion.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Same-document View Transitions are not supported in every browser; treat as progressive enhancement.",
+    "Hundreds of named elements in one transition degrade performance."
+  ]
+}

@@ -49,7 +49,7 @@ test('verify-package accepts the build', () => {
 
 test('package contains the skill and no repo-only files', () => {
   const files = list(join(dist, 'frontend-craft'));
-  for (const required of ['SKILL.md', 'LICENSE', 'LICENSE-docs', 'NOTICE.md', 'cli/bin/craft.js', 'cli/package.json', 'tokens/recipes.json', 'templates/DESIGN.md', 'cli/schemas/catalog-schema.json']) {
+  for (const required of ['SKILL.md', 'LICENSE', 'LICENSE-docs', 'NOTICE.md', 'cli/bin/craft.js', 'cli/package.json', 'tokens/recipes.json', 'templates/DESIGN.md', 'cli/schemas/catalog-schema.json', 'catalog/index/index.json', 'catalog/entries/data-table-sort-filter.json']) {
     assert.ok(files.includes(required), `missing ${required}`);
   }
   assert.equal(files.filter((f) => f.startsWith('references/')).length, 16);
@@ -90,6 +90,12 @@ test('extracted zip installs into a clean project and the CLI works there', () =
   assert.equal(sh(process.execPath, [craft, 'lint', '--cwd', app]).status, 0);
   assert.equal(sh(process.execPath, [craft, 'contrast', '--cwd', app]).status, 0);
   assert.equal(JSON.parse(sh(process.execPath, [craft, 'doctor', '--json', '--cwd', app]).stdout).environment.contract, true);
+  const found = sh(process.execPath, [craft, 'search', 'sortable data table', '--json', '--cwd', app]);
+  assert.equal(found.status, 0, found.stderr);
+  const card = JSON.parse(found.stdout).results[0];
+  assert.equal(card.id, 'data-table-sort-filter');
+  assert.ok(existsSync(card.file) && card.file.startsWith(skill), 'cards point into the installed skill');
+  assert.equal(sh(process.execPath, [craft, 'catalog', 'validate', '--cwd', app]).status, 0);
 });
 
 test('installer usage errors', () => {

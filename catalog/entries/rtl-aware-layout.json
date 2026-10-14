@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "1.0",
+  "id": "rtl-aware-layout",
+  "title": "RTL-aware layout with logical properties",
+  "category": "specialized-product",
+  "description": "A layout approach that works in both left-to-right and right-to-left languages: CSS logical properties (inline-start/end, block-start/end) instead of left/right, the dir attribute set per document and per embedded content, mirrored directional icons, and isolation of mixed-direction text such as names and numbers.",
+  "intent": "Ship one layout that reads correctly in Arabic, Hebrew, Persian, and Urdu as well as LTR languages, without a separate stylesheet.",
+  "tags": [
+    "rtl",
+    "i18n",
+    "internationalization",
+    "localization",
+    "logical-properties",
+    "bidi",
+    "arabic",
+    "hebrew"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "margin-inline, padding-inline, inset-inline, text-align: start everywhere",
+    "dir on html plus dir=\"auto\" or bdi for user-generated content",
+    "directional icons (arrows, chevrons) mirrored; others (play, check) not",
+    "numbers, code, and phone numbers isolated",
+    "layouts tested in both directions in CI"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced",
+      "airy"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Swipe and carousel directions follow reading direction; keyboard arrows in horizontal widgets follow visual direction.",
+  "responsive": "Logical properties apply at all breakpoints; check that off-canvas drawers open from the inline-start side.",
+  "accessibility": "Correct lang and dir attributes so screen readers pick the right voice; do not mirror text by transform; ensure focus order follows visual order in both directions.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Third-party widgets may hardcode left/right and need overrides.",
+    "Fonts must cover the target scripts; typographic scale often needs adjusting for Arabic script."
+  ]
+}
