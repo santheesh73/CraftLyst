@@ -18,8 +18,8 @@ This project is built in gated phases. Nothing below is claimed beyond what is m
 
 | Phase | Scope | State |
 |---|---|---|
-| P0 Foundation | plan, ADRs, schemas, CI skeleton | in progress |
-| P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | not started |
+| P0 Foundation | plan, ADRs, schemas, CI skeleton | done (CI green on Node 20 and 22) |
+| P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | built; waiting on the human gate (use on 3 real projects) |
 | P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | not started |
 | P3 Evaluation (v0.3) | briefs, rubric, paired harness | not started |
 | P4 Catalog (v0.4) | pattern catalog and offline search | not started |
@@ -27,6 +27,17 @@ This project is built in gated phases. Nothing below is claimed beyond what is m
 | P6 1.0 | other-agent adapters, release | not started |
 
 See [PLAN.md](PLAN.md) for gates and [docs/decisions/](docs/decisions/README.md) for ADRs.
+
+## Install (v0.1)
+
+```sh
+npm ci && npm run package
+node scripts/install-claude-code.js --user     # or --project <dir>; add --dry-run to preview
+```
+
+See [docs/installation.md](docs/installation.md) and [docs/usage.md](docs/usage.md).
+v0.1 ships the skill, templates, and a minimal CLI (`doctor`, `init`, `lint` with the
+contract rule only, `contrast`). The full Slop Lint rule set and rendered checks arrive in v0.2.
 
 ## Development
 
