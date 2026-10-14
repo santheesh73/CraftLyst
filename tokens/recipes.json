@@ -1,0 +1,306 @@
+{
+  "schemaVersion": "1.0",
+  "precedence": ["density", "contrast", "shape", "motion", "voice", "formality", "imagery", "temperature"],
+  "axes": {
+    "density": {
+      "label": "Density",
+      "question": "How much information must fit on one screen, and how often is it scanned?",
+      "poles": ["compact", "airy"],
+      "positions": {
+        "compact": {
+          "summary": "Tight rhythm for scanning and comparing many items at once.",
+          "fitsWhen": ["data tables and dashboards used daily", "expert users who scan, not read", "tools where switching screens is costly"],
+          "tokens": {
+            "spaceBaseUnit": { "min": 4, "max": 4, "unit": "px" },
+            "spaceScale": [0, 2, 4, 6, 8, 12, 16, 24, 32, 48],
+            "sectionSpacing": { "min": 24, "max": 48, "unit": "px" },
+            "controlHeight": { "min": 32, "max": 40, "unit": "px" },
+            "bodySize": { "min": 13, "max": 15, "unit": "px" },
+            "lineHeight": { "min": 1.35, "max": 1.5, "unit": "ratio" },
+            "typeScaleRatio": { "min": 1.125, "max": 1.2, "unit": "ratio" },
+            "measure": { "min": 60, "max": 90, "unit": "ch" }
+          },
+          "avoid": ["touch targets below 24px", "hero-sized headings inside work surfaces"]
+        },
+        "balanced": {
+          "summary": "Comfortable reading and doing; the default for most products.",
+          "fitsWhen": ["mixed reading and task flows", "general consumer and SaaS products"],
+          "tokens": {
+            "spaceBaseUnit": { "min": 4, "max": 8, "unit": "px" },
+            "spaceScale": [0, 4, 8, 12, 16, 24, 32, 48, 64, 96],
+            "sectionSpacing": { "min": 48, "max": 96, "unit": "px" },
+            "controlHeight": { "min": 40, "max": 44, "unit": "px" },
+            "bodySize": { "min": 15, "max": 17, "unit": "px" },
+            "lineHeight": { "min": 1.45, "max": 1.6, "unit": "ratio" },
+            "typeScaleRatio": { "min": 1.2, "max": 1.25, "unit": "ratio" },
+            "measure": { "min": 55, "max": 75, "unit": "ch" }
+          }
+        },
+        "airy": {
+          "summary": "Generous space that slows the reader down and gives each element weight.",
+          "fitsWhen": ["editorial and long-form reading", "portfolios and brand pages with few items", "calm, low-frequency use"],
+          "tokens": {
+            "spaceBaseUnit": { "min": 8, "max": 8, "unit": "px" },
+            "spaceScale": [0, 8, 16, 24, 32, 48, 64, 96, 128, 160],
+            "sectionSpacing": { "min": 96, "max": 160, "unit": "px" },
+            "controlHeight": { "min": 44, "max": 52, "unit": "px" },
+            "bodySize": { "min": 17, "max": 20, "unit": "px" },
+            "lineHeight": { "min": 1.55, "max": 1.75, "unit": "ratio" },
+            "typeScaleRatio": { "min": 1.25, "max": 1.414, "unit": "ratio" },
+            "measure": { "min": 50, "max": 70, "unit": "ch" }
+          },
+          "avoid": ["airy spacing inside data tables", "padding so large that the first screen shows no content"]
+        }
+      }
+    },
+    "temperature": {
+      "label": "Temperature",
+      "question": "Should the interface feel warm and human, or cool and precise?",
+      "poles": ["warm", "cool"],
+      "positions": {
+        "warm": {
+          "summary": "Neutrals tinted toward red-yellow; feels human, hospitable, handmade.",
+          "fitsWhen": ["food, hospitality, community, care", "products that should feel personal"],
+          "tokens": {
+            "neutralHue": { "min": 30, "max": 80, "unit": "deg" },
+            "neutralChroma": { "min": 0.005, "max": 0.02 },
+            "accentChroma": { "min": 0.08, "max": 0.18 }
+          }
+        },
+        "neutral": {
+          "summary": "Near-gray neutrals that let content and one accent carry the color.",
+          "fitsWhen": ["content-first products", "products whose brand color must dominate"],
+          "tokens": {
+            "neutralHue": { "min": 0, "max": 360, "unit": "deg" },
+            "neutralChroma": { "min": 0, "max": 0.006 },
+            "accentChroma": { "min": 0.08, "max": 0.2 }
+          }
+        },
+        "cool": {
+          "summary": "Neutrals tinted toward blue-green; feels precise, technical, calm.",
+          "fitsWhen": ["developer tools, finance, health data", "products that must read as exact"],
+          "tokens": {
+            "neutralHue": { "min": 200, "max": 265, "unit": "deg" },
+            "neutralChroma": { "min": 0.005, "max": 0.02 },
+            "accentChroma": { "min": 0.06, "max": 0.16 }
+          }
+        }
+      }
+    },
+    "formality": {
+      "label": "Formality",
+      "question": "How serious is the context: play, everyday use, or high stakes?",
+      "poles": ["playful", "formal"],
+      "positions": {
+        "playful": {
+          "summary": "Loose rules, bigger contrasts in size, room for surprise.",
+          "fitsWhen": ["games, kids, creative tools, events", "brands that want personality first"],
+          "tokens": {
+            "typeScaleRatio": { "min": 1.333, "max": 1.618, "unit": "ratio" },
+            "headingWeight": { "min": 600, "max": 900 },
+            "caseStyle": "sentence or playful mixed case",
+            "accentCount": { "min": 2, "max": 3, "unit": "count" }
+          },
+          "avoid": ["playfulness in error, payment, or legal flows"]
+        },
+        "approachable": {
+          "summary": "Friendly but orderly; plain language and clear structure.",
+          "fitsWhen": ["consumer apps, education, most SaaS"],
+          "tokens": {
+            "typeScaleRatio": { "min": 1.2, "max": 1.333, "unit": "ratio" },
+            "headingWeight": { "min": 600, "max": 700 },
+            "caseStyle": "sentence case",
+            "accentCount": { "min": 1, "max": 2, "unit": "count" }
+          }
+        },
+        "formal": {
+          "summary": "Restrained, consistent, conservative; trust through order.",
+          "fitsWhen": ["finance, legal, government, healthcare", "enterprise admin and compliance"],
+          "tokens": {
+            "typeScaleRatio": { "min": 1.125, "max": 1.25, "unit": "ratio" },
+            "headingWeight": { "min": 500, "max": 650 },
+            "caseStyle": "sentence case; no all-caps body text",
+            "accentCount": { "min": 1, "max": 1, "unit": "count" }
+          }
+        }
+      }
+    },
+    "motion": {
+      "label": "Motion energy",
+      "question": "What should motion do here: nothing, explain changes, or create an experience?",
+      "poles": ["still", "expressive"],
+      "positions": {
+        "still": {
+          "summary": "State changes are instant or near-instant; motion only for feedback.",
+          "fitsWhen": ["high-frequency tools", "audiences sensitive to motion", "low-power devices"],
+          "tokens": {
+            "durationMs": { "fast": { "min": 0, "max": 100, "unit": "ms" }, "base": { "min": 80, "max": 150, "unit": "ms" }, "slow": { "min": 150, "max": 200, "unit": "ms" } },
+            "easing": "ease-out",
+            "motionDistancePx": { "min": 0, "max": 4, "unit": "px" },
+            "motionUses": ["focus and press feedback", "loading indicators"]
+          }
+        },
+        "subtle": {
+          "summary": "Motion explains where things come from and go; never decorates.",
+          "fitsWhen": ["most products", "overlays, disclosures, and navigation transitions"],
+          "tokens": {
+            "durationMs": { "fast": { "min": 100, "max": 150, "unit": "ms" }, "base": { "min": 180, "max": 250, "unit": "ms" }, "slow": { "min": 280, "max": 400, "unit": "ms" } },
+            "easing": "cubic-bezier(0.2, 0, 0, 1)",
+            "motionDistancePx": { "min": 4, "max": 16, "unit": "px" },
+            "motionUses": ["overlay enter and exit", "disclosure", "list reorder", "page transitions"]
+          }
+        },
+        "expressive": {
+          "summary": "Motion is part of the identity: choreography, scroll-linked scenes, playful physics.",
+          "fitsWhen": ["launch and brand pages", "immersive and 3D experiences", "creative portfolios"],
+          "tokens": {
+            "durationMs": { "fast": { "min": 150, "max": 250, "unit": "ms" }, "base": { "min": 300, "max": 600, "unit": "ms" }, "slow": { "min": 600, "max": 1200, "unit": "ms" } },
+            "easing": "custom curves or springs, defined as tokens",
+            "motionDistancePx": { "min": 16, "max": 120, "unit": "px" },
+            "motionUses": ["entrances", "scroll-linked narrative", "signature interactions"]
+          },
+          "avoid": ["autoplay or parallax without a prefers-reduced-motion path", "motion that delays reaching content"]
+        }
+      }
+    },
+    "shape": {
+      "label": "Shape language",
+      "question": "Should edges read as exact and structural, or soft and friendly?",
+      "poles": ["sharp", "soft"],
+      "positions": {
+        "sharp": {
+          "summary": "Square or nearly square corners; structure comes from alignment and lines.",
+          "fitsWhen": ["editorial, technical, architectural brands", "dense grids where radii waste space"],
+          "tokens": {
+            "radius": { "control": { "min": 0, "max": 2, "unit": "px" }, "container": { "min": 0, "max": 4, "unit": "px" } },
+            "borderWidth": { "min": 1, "max": 2, "unit": "px" }
+          }
+        },
+        "mixed": {
+          "summary": "Small radii on controls, near-square containers; reads as precise but not cold.",
+          "fitsWhen": ["most products", "products that pair data with friendly flows"],
+          "tokens": {
+            "radius": { "control": { "min": 4, "max": 8, "unit": "px" }, "container": { "min": 6, "max": 12, "unit": "px" } },
+            "borderWidth": { "min": 1, "max": 1, "unit": "px" }
+          }
+        },
+        "soft": {
+          "summary": "Generous radii and rounded forms; reads as friendly and tactile.",
+          "fitsWhen": ["consumer, kids, wellness", "touch-first mobile apps"],
+          "tokens": {
+            "radius": { "control": { "min": 10, "max": 9999, "unit": "px" }, "container": { "min": 16, "max": 28, "unit": "px" } },
+            "borderWidth": { "min": 1, "max": 2, "unit": "px" }
+          },
+          "avoid": ["the same large radius plus shadow on every element (vis/default-stack)"]
+        }
+      }
+    },
+    "contrast": {
+      "label": "Contrast",
+      "question": "How much visual drama between elements: quiet and even, or bold and stark?",
+      "poles": ["low", "high"],
+      "positions": {
+        "low": {
+          "summary": "Quiet surfaces and close tones; hierarchy from type and space. Text still meets WCAG AA.",
+          "fitsWhen": ["long sessions", "calm, focused tools"],
+          "tokens": {
+            "shadowPolicy": "none or hairline borders",
+            "elevationLevels": { "min": 1, "max": 2, "unit": "count" },
+            "surfaceSteps": { "min": 2, "max": 3, "unit": "count" },
+            "headingWeight": { "min": 500, "max": 600 }
+          }
+        },
+        "medium": {
+          "summary": "Clear separation of layers with restrained depth.",
+          "fitsWhen": ["most products"],
+          "tokens": {
+            "shadowPolicy": "subtle shadows for overlays only; borders for structure",
+            "elevationLevels": { "min": 2, "max": 3, "unit": "count" },
+            "surfaceSteps": { "min": 3, "max": 4, "unit": "count" },
+            "headingWeight": { "min": 600, "max": 700 }
+          }
+        },
+        "high": {
+          "summary": "Stark value contrast, heavy weights, big scale jumps; confident and loud.",
+          "fitsWhen": ["brand and campaign pages", "posters, events, bold editorial"],
+          "tokens": {
+            "shadowPolicy": "hard edges or none; contrast from color blocks",
+            "elevationLevels": { "min": 1, "max": 2, "unit": "count" },
+            "surfaceSteps": { "min": 2, "max": 3, "unit": "count" },
+            "headingWeight": { "min": 700, "max": 900 },
+            "displaySize": { "min": 48, "max": 120, "unit": "px" }
+          }
+        }
+      }
+    },
+    "voice": {
+      "label": "Typographic voice",
+      "question": "What should the letterforms say before anyone reads the words?",
+      "poles": ["neutral", "characterful"],
+      "positions": {
+        "neutral-sans": {
+          "summary": "Invisible type that gets out of the way.",
+          "fitsWhen": ["utilities and data-heavy tools", "products where the content is the brand"],
+          "tokens": { "fontCategories": ["system UI stack or neo-grotesque sans"], "letterSpacingHeadings": { "min": -0.02, "max": 0 } }
+        },
+        "humanist": {
+          "summary": "Open, calligraphic sans; warm and readable at small sizes.",
+          "fitsWhen": ["education, health, community"],
+          "tokens": { "fontCategories": ["humanist sans"], "letterSpacingHeadings": { "min": -0.01, "max": 0 } }
+        },
+        "geometric": {
+          "summary": "Circles and straight lines; modern, constructed, optimistic.",
+          "fitsWhen": ["product launches, design tools, modern brands"],
+          "tokens": { "fontCategories": ["geometric sans"], "letterSpacingHeadings": { "min": -0.03, "max": -0.01 } }
+        },
+        "editorial-serif": {
+          "summary": "Serif headings or text; authority, literacy, considered pace.",
+          "fitsWhen": ["publishing, culture, premium and legal", "long-form reading"],
+          "tokens": { "fontCategories": ["text serif for reading", "display serif for headings"], "letterSpacingHeadings": { "min": -0.02, "max": 0 } }
+        },
+        "technical-mono": {
+          "summary": "Monospace accents; precise, engineered, honest about being a tool.",
+          "fitsWhen": ["developer tools, infrastructure, data products"],
+          "tokens": { "fontCategories": ["sans for body", "monospace for labels, numbers, code"], "letterSpacingHeadings": { "min": -0.01, "max": 0.02 } }
+        },
+        "display": {
+          "summary": "A distinctive display face carries identity; body stays plain.",
+          "fitsWhen": ["brand, campaign, entertainment", "portfolios with a strong point of view"],
+          "tokens": { "fontCategories": ["display face for headings only", "plain sans or serif for body"], "letterSpacingHeadings": { "min": -0.04, "max": 0.05 } },
+          "avoid": ["display faces below 20px", "more than two families plus mono"]
+        }
+      }
+    },
+    "imagery": {
+      "label": "Imagery",
+      "question": "Does the product sell through pictures, through words, or both?",
+      "poles": ["type-led", "imagery-led"],
+      "positions": {
+        "type-led": {
+          "summary": "Typography, layout, and real data carry the page; images are rare and purposeful.",
+          "fitsWhen": ["tools, docs, finance", "products without strong visual assets"],
+          "tokens": { "mediaShare": { "min": 0, "max": 20, "unit": "percent" }, "typeScaleRatio": { "min": 1.2, "max": 1.414, "unit": "ratio" } },
+          "avoid": ["stock illustrations used to fill space"]
+        },
+        "balanced": {
+          "summary": "Real product views or photos support the words.",
+          "fitsWhen": ["SaaS marketing with a visual product", "e-commerce category pages"],
+          "tokens": { "mediaShare": { "min": 20, "max": 50, "unit": "percent" }, "mediaAspectRatios": ["16:9", "4:3", "1:1"] }
+        },
+        "imagery-led": {
+          "summary": "Photography, product shots, or 3D lead; type frames them.",
+          "fitsWhen": ["fashion, travel, food, real estate", "product detail pages", "portfolios of visual work"],
+          "tokens": { "mediaShare": { "min": 50, "max": 85, "unit": "percent" }, "mediaAspectRatios": ["4:5", "3:2", "21:9"] },
+          "avoid": ["text over images without a contrast-safe scrim", "unoptimized hero images that delay LCP"]
+        }
+      }
+    }
+  },
+  "conflicts": [
+    { "when": { "density": "compact", "motion": "expressive" }, "message": "Expressive motion on a compact, high-frequency surface slows repeated tasks; confine it to onboarding or marketing pages." },
+    { "when": { "density": "airy", "imagery": "type-led", "contrast": "low" }, "message": "Airy, type-led, and low contrast together often read as empty; add a signature move or raise contrast." },
+    { "when": { "formality": "formal", "voice": "display" }, "message": "Display faces undercut formality; limit them to a wordmark or a single page-level heading." },
+    { "when": { "shape": "soft", "contrast": "high" }, "message": "Soft shapes with stark contrast can look toy-like; check the swap test against the audience." },
+    { "when": { "formality": "playful", "temperature": "cool", "density": "compact" }, "message": "Playful tone on a cool, compact surface sends mixed signals; decide which one the audience needs." }
+  ]
+}
