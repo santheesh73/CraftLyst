@@ -1,4 +1,4 @@
-import { baseClass, hasColorLiteral, withoutVars } from '../../src/rule-helpers.js';
+import { baseClass, hasColorLiteral, withoutVars, OG_IMAGE_FILE } from '../../src/rule-helpers.js';
 
 /**
  * Blur radius of the largest shadow layer in a box-shadow/text-shadow value, if colored.
@@ -30,7 +30,7 @@ export default {
     const out = [];
     const glow = ctx.thresholds.glowBlurPx;
     for (const doc of ctx.docs) {
-      if (doc.isTest) continue;
+      if (doc.isTest || OG_IMAGE_FILE.test(doc.file)) continue;
       for (const css of doc.css) {
         for (const r of css.rules) {
           const clip = r.decls.find((d) => /^(-webkit-)?background-clip$/.test(d.prop) && /text/.test(d.value));

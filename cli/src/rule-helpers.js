@@ -170,6 +170,12 @@ export function visualTraits(el, classes) {
   return t;
 }
 
+/** Files that render images (Open Graph cards via satori/next/og), not interface. */
+export const OG_IMAGE_FILE = /(^|\/)(opengraph-image|twitter-image|og-image|og)(\.[a-z]+)?\.(tsx|jsx|ts|js)$|(^|\/)api\/og(\/|\.)/;
+
+/** Syntax-highlighting themes carry their own palette (Prism, highlight.js, Shiki). */
+export const SYNTAX_THEME_FILE = /(^|\/)[\w.-]*(prism|highlight|hljs|shiki|syntax|code-theme)[\w.-]*\.(css|scss)$/i;
+
 /**
  * Card-like: a boundary (border or shadow) plus radius, padding, and a background.
  * @param {ReturnType<typeof visualTraits>} t
@@ -209,7 +215,8 @@ export function hasAccessibleName(el) {
   /** @param {Element} e @returns {boolean | null} */
   const textIn = (e) => {
     if (e.text.length) return true;
-    let unknown = false;
+    // Content injected at runtime (v-html, innerHTML, set:html) cannot be read statically.
+    let unknown = e.dynamicText || Object.keys(e.attrs).some((a) => /^(v-html|v-text|innerHTML|dangerouslySetInnerHTML|set:html|set:text|textContent)$/.test(a));
     for (const c of e.children) {
       if (c.tag === 'svg' || /Icon$|^Icon|^Lucide|^Fa[A-Z]|^Hi[A-Z]|^Md[A-Z]/.test(c.tag) || c.tag === 'i' || c.tag === 'img') {
         if (c.tag === 'img' && c.attrs.alt?.value) return true;

@@ -11,7 +11,7 @@ import { parseCss } from './css.js';
  *   tag: string, attrs: Record<string, Attr>, classes: string[], classDynamic: boolean,
  *   styleDecls: StyleDecl[], line: number, endLine: number, column: number,
  *   children: Element[], parent: Element | null, text: { value: string, line: number }[],
- *   hasSpread: boolean, inLoop: boolean
+ *   dynamicText: boolean, hasSpread: boolean, inLoop: boolean
  * }} Element
  * @typedef {{ value: string, line: number, context: string }} StringLit
  * @typedef {import('./css.js').Comment} Comment
@@ -37,7 +37,7 @@ const UNITLESS = new Set(['opacity', 'z-index', 'font-weight', 'line-height', 'f
  * @returns {Element}
  */
 function makeElement(tag, line, endLine, column, parent) {
-  return { tag, attrs: {}, classes: [], classDynamic: false, styleDecls: [], line, endLine, column, children: [], parent, text: [], hasSpread: false, inLoop: false };
+  return { tag, attrs: {}, classes: [], classDynamic: false, styleDecls: [], line, endLine, column, children: [], parent, text: [], dynamicText: false, hasSpread: false, inLoop: false };
 }
 
 /**
@@ -349,6 +349,8 @@ export function parseJsx(text, opts = {}) {
         return;
       }
       case 'JSXExpressionContainer':
+        // {expr} as a child renders content we cannot see statically (text, conditionals).
+        if (context === 'text' && parent && node.expression.type !== 'JSXEmptyExpression') parent.dynamicText = true;
         visit(node.expression, parent, context === 'text' ? 'expr' : context, inLoop);
         return;
       default:

@@ -15,7 +15,8 @@ export default {
       if (doc.isTest) continue;
       /** @type {Map<import('../types.js').Element, boolean>} */
       const card = new Map();
-      for (const el of doc.all) card.set(el, isCardLike(visualTraits(el, ctx.classes)));
+      // Controls (buttons, links, inputs) have borders and padding but are not containers.
+      for (const el of doc.all) card.set(el, !/^(button|a|input|select|textarea|label|summary|Button|Link)$/.test(el.tag) && isCardLike(visualTraits(el, ctx.classes)));
       for (const el of doc.all) {
         if (!card.get(el)) continue;
         let depth = 1;

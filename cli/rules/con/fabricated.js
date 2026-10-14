@@ -53,7 +53,8 @@ export default {
         }
       }
       for (const el of doc.all) {
-        if (el.tag !== 'blockquote' || isIllustrative(el.line)) continue;
+        // A blockquote without literal text is a component wrapper (MDX, CMS), not a testimonial.
+        if (el.tag !== 'blockquote' || isIllustrative(el.line) || el.hasSpread || !el.text.length) continue;
         const attributed = 'cite' in el.attrs || el.children.some((c) => /^(cite|footer|figcaption)$/.test(c.tag)) || (el.parent?.tag === 'figure' && el.parent.children.some((c) => c.tag === 'figcaption'));
         if (!attributed) out.push({ file: doc.file, line: el.line, severity: 'warn', confidence: 0.4, message: 'Quote without attribution (no cite, footer, or figcaption).', remediation: 'Attribute testimonials to a real, consenting person or source, or remove them.' });
       }

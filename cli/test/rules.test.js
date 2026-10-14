@@ -2,7 +2,8 @@
 // (must not fire at warn or block). Fixtures live in cli/fixtures/rules/<prefix>/<name>/.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync } from 'node:fs';
+import { existsSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runLint } from '../src/lint.js';
@@ -21,6 +22,7 @@ for (const rule of RULES) {
     const r = runLint(join(dir, 'positive'), { rules: [rule.id] });
     const hits = r.findings.filter((f) => f.ruleId === rule.id);
     assert.ok(hits.length > 0, `${rule.id} found nothing in its positive fixture`);
+    assert.ok(hits.some((f) => f.severity === rule.severity), `${rule.id} positive fixture should produce its default severity (${rule.severity})`);
     for (const f of hits) {
       assert.ok(f.message.length > 0 && f.remediation.length > 0, 'finding needs a message and a remediation');
       assert.ok(f.confidence > 0 && f.confidence <= 1);
@@ -38,6 +40,14 @@ for (const rule of RULES) {
 test('rendered-only rules are reported as not run by lint', () => {
   const r = runLint(join(FIXTURES, 'a11y', 'alt', 'negative'));
   assert.deepEqual(r.rulesRenderedOnly.sort(), [...RENDERED_ONLY].sort());
+});
+
+test('tok/hardcoded only summarizes literals when the project has no tokens of that kind', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'craft-notokens-'));
+  writeFileSync(join(dir, 'a.css'), '.a { color: #123456; padding: 13px; }\n.b { color: #654321; }\n');
+  const r = runLint(dir, { rules: ['tok/hardcoded'] });
+  assert.deepEqual(r.findings.map((f) => f.severity), ['info', 'info']);
+  assert.match(r.findings.find((f) => /color/.test(f.message))?.message ?? '', /^2 literal color value/);
 });
 
 test('a reasoned craft-allow suppresses the finding and is listed as an exception', () => {

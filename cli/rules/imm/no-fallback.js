@@ -1,4 +1,4 @@
-import { usesWebGL } from './shared.js';
+import { createsScene } from './shared.js';
 
 const NO_WEBGL = /WebGLRenderingContext|isWebGL2?Available|WebGL\.is|getContext\([^)]*\)\s*(\)|;)?\s*(if|\?\?|\|\||&&|==)|if\s*\(\s*!\s*(gl|ctx|context)\b|fallback\s*=|<noscript|ErrorBoundary|onCreated|webglcontextlost|catch\s*\(/;
 const REDUCED = /prefers-reduced-motion|useReducedMotion|reducedMotion/;
@@ -16,7 +16,8 @@ export default {
     const out = [];
     const project = ctx.text();
     for (const doc of ctx.docs) {
-      if (!usesWebGL(doc)) continue;
+      // Judge the file that creates the scene; components rendered inside it inherit its fallbacks.
+      if (!createsScene(doc)) continue;
       const src = doc.source;
       const missing = [];
       if (!NO_WEBGL.test(src)) missing.push('no-WebGL fallback');

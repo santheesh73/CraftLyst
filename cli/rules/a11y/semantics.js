@@ -1,3 +1,16 @@
+/**
+ * A click handler that is a convenience around real controls (event delegation over links or
+ * buttons) or a modal backdrop (closed by Escape too) is not a keyboard trap.
+ * @param {import('../types.js').Element} el
+ */
+function delegates(el) {
+  if (/(^|[\s_-])(backdrop|overlay|scrim|mask)($|[\s_-])/i.test(el.classes.join(' '))) return true;
+  /** @param {import('../types.js').Element} e @returns {boolean} */
+  // Items rendered in a loop by components (<FilterItem> per entry) are treated as controls too.
+  const hasControl = (e) => e.children.some((c) => /^(a|button|input|select|textarea|summary)$/.test(c.tag) || /^[A-Z]\w*(Link|Button)$|^(Link|Button|RouterLink|NuxtLink)$/.test(c.tag) || (c.inLoop && /^[A-Z]/.test(c.tag)) || hasControl(c));
+  return hasControl(el);
+}
+
 /** @type {import('../types.js').Rule} */
 export default {
   id: 'a11y/semantics',
@@ -11,7 +24,7 @@ export default {
     for (const doc of ctx.docs) {
       if (doc.isTest) continue;
       for (const el of doc.all) {
-        if ((el.tag === 'div' || el.tag === 'span' || el.tag === 'li' || el.tag === 'img') && 'onClick' in el.attrs) {
+        if ((el.tag === 'div' || el.tag === 'span' || el.tag === 'li' || el.tag === 'img') && 'onClick' in el.attrs && !delegates(el)) {
           const role = el.attrs.role?.value;
           const keyboard = 'onKeyDown' in el.attrs || 'onKeyUp' in el.attrs || 'onKeyPress' in el.attrs;
           const focusable = 'tabIndex' in el.attrs;
@@ -33,7 +46,7 @@ export default {
         const html = doc.all.find((e) => e.tag === 'html');
         if (html && !('lang' in html.attrs)) out.push({ file: doc.file, line: html.line, message: '<html> has no lang attribute.', remediation: 'Add lang (for example lang="en") so assistive technology uses the right pronunciation.', confidence: 0.95 });
         // An SPA shell (<div id="root"></div> and nothing else) gets its landmarks from the app.
-        const shell = doc.all.some((e) => /^(root|app|__next|__nuxt|svelte|q-app)$/.test(e.attrs.id?.value ?? '') && e.children.length === 0);
+        const shell = doc.all.some((e) => /^(root|app|__next|__nuxt|svelte|q-app)$/.test(e.attrs.id?.value ?? '') && e.children.length === 0) || /%[\w.]+%|<!--\s*(app-html|ssr-outlet)\s*-->/.test(doc.source);
         if (doc.kind === 'html' && !shell && !doc.all.some((e) => e.tag === 'main' || e.attrs.role?.value === 'main')) {
           out.push({ file: doc.file, line: html?.line ?? 1, message: 'Page has no <main> landmark.', remediation: 'Wrap the primary content in <main>.', confidence: 0.8 });
         }

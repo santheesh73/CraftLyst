@@ -6,7 +6,7 @@ import postcss from 'postcss';
  * @typedef {{ selector: string, line: number, endLine: number, decls: CssDecl[], media: string[] }} CssRule
  * @typedef {{ name: string, params: string, line: number, endLine: number }} CssAtRule
  * @typedef {{ text: string, line: number, endLine: number }} Comment
- * @typedef {{ rules: CssRule[], decls: CssDecl[], atRules: CssAtRule[], comments: Comment[], error: string | null }} CssModel
+ * @typedef {{ rules: CssRule[], decls: CssDecl[], atRules: CssAtRule[], keyframes: Record<string, string[]>, comments: Comment[], error: string | null }} CssModel
  */
 
 /**
@@ -59,7 +59,7 @@ function stripLineComments(text) {
 export function parseCss(text, opts = {}) {
   const offset = opts.lineOffset ?? 0;
   /** @type {CssModel} */
-  const model = { rules: [], decls: [], atRules: [], comments: [], error: null };
+  const model = { rules: [], decls: [], atRules: [], keyframes: /** @type {Record<string, string[]>} */ ({}), comments: [], error: null };
   let root;
   try {
     root = postcss.parse(opts.scss ? stripLineComments(text) : text);
@@ -89,6 +89,12 @@ export function parseCss(text, opts = {}) {
     }
     if (node.type === 'atrule') {
       model.atRules.push({ name: node.name.toLowerCase(), params: node.params, line, endLine });
+      if (/^(-\w+-)?keyframes$/i.test(node.name)) {
+        /** @type {Set<string>} */
+        const props = new Set();
+        node.walkDecls((/** @type {any} */ d) => { props.add(d.prop.toLowerCase()); });
+        model.keyframes[node.params.trim()] = [...props];
+      }
       const nextMedia = ['media', 'supports', 'container', 'layer'].includes(node.name.toLowerCase()) ? [...media, `@${node.name} ${node.params}`] : media;
       // Declarations directly inside at-rules like @theme or @font-face belong to a pseudo-rule.
       /** @type {CssRule} */
