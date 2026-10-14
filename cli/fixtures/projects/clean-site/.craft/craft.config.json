@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "stack": { "framework": "auto", "styling": "auto", "touch": true },
+  "failOn": "block",
+  "rules": {},
+  "thresholds": {
+    "cardShare": 0.6,
+    "cardDepth": 1,
+    "cloneGridMin": 3,
+    "defaultStackShare": 0.8,
+    "touchTarget": 44,
+    "touchTargetMin": 24,
+    "glowBlurPx": 24
+  },
+  "ignore": ["node_modules/**", "dist/**", "build/**", ".next/**", "coverage/**"],
+  "exceptions": [],
+  "tier2": { "viewports": [320, 375, 768, 1280, 1920] },
+  "contract": { "maxDesignLines": 150 }
+}

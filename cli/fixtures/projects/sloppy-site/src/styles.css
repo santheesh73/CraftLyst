@@ -1,0 +1,37 @@
+.hero {
+  background: linear-gradient(90deg, #7c3aed, #ec4899);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  box-shadow: 0 0 60px #7c3aed;
+  padding: 37px;
+}
+
+.card {
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  color: var(--brand-ink);
+}
+
+button:focus {
+  outline: none;
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.parallax {
+  background-attachment: fixed;
+}
+
+.muted {
+  color: #aaaaaa;
+  background-color: #ffffff;
+}
+
+@keyframes float {
+  50% {
+    transform: translateY(-8px);
+  }
+}

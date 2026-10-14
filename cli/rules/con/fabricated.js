@@ -14,6 +14,10 @@ const CLAIMS = [
   { re: /★{4,}|⭐{3,}|\b[45](\.\d)?\s*\/\s*5\s*stars?\b|\b5[- ]star(s)? (rating|reviews?)\b/i, what: 'star-rating filler' }
 ];
 
+/** Plan limits ("Team size: 100+ developers", "Up to 20+ users") on pricing pages are not adoption claims. */
+const PLAN_FILE = /pric|plans?\b|billing|subscription/i;
+const PLAN_LINE = /\b(up to|team size|seats?|limits?|max(imum)?|per (month|year|seat|user))\b/i;
+
 const SKIP_CONTEXT = /^attr:(class|className|href|src|srcSet|id|key|type|name|placeholder|rel|target|role|data-|aria-controls|htmlFor|for|style|as|method|action|lang|dir|width|height|sizes|loading|variant|size|color)/;
 
 /** @type {import('../types.js').Rule} */
@@ -33,8 +37,12 @@ export default {
       const isIllustrative = (/** @type {number} */ line) => illustrative.some(([a, b]) => line >= a && line <= b);
       /** @type {Set<string>} */
       const seen = new Set();
+      const lines = doc.source.split('\n');
+      // Markup shown as a code sample is documentation, not page copy.
+      /** @type {[number, number][]} */
+      const samples = doc.all.filter((e) => /^(pre|code|textarea|xmp)$/.test(e.tag)).map((e) => [e.line, e.endLine]);
       for (const s of doc.strings) {
-        if (SKIP_CONTEXT.test(s.context) || isIllustrative(s.line)) continue;
+        if (samples.some(([a, b]) => s.line >= a && s.line <= b) || SKIP_CONTEXT.test(s.context) || isIllustrative(s.line)) continue;
         if (/^(\.|\/|@|https?:|[\w-]+\/[\w-]+$)/.test(s.value.trim())) continue;
         for (const p of PLACEHOLDERS) {
           const key = `${s.line}|${p.what}`;
@@ -45,6 +53,7 @@ export default {
         }
         for (const c of CLAIMS) {
           const key = `${s.line}|${c.what}`;
+          if (c.what === 'unsourced count claim' && (PLAN_FILE.test(doc.file) || PLAN_LINE.test(lines[s.line - 1] ?? ''))) continue;
           if (c.re.test(s.value) && !seen.has(key)) {
             seen.add(key);
             out.push({ file: doc.file, line: s.line, severity: 'warn', confidence: c.what.startsWith('"Trusted') ? 0.5 : 0.7, message: `${c.what[0].toUpperCase()}${c.what.slice(1)}: "${s.value.trim().slice(0, 60)}".`, remediation: 'Back the claim with a real, cited source, or remove it. Mark mock content with data-craft-illustrative.' });
@@ -53,7 +62,8 @@ export default {
         }
       }
       for (const el of doc.all) {
-        if (el.tag !== 'blockquote' || isIllustrative(el.line)) continue;
+        // A blockquote without literal text is a component wrapper (MDX, CMS), not a testimonial.
+        if (el.tag !== 'blockquote' || isIllustrative(el.line) || el.hasSpread || !el.text.length) continue;
         const attributed = 'cite' in el.attrs || el.children.some((c) => /^(cite|footer|figcaption)$/.test(c.tag)) || (el.parent?.tag === 'figure' && el.parent.children.some((c) => c.tag === 'figcaption'));
         if (!attributed) out.push({ file: doc.file, line: el.line, severity: 'warn', confidence: 0.4, message: 'Quote without attribution (no cite, footer, or figcaption).', remediation: 'Attribute testimonials to a real, consenting person or source, or remove them.' });
       }

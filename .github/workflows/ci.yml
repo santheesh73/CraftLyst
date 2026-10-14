@@ -28,6 +28,8 @@ jobs:
         run: npm run lint
       - name: Type-check (tsc --checkJs)
         run: npm run typecheck
+      - name: Install Chromium for Tier 2 tests (version pinned by package-lock.json)
+        run: npx playwright install --with-deps chromium
       - name: Unit tests
         run: npm test
       - name: Validate schemas, SKILL.md frontmatter and line count

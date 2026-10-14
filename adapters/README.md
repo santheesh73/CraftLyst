@@ -1,3 +1,6 @@
 # Agent adapters
 
-`claude-code/` (with the opt-in Stop hook in `hooks/`, P2), `codex/`, `cursor/`, `other-agents/` (P6). An agent is listed as supported only after a verified install and behavior check.
+- `claude-code/`: installer notes and the opt-in proof Stop hook (`hooks/stop-proof.js`).
+- `codex/`, `cursor/`, `other-agents/`: planned for P6.
+
+An agent is listed as supported only after a verified install and behavior check.

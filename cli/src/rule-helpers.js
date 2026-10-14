@@ -49,7 +49,8 @@ export function colorLiterals(value) {
   /** @type {string[]} */
   const out = [];
   for (const m of v.matchAll(new RegExp(HEX.source, 'gi'))) out.push(m[0]);
-  for (const m of v.matchAll(/\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\([^)]*\)/gi)) out.push(m[0]);
+  // hsl(var(--primary)) builds a color from a token's channels; only literal channels count.
+  for (const m of v.matchAll(/\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\([^)]*\)/gi)) if (!/^\w+\(\s*VAR/.test(m[0])) out.push(m[0]);
   for (const word of v.toLowerCase().split(/[\s,/()]+/)) if (NAMED_COLORS.has(word)) out.push(word);
   return out;
 }
@@ -170,6 +171,46 @@ export function visualTraits(el, classes) {
   return t;
 }
 
+/** Files that render images (Open Graph cards via satori/next/og), not interface. */
+/**
+ * Is the element (or an ancestor) hidden at the smallest viewport or marked decorative?
+ * Covers aria-hidden (JSX boolean or "true"), an unprefixed Tailwind hidden/invisible class, the hidden
+ * attribute, and boxes inside a horizontal scroll container (overflow-x-auto), which scroll rather than overflow.
+ * @param {Element} el
+ */
+export function isHiddenOrDecorative(el) {
+  for (let e = /** @type {Element | null} */ (el); e; e = e.parent) {
+    const ariaHidden = e.attrs['aria-hidden'];
+    if ((ariaHidden && ariaHidden.value !== 'false') || 'hidden' in e.attrs || e.classes.some((c) => c === 'hidden' || c === 'invisible')) return true;
+    if (e !== el && e.classes.some((c) => /(^|:)overflow-(x-)?(auto|scroll)$/.test(c))) return true;
+  }
+  return false;
+}
+
+/** Component names that render a control (Toolbar.ToggleItem, Select.Trigger, <Input>). */
+export const INTERACTIVE_COMPONENT = /(Item|Trigger|Input|Button|Link|Tab|Checkbox|Radio|Switch|Select|Textarea|TextArea|Toggle|Slider|Thumb|Option|Field|Control)$|^(Button|Link|Input|Select|Textarea|Checkbox|Radio|Switch)/;
+
+/** Server-side template includes (Hugo, Go, Jinja, Liquid, Nunjucks, Handlebars, PHP): the page is assembled from other files. */
+export const TEMPLATE_INCLUDE = /\{\{-?\s*(block|partial|template|include|yield)\b|\{%-?\s*(include|extends|block|render)\b|\{\{>\s*[\w/]|<\?php[^?]*\b(include|require)(_once)?\b/;
+
+export const OG_IMAGE_FILE = /(^|\/)(opengraph-image|twitter-image|og-image|og)(\.[a-z]+)?\.(tsx|jsx|ts|js)$|(^|\/)api\/og(\/|\.)/;
+
+/** Syntax-highlighting themes carry their own palette (Prism, highlight.js, Shiki). */
+export const SYNTAX_THEME_FILE = /(^|\/)[\w.-]*(prism|highlight|hljs|shiki|syntax|code-theme)[\w.-]*\.(css|scss)$/i;
+
+/** Selectors of syntax-highlighting themes (Prism, highlight.js, Shiki, CodeMirror). */
+export const SYNTAX_SELECTOR = /\.(token|hljs|shiki|cm-|prism)/;
+
+/**
+ * Is this document a syntax-highlighting theme (by name, or because most of its rules style code tokens)?
+ * @param {import('./document.js').Document} doc
+ */
+export function isSyntaxTheme(doc) {
+  if (SYNTAX_THEME_FILE.test(doc.file)) return true;
+  const rules = doc.css.flatMap((c) => c.rules);
+  return rules.length >= 3 && rules.filter((r) => SYNTAX_SELECTOR.test(r.selector)).length / rules.length >= 0.5;
+}
+
 /**
  * Card-like: a boundary (border or shadow) plus radius, padding, and a background.
  * @param {ReturnType<typeof visualTraits>} t
@@ -209,7 +250,8 @@ export function hasAccessibleName(el) {
   /** @param {Element} e @returns {boolean | null} */
   const textIn = (e) => {
     if (e.text.length) return true;
-    let unknown = false;
+    // Content injected at runtime (v-html, innerHTML, set:html) cannot be read statically.
+    let unknown = e.dynamicText || Object.keys(e.attrs).some((a) => /^(v-html|v-text|innerHTML|dangerouslySetInnerHTML|set:html|set:text|textContent)$/.test(a));
     for (const c of e.children) {
       if (c.tag === 'svg' || /Icon$|^Icon|^Lucide|^Fa[A-Z]|^Hi[A-Z]|^Md[A-Z]/.test(c.tag) || c.tag === 'i' || c.tag === 'img') {
         if (c.tag === 'img' && c.attrs.alt?.value) return true;

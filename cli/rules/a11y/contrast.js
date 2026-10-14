@@ -1,6 +1,6 @@
 import { checkPairs } from '../../src/tokens.js';
 import { parseColor, contrastRatio } from '../../src/color.js';
-import { tailwindArbitrary } from '../../src/rule-helpers.js';
+import { tailwindArbitrary, isSyntaxTheme, SYNTAX_SELECTOR } from '../../src/rule-helpers.js';
 
 /** @type {import('../types.js').Rule} */
 export default {
@@ -34,8 +34,11 @@ export default {
       if (ratio < 4.5) out.push({ file, line, message: `${where}: ${fg} on ${bg} is ${ratio}:1 (text needs 4.5:1, large text 3:1).`, remediation: 'Use token pairs checked by craft contrast.', confidence: ratio < 3 ? 0.85 : 0.6 });
     };
     for (const doc of ctx.docs) {
+      // Code-highlighting palettes are usually third-party themes with their own contrast choices.
+      if (isSyntaxTheme(doc)) continue;
       for (const css of doc.css) {
         for (const r of css.rules) {
+          if (SYNTAX_SELECTOR.test(r.selector)) continue;
           const fg = r.decls.find((d) => d.prop === 'color');
           const bg = r.decls.find((d) => d.prop === 'background-color' || (d.prop === 'background' && /^#|^rgb|^hsl|^oklch|^[a-z]+$/i.test(d.value.trim())));
           if (fg && bg) pair(doc.file, fg.line, fg.value.trim(), bg.value.trim(), `"${r.selector}"`);

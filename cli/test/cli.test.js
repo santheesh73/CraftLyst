@@ -34,14 +34,12 @@ test('usage errors exit 2', async () => {
 });
 
 test('planned commands exit 3 and name their version', async () => {
-  for (const cmd of ['audit', 'shoot', 'report', 'search', 'index', 'catalog', 'tokens']) {
+  for (const cmd of ['search', 'index', 'catalog', 'tokens']) {
     const r = await run([cmd, '--json']);
     assert.equal(r.code, EXIT.UNAVAILABLE, cmd);
     assert.equal(r.json().status, 'unavailable');
     assert.match(r.json().availableIn, /^\d+\.\d+\.\d+$/);
   }
-  const fromRepo = await run(['init', '--from-repo', '--cwd', tmp()]);
-  assert.equal(fromRepo.code, EXIT.UNAVAILABLE);
 });
 
 test('doctor detects a Next + Tailwind v4 project from files', async () => {

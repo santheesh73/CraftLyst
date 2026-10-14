@@ -1,4 +1,12 @@
-import { visualTraits, isCardLike } from '../../src/rule-helpers.js';
+import { visualTraits, isCardLike, INTERACTIVE_COMPONENT } from '../../src/rule-helpers.js';
+
+const OVERLAY = /dropdown|popover|tooltip|menu|modal|dialog|drawer|toast|listbox|combobox/i;
+
+/**
+ * Floating layers (menus, popovers, tooltips, dialogs, absolutely positioned panels) sit above content, not nested in it.
+ * @param {import('../types.js').Element} el
+ */
+const isOverlay = (el) => OVERLAY.test(`${el.tag} ${el.attrs.id?.value ?? ''} ${el.attrs.role?.value ?? ''}`) || el.classes.some((c) => OVERLAY.test(c) || c === 'absolute' || c === 'fixed');
 
 /** @type {import('../types.js').Rule} */
 export default {
@@ -15,7 +23,13 @@ export default {
       if (doc.isTest) continue;
       /** @type {Map<import('../types.js').Element, boolean>} */
       const card = new Map();
-      for (const el of doc.all) card.set(el, isCardLike(visualTraits(el, ctx.classes)));
+      // Controls (buttons, links, inputs) have borders and padding but are not containers.
+      // Inline badges and media (a rounded, shadowed <img>) are not containers, and menus, popovers, tooltips, and dialogs float above the card they sit in.
+      for (const el of doc.all) {
+        const name = el.tag.split('.').pop() ?? '';
+        const control = /^(button|a|input|select|textarea|label|summary|span|small|em|strong|code|kbd|mark|abbr|td|th|dialog|img|picture|video|iframe|svg|canvas|Badge|Image|Img|Avatar)$/.test(name) || (/^[A-Z]/.test(name) && INTERACTIVE_COMPONENT.test(name)) || /^motion\.(button|a|input)$/.test(el.tag);
+        card.set(el, !control && !isOverlay(el) && isCardLike(visualTraits(el, ctx.classes)));
+      }
       for (const el of doc.all) {
         if (!card.get(el)) continue;
         let depth = 1;

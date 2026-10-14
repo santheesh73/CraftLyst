@@ -68,7 +68,16 @@ only requires that gate before P3).
 - M1.6 packaging (`dist/frontend-craft/`, zip, `SHA256SUMS`) + `scripts/install-claude-code`
 - M1.7 trigger tests (≥ 40 prompts) + runner + recorded results
 
-**P2–P6**: milestones are planned at the start of each phase and appended here.
+**P2**
+- M2.1 parsers (ADR-0005) and the rule engine with `craft-allow` exceptions
+- M2.2 20 Slop Lint rules, each with positive and negative fixtures
+- M2.3 `init --from-repo` token extraction
+- M2.4 `audit` (T1), `shoot` (T2, ADR-0012, ADR-0013), `report` with content hash and `--check`
+- M2.5 opt-in Claude Code Stop hook
+- M2.6 no-network CI test; fixture projects; 500-file speed test
+- M2.7 false-positive measurement on held-out OSS repos (`docs/evals/false-positives.md`)
+
+**P3–P6**: milestones are planned at the start of each phase and appended here.
 
 ## 4. Risks
 
@@ -92,14 +101,16 @@ Recorded in `docs/decisions/`. Status in brackets.
 - ADR-0002 Project defaults: licenses, Node ≥ 20, ESM + JSDoc, `node:test` [accepted]
 - ADR-0003 Dependency policy and dev-only tooling (TypeScript for `--checkJs`) [accepted]
 - ADR-0004 In-house JSON Schema subset validator instead of a runtime dependency [accepted]
-- ADR-0005 Runtime parser dependencies for P2 (CSS, HTML, JSX) [proposed; pinned at P2]
+- ADR-0005 Runtime parser dependencies for P2 (CSS, HTML, JSX) [accepted]
 - ADR-0006 Repository layout and the repo-vs-package boundary [accepted]
 - ADR-0007 Security policy: read-only default, no network without `--allow-network` [accepted]
 - ADR-0008 Lint for this repository without ESLint (dependency-free repo lint script) [accepted]
 - ADR-0009 Deterministic zip packaging without a zip dependency [accepted]
 - ADR-0010 Trigger tests run against headless Claude Code [accepted]
 - ADR-0011 Ship a minimal CLI in v0.1 [accepted]
-- Planned: Tier 2 optional install flow (P2), report schema versioning (P2), catalog index format (P4), conformance harness design (P5).
+- ADR-0012 Loopback connections for rendered checks [accepted]
+- ADR-0013 Playwright and axe-core as dev dependencies for testing Tier 2 [accepted]
+- Planned: catalog index format (P4), conformance harness design (P5).
 
 ## 6. Conventions
 

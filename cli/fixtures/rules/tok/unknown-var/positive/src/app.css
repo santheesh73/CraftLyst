@@ -1,3 +1,7 @@
+:root {
+  --color-paper: #ffffff;
+  --color-text: #1b1e22;
+}
 .panel {
   color: var(--color-ink);
 }

@@ -1,3 +1,5 @@
+import { visualTraits, isCardLike } from '../../src/rule-helpers.js';
+
 /**
  * Shape of a block: icon/image, heading, and up to two short text lines.
  * @param {import('../types.js').Element} el
@@ -44,6 +46,8 @@ export default {
           if (k.inLoop) continue;
           const sig = signature(k);
           if (!sig) continue;
+          // Without an icon, heading + text siblings are FAQ entries, slides, or prose sections unless styled as cards.
+          if (!sig.includes('I') && !isCardLike(visualTraits(k, ctx.classes))) continue;
           const key = `${k.tag}|${sig}`;
           groups.set(key, [...(groups.get(key) ?? []), k]);
         }

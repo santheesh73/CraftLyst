@@ -15,9 +15,10 @@ export function templatesDir() {
 
 /**
  * @param {string} root project root
+ * @param {{ tokens?: object }} [opts] tokens to write instead of the template tokens.json
  * @returns {{ created: string[], skipped: string[] }}
  */
-export function init(root) {
+export function init(root, opts = {}) {
   const target = join(root, '.craft');
   mkdirSync(join(target, 'reports'), { recursive: true });
   /** @type {string[]} */
@@ -31,7 +32,8 @@ export function init(root) {
       skipped.push(`.craft/${f}`);
       continue;
     }
-    copyFileSync(src + '/' + f, dest);
+    if (f === 'tokens.json' && opts.tokens) writeFileSync(dest, JSON.stringify(opts.tokens, null, 2) + '\n');
+    else copyFileSync(src + '/' + f, dest);
     created.push(`.craft/${f}`);
   }
   const ignore = join(target, '.gitignore');

@@ -1,0 +1,9 @@
+{
+  "name": "fixture-r3f-scene",
+  "private": true,
+  "dependencies": {
+    "react": "19.0.0",
+    "@react-three/fiber": "9.0.0",
+    "three": "0.170.0"
+  }
+}

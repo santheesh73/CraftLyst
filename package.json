@@ -1,6 +1,6 @@
 {
   "name": "frontend-craft",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "An installable skill and CLI that gives AI coding agents a design contract, executable frontend checks, and proof reports.",
   "license": "Apache-2.0",
   "type": "module",

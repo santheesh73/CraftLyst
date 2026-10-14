@@ -1,4 +1,3 @@
-const LOOP = /requestAnimationFrame\(|useFrame\(|setAnimationLoop\(|ticker\.add\(|\.onBeforeRenderObservable|engine\.runRenderLoop/;
 const PAUSE = /visibilitychange|document\.hidden|IntersectionObserver|frameloop\s*=|useInView|inView|cancelAnimationFrame|setAnimationLoop\(\s*null/;
 const DPR = /setPixelRatio\(\s*Math\.min|dpr\s*=\s*\{?\s*\[|devicePixelRatio\s*,\s*\d|Math\.min\(\s*(window\.)?devicePixelRatio|AdaptiveDpr|maxDpr|resolution\s*:\s*Math\.min/;
 const BUDGET = /delta|clock\.getDelta|performance\.now|PerformanceMonitor|frameBudget|fps|targetFps|deltaTime|elapsed/i;
@@ -16,7 +15,14 @@ export default {
     for (const doc of ctx.docs) {
       if (doc.isTest || doc.kind === 'css') continue;
       const src = doc.scripts.join('\n') || doc.source;
-      const m = LOOP.exec(src);
+      // react-three-fiber: useFrame callbacks run on the <Canvas> loop, so the Canvas carries the
+      // policy (frameloop, dpr). Check the Canvas element instead of each useFrame.
+      for (const el of doc.all) {
+        if (el.tag !== 'Canvas' || el.hasSpread || !/@react-three\/fiber/.test(doc.imports.join(' '))) continue;
+        const missing = [!('frameloop' in el.attrs) && 'frameloop control (demand or pause offscreen)', !('dpr' in el.attrs) && 'DPR clamp (dpr={[1, 2]})'].filter(Boolean);
+        if (missing.length === 2 && !PAUSE.test(src)) out.push({ file: doc.file, line: el.line, message: `<Canvas> without ${missing.join(' or ')}.`, remediation: 'Set dpr={[1, 2]} and frameloop="demand" (or pause it when offscreen with useInView).' });
+      }
+      const m = /requestAnimationFrame\(|setAnimationLoop\(|ticker\.add\(|\.onBeforeRenderObservable|engine\.runRenderLoop/.exec(src);
       if (!m) continue;
       const scene = /three|@react-three|pixi|babylon|ogl|regl|getContext\(/.test(src);
       if (!scene) continue;

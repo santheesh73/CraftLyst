@@ -1,0 +1,78 @@
+:root {
+  --color-surface: #fbfaf7;
+  --color-text: #22201c;
+  --color-text-muted: #5c574f;
+  --color-accent: #8a3b12;
+  --color-focus: #8a3b12;
+  --space-2: 8px;
+  --space-4: 16px;
+  --space-8: 32px;
+  --text-body: 1.0625rem;
+  --text-lead: 1.25rem;
+  --text-h1: 2.25rem;
+  --measure: 65ch;
+}
+
+body {
+  margin: 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font: var(--text-body)/1.6 Georgia, "Times New Roman", serif;
+}
+
+.site-header,
+main {
+  max-width: var(--measure);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+.site-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding-block: var(--space-4);
+}
+
+nav a {
+  display: inline-block;
+  padding: var(--space-2);
+  min-height: 44px;
+  color: var(--color-accent);
+}
+
+h1 {
+  font-size: var(--text-h1);
+  line-height: 1.15;
+}
+
+.lead {
+  font-size: var(--text-lead);
+  color: var(--color-text-muted);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+}
+
+.skip:focus {
+  left: var(--space-4);
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a {
+    transition: color 150ms ease;
+  }
+}

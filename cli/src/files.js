@@ -6,7 +6,11 @@ import { globToRegExp } from './glob.js';
 
 export const DEFAULT_IGNORES = [
   'node_modules', '.git', '.hg', '.svn', 'dist', 'build', 'out', '.next', '.nuxt', '.svelte-kit',
-  '.astro', '.output', '.vercel', '.turbo', '.cache', 'coverage', 'vendor', '.craft/reports', 'storybook-static'
+  '.astro', '.output', '.vercel', '.turbo', '.cache', 'coverage', 'vendor', '.craft/reports', 'storybook-static',
+  // Agent configuration and installed skills (including this one) are not the product's UI.
+  '.claude', '.cursor', '.codex', '.agents', '.windsurf', '.github',
+  // Scripts and styles in static asset folders are served verbatim, usually third-party or built.
+  'public/**/*.js', 'public/**/*.css', 'static/**/*.js', 'static/**/*.css'
 ];
 
 /** File extensions Slop Lint reads. */
@@ -68,6 +72,8 @@ export function listFiles(root, opts = {}) {
   const walk = (rel, inherited) => {
     const abs = rel ? join(root, rel) : root;
     let rules = inherited;
+    // A nested folder with its own LICENSE and no package.json is a copied-in third-party library.
+    if (rel && !existsSync(join(abs, 'package.json')) && readdirSync(abs).some((n) => /^(licen[cs]e|copying)(\.\w+)?$/i.test(n))) return;
     const gi = join(abs, '.gitignore');
     if (existsSync(gi)) rules = [...inherited, ...parseGitignore(readFileSync(gi, 'utf8'), rel)];
     for (const name of readdirSync(abs).sort()) {

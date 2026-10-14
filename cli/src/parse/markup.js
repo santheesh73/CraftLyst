@@ -11,7 +11,7 @@ import { parseCss } from './css.js';
  *   tag: string, attrs: Record<string, Attr>, classes: string[], classDynamic: boolean,
  *   styleDecls: StyleDecl[], line: number, endLine: number, column: number,
  *   children: Element[], parent: Element | null, text: { value: string, line: number }[],
- *   hasSpread: boolean, inLoop: boolean
+ *   dynamicText: boolean, hasSpread: boolean, inLoop: boolean
  * }} Element
  * @typedef {{ value: string, line: number, context: string }} StringLit
  * @typedef {import('./css.js').Comment} Comment
@@ -37,7 +37,7 @@ const UNITLESS = new Set(['opacity', 'z-index', 'font-weight', 'line-height', 'f
  * @returns {Element}
  */
 function makeElement(tag, line, endLine, column, parent) {
-  return { tag, attrs: {}, classes: [], classDynamic: false, styleDecls: [], line, endLine, column, children: [], parent, text: [], hasSpread: false, inLoop: false };
+  return { tag, attrs: {}, classes: [], classDynamic: false, styleDecls: [], line, endLine, column, children: [], parent, text: [], dynamicText: false, hasSpread: false, inLoop: false };
 }
 
 /**
@@ -54,7 +54,8 @@ function parseStyleAttr(styleText, line) {
 
 /**
  * @param {string} text
- * @param {{ fragment?: boolean }} [opts]
+ * @param {{ fragment?: boolean, keepCase?: boolean }} [opts]
+ *   keepCase: keep the source casing of tag names (Vue/Svelte/Astro components such as <Input>)
  * @returns {MarkupModel}
  */
 export function parseHtml(text, opts = {}) {
@@ -93,7 +94,9 @@ export function parseHtml(text, opts = {}) {
         if (node.content) for (const c of node.content.childNodes ?? []) visit(c, parent);
         return;
       }
-      const el = makeElement(node.tagName.toLowerCase(), loc.startLine, loc.endLine ?? loc.startLine, loc.startCol, parent);
+      const written = opts.keepCase ? text.slice(loc.startOffset + 1, loc.startOffset + 1 + node.tagName.length) : '';
+      const tag = written.toLowerCase() === node.tagName.toLowerCase() && /^[A-Z]/.test(written) ? written : node.tagName.toLowerCase();
+      const el = makeElement(tag, loc.startLine, loc.endLine ?? loc.startLine, loc.startCol, parent);
       for (const a of node.attrs ?? []) {
         const name = a.name;
         const aloc = loc.attrs?.[name];
@@ -160,8 +163,10 @@ export function parseSfc(text) {
   if (fm) {
     extraScripts.push(fm[0]);
     src = fm[0].replace(/[^\n]/g, ' ') + src.slice(fm[0].length);
+    // Astro template expressions hold JS comments ({/* <Image /> */}); blank them outside <style>/<script>.
+    src = src.replace(/(<(style|script)\b[\s\S]*?<\/\2>)|\/\*[\s\S]*?\*\//g, (m, block) => block ?? m.replace(/[^\n]/g, ' '));
   }
-  const model = parseHtml(src, { fragment: true });
+  const model = parseHtml(src, { fragment: true, keepCase: true });
   model.scripts.push(...extraScripts);
   for (const s of extraScripts) for (const m of s.matchAll(/import\s+(?:[^'"]*?\sfrom\s+)?['"]([^'"]+)['"]/g)) model.imports.push(m[1]);
   return model;
@@ -349,6 +354,8 @@ export function parseJsx(text, opts = {}) {
         return;
       }
       case 'JSXExpressionContainer':
+        // {expr} as a child renders content we cannot see statically (text, conditionals).
+        if (context === 'text' && parent && node.expression.type !== 'JSXEmptyExpression') parent.dynamicText = true;
         visit(node.expression, parent, context === 'text' ? 'expr' : context, inLoop);
         return;
       default:
