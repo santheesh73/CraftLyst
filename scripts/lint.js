@@ -6,7 +6,7 @@ import { join, relative, dirname, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'coverage', '.work']);
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'coverage', '.work', '.claude']);
 /** Fixture files are deliberately sloppy input for rules; only the security checks skip them too. */
 const FIXTURE_PREFIX = `cli${sep}fixtures${sep}`;
 
