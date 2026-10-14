@@ -5,7 +5,9 @@
 | Agent | Status | Evidence |
 |---|---|---|
 | Claude Code | supported (skill format) | installed into a clean project and triggered in headless runs; see `evals/triggers/results/` |
-| Codex, Cursor, others | untested | adapters are planned for P6; nothing is claimed until a verified install |
+| Codex | untested | `scripts/install-agent.js --agent codex` is unit-tested; no live Codex session was run (no Codex CLI or API key in the build environment) |
+| Cursor | untested | `scripts/install-agent.js --agent cursor` is unit-tested; no live Cursor session was run |
+| Other agents | untested | `--agent generic` writes an `AGENTS.md` block; see `adapters/other-agents/` |
 
 ## Node
 

@@ -43,6 +43,18 @@ Verify:
 node ~/.claude/skills/frontend-craft/cli/bin/craft.js --version
 ```
 
+## Install for other agents (untested)
+
+```sh
+node scripts/install-agent.js --agent codex   --project ./my-app   # .frontend-craft/ + AGENTS.md block
+node scripts/install-agent.js --agent cursor  --project ./my-app   # .frontend-craft/ + .cursor/rules/frontend-craft.mdc
+node scripts/install-agent.js --agent generic --project ./my-app   # .frontend-craft/ + AGENTS.md block
+```
+
+These adapters are untested in live sessions of those agents; see `docs/compatibility.md` and
+`adapters/`. Add `--dry-run` to preview. Uninstall by deleting `.frontend-craft/` and the pointer
+(the marked `AGENTS.md` block or the `.mdc` rule).
+
 ## Uninstall
 
 Delete the `frontend-craft` directory from `~/.claude/skills/` or `<project>/.claude/skills/`.
