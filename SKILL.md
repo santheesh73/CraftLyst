@@ -120,6 +120,7 @@ node <skill-dir>/cli/bin/craft.js --version
 node <skill-dir>/cli/bin/craft.js doctor --json        # stack and tooling
 node <skill-dir>/cli/bin/craft.js lint --json          # T0 findings
 node <skill-dir>/cli/bin/craft.js contrast --json      # WCAG AA on token pairs
+node <skill-dir>/cli/bin/craft.js report --json        # the receipt: run last, after the final edit
 ```
 
 Exit codes: 0 ok, 1 findings at or above the fail level, 2 usage error, 3 tool or
@@ -135,7 +136,10 @@ the checks after fixing. Details and the Tier 2 checklist: [references/visual-qa
 
 ### 7. Report
 
-Start the final answer with the proof summary:
+Run `craft report` after your last edit (it re-runs Tier 0 and folds in fresh `audit` and
+`shoot` results), then build the proof summary from `.craft/reports/latest.json`: the
+"Verified" line lists only checks that file marks `verified`. Output you saw from a command
+but did not fold into the report is not a receipt. Start the final answer with:
 
 ```
 Highest tier reached: T1 (static)
