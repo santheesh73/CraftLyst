@@ -34,6 +34,10 @@ const INCLUDE = [
   ['adapters/claude-code', 'adapters/claude-code'],
   ['scripts/install-claude-code.js', 'scripts/install-claude-code.js'],
   ['scripts/install-claude-code', 'scripts/install-claude-code'],
+  ['scripts/install-agent.js', 'scripts/install-agent.js'],
+  ['adapters/codex', 'adapters/codex'],
+  ['adapters/cursor', 'adapters/cursor'],
+  ['adapters/other-agents', 'adapters/other-agents'],
   ['scripts/validate-skill.js', 'scripts/validate-skill.js']
 ];
 /**
@@ -44,7 +48,7 @@ const INCLUDE = [
 const VENDOR = ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js'];
 /** Files inside vendored packages that are not needed at runtime. */
 const VENDOR_SKIP = /\.(map|d\.ts|d\.mts|d\.cts|md)$|(^|\/)(bin)\//i;
-const EXECUTABLE = new Set(['adapters/claude-code/hooks/stop-proof.js', 'cli/bin/craft.js', 'scripts/install-claude-code', 'scripts/install-claude-code.js']);
+const EXECUTABLE = new Set(['adapters/claude-code/hooks/stop-proof.js', 'cli/bin/craft.js', 'scripts/install-claude-code', 'scripts/install-claude-code.js', 'scripts/install-agent.js']);
 
 /**
  * @param {string} src
