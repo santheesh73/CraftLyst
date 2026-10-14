@@ -114,13 +114,13 @@ Recorded in `docs/decisions/`. Status in brackets.
 - [x] P0 scaffold, licenses, community files
 - [x] P0 schemas + validator + examples
 - [x] P0 CI skeleton
-- [ ] P0 gate: CI green on GitHub
-- [ ] P1 templates
-- [ ] P1 recipes.json + schema
-- [ ] P1 16 references
-- [ ] P1 SKILL.md
-- [ ] P1 minimal CLI
-- [ ] P1 packaging + install script
-- [ ] P1 trigger tests
-- [ ] P1 automatic gate
+- [x] P0 gate: CI green on GitHub
+- [x] P1 templates
+- [x] P1 recipes.json + schema
+- [x] P1 16 references
+- [x] P1 SKILL.md
+- [x] P1 minimal CLI
+- [x] P1 packaging + install script
+- [x] P1 trigger tests
+- [x] P1 automatic gate
 - [ ] P1 HUMAN GATE (user: 3 real projects)

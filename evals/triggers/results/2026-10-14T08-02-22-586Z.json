@@ -1,0 +1,697 @@
+{
+  "schemaVersion": "1.0",
+  "label": "v0.1 description, run 2 (repeat for variance)",
+  "startedAt": "2026-10-14T08:02:22.586Z",
+  "finishedAt": "2026-10-14T08:04:29.619Z",
+  "claudeCodeVersion": "2.1.299 (Claude Code)",
+  "models": [
+    "claude-sonnet-5-5"
+  ],
+  "descriptionChars": 835,
+  "description": "Guides frontend design and implementation with a persistent design contract (.craft/), executable checks (the craft CLI), and proof reports, so interfaces are product-specific, accessible, responsive, and verified instead of generic. Use when creating, modifying, redesigning, reviewing, or auditing user interfaces in code, including websites, landing pages, web apps, dashboards, portfolios, UI components, forms, design systems and design tokens, CSS or Tailwind styling, layout, typography, color, responsive behavior, UI accessibility, animation and motion, and 3D, WebGL, or immersive web experiences. Also use when turning a reference screenshot or site into a design system. Not for backend, API, database, or infrastructure work, for copywriting without UI changes, or for questions about operating design tools such as Figma.",
+  "prompts": 50,
+  "scored": 50,
+  "errors": 0,
+  "accuracy": 96,
+  "shouldTrigger": {
+    "total": 25,
+    "correct": 23
+  },
+  "shouldNotTrigger": {
+    "total": 25,
+    "correct": 25
+  },
+  "isolation": {
+    "settingSources": "project",
+    "unsetEnv": [
+      "CLAUDE_COWORK_MEMORY_PATH_OVERRIDE",
+      "CLAUDE_CODE_SESSION_ID",
+      "CLAUDE_CODE_PROJECTS_SESSION",
+      "CLAUDE_CODE_CHILD_SESSION",
+      "CLAUDE_CODE_ADDITIONAL_DIRECTORIES_CLAUDE_MD"
+    ],
+    "disallowedTools": [
+      "Bash",
+      "Edit",
+      "Write",
+      "NotebookEdit",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "Agent"
+    ],
+    "maxTurns": 2
+  },
+  "results": [
+    {
+      "id": "t01",
+      "expect": true,
+      "category": "build-page",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft",
+        "artifact-design"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t02",
+      "expect": true,
+      "category": "build-app",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft",
+        "dataviz"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t03",
+      "expect": true,
+      "category": "build-portfolio",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t04",
+      "expect": true,
+      "category": "component",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t05",
+      "expect": true,
+      "category": "modify",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t06",
+      "expect": true,
+      "category": "review",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t07",
+      "expect": true,
+      "category": "audit",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t08",
+      "expect": true,
+      "category": "design-system",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t09",
+      "expect": true,
+      "category": "motion",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t10",
+      "expect": true,
+      "category": "immersive",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t11",
+      "expect": true,
+      "category": "reference",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": false,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t12",
+      "expect": true,
+      "category": "redesign",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t13",
+      "expect": true,
+      "category": "form",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t14",
+      "expect": true,
+      "category": "responsive",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t15",
+      "expect": true,
+      "category": "css",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t16",
+      "expect": true,
+      "category": "build-page",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t17",
+      "expect": true,
+      "category": "component",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t18",
+      "expect": true,
+      "category": "dark-mode",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t19",
+      "expect": true,
+      "category": "typography",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t20",
+      "expect": true,
+      "category": "build-app",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t21",
+      "expect": true,
+      "category": "astro",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t22",
+      "expect": true,
+      "category": "modify",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t23",
+      "expect": true,
+      "category": "mobile-web",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Skill",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t24",
+      "expect": true,
+      "category": "review",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": false,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "t25",
+      "expect": true,
+      "category": "rtl",
+      "near_miss": false,
+      "triggered": true,
+      "skills": [
+        "frontend-craft"
+      ],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n01",
+      "expect": false,
+      "category": "backend",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n02",
+      "expect": false,
+      "category": "database",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": null,
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n03",
+      "expect": false,
+      "category": "copywriting",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": null,
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n04",
+      "expect": false,
+      "category": "figma",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": null,
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n05",
+      "expect": false,
+      "category": "devops",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n06",
+      "expect": false,
+      "category": "backend",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n07",
+      "expect": false,
+      "category": "data",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Write",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n08",
+      "expect": false,
+      "category": "infra",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n09",
+      "expect": false,
+      "category": "algorithm",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Bash",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n10",
+      "expect": false,
+      "category": "frontend-build-tooling",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n11",
+      "expect": false,
+      "category": "state-logic",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Grep",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n12",
+      "expect": false,
+      "category": "git",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": null,
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n13",
+      "expect": false,
+      "category": "seo-copy",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [
+        "artifact-design"
+      ],
+      "firstTool": "Artifact",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n14",
+      "expect": false,
+      "category": "mobile-native",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n15",
+      "expect": false,
+      "category": "security",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Grep",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n16",
+      "expect": false,
+      "category": "testing",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n17",
+      "expect": false,
+      "category": "explain",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": null,
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n18",
+      "expect": false,
+      "category": "spreadsheet",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Bash",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n19",
+      "expect": false,
+      "category": "graphic-design",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": null,
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n20",
+      "expect": false,
+      "category": "cli",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Write",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n21",
+      "expect": false,
+      "category": "backend",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n22",
+      "expect": false,
+      "category": "dependency",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n23",
+      "expect": false,
+      "category": "email",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n24",
+      "expect": false,
+      "category": "ml",
+      "near_miss": false,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    },
+    {
+      "id": "n25",
+      "expect": false,
+      "category": "performance-backend",
+      "near_miss": true,
+      "triggered": false,
+      "skills": [],
+      "firstTool": "Glob",
+      "correct": true,
+      "error": null,
+      "model": "claude-sonnet-5-5"
+    }
+  ]
+}
