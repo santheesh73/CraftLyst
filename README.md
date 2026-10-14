@@ -20,7 +20,7 @@ This project is built in gated phases. Nothing below is claimed beyond what is m
 |---|---|---|
 | P0 Foundation | plan, ADRs, schemas, CI skeleton | done (CI green on Node 20 and 22) |
 | P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | built; waiting on the human gate (use on 3 real projects) |
-| P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | not started |
+| P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | built; gate report pending |
 | P3 Evaluation (v0.3) | briefs, rubric, paired harness | not started |
 | P4 Catalog (v0.4) | pattern catalog and offline search | not started |
 | P5 Contracts and tokens (v0.5) | component contracts, conformance kit, token adapters | not started |
@@ -36,8 +36,9 @@ node scripts/install-claude-code.js --user     # or --project <dir>; add --dry-r
 ```
 
 See [docs/installation.md](docs/installation.md) and [docs/usage.md](docs/usage.md).
-v0.1 ships the skill, templates, and a minimal CLI (`doctor`, `init`, `lint` with the
-contract rule only, `contrast`). The full Slop Lint rule set and rendered checks arrive in v0.2.
+The CLI ships `doctor`, `init` (with `--from-repo`), `lint` (20 Slop Lint rules, see
+[docs/rules.md](docs/rules.md)), `contrast`, `audit` (Tier 1), `shoot` (Tier 2, needs
+Playwright and axe-core), and `report`.
 
 ## Development
 

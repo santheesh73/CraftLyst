@@ -2,7 +2,7 @@
 // (must not fire at warn or block). Fixtures live in cli/fixtures/rules/<prefix>/<name>/.
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { existsSync, mkdirSync, mkdtempSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -36,6 +36,11 @@ for (const rule of RULES) {
     assert.deepEqual(hits.map((f) => `${f.file}:${f.line ?? ''} ${f.message}`), []);
   });
 }
+
+test('docs/rules.md lists every rule', () => {
+  const doc = readFileSync(join(dirname(fileURLToPath(import.meta.url)), '..', '..', 'docs', 'rules.md'), 'utf8');
+  for (const r of RULES) assert.ok(doc.includes(`\`${r.id}\``), `${r.id} missing from docs/rules.md`);
+});
 
 test('rendered-only rules are reported as not run by lint', () => {
   const r = runLint(join(FIXTURES, 'a11y', 'alt', 'negative'));
