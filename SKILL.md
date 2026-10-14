@@ -87,6 +87,12 @@ signature move, token summary, product-specific "never do", open questions.
   (ask) → hand-rolled following the component contract.
 - Choose layout and patterns for fit with the task and content, not popularity:
   [references/layout-patterns.md](references/layout-patterns.md).
+- Search the bundled pattern catalog offline before designing a pattern from scratch:
+  `node <skill-dir>/cli/bin/craft.js search "<intent>" --stack <framework>,<styling> --axes density=compact --json`.
+  It returns 3-5 compact cards; read only the entry files you use, never the whole catalog.
+  Trust levels: L0 reference (never copy), L1 spec (implement independently), L2 licensed
+  source (adapt with attribution), L3 tested component. Exit 3 means no index: note
+  "catalog not consulted" and continue.
 - Galleries and showcase sites are visual references only. Never paste third-party code,
   copy, or assets.
 
