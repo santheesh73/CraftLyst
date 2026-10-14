@@ -3,10 +3,10 @@ import { visualTraits, isCardLike } from '../../src/rule-helpers.js';
 const OVERLAY = /dropdown|popover|tooltip|menu|modal|dialog|drawer|toast|listbox|combobox/i;
 
 /**
- * Floating layers (menus, popovers, tooltips, dialogs) are positioned above content, not nested in it.
+ * Floating layers (menus, popovers, tooltips, dialogs, absolutely positioned panels) sit above content, not nested in it.
  * @param {import('../types.js').Element} el
  */
-const isOverlay = (el) => OVERLAY.test(`${el.tag} ${el.attrs.id?.value ?? ''} ${el.attrs.role?.value ?? ''}`) || el.classes.some((c) => OVERLAY.test(c));
+const isOverlay = (el) => OVERLAY.test(`${el.tag} ${el.attrs.id?.value ?? ''} ${el.attrs.role?.value ?? ''}`) || el.classes.some((c) => OVERLAY.test(c) || c === 'absolute' || c === 'fixed');
 
 /** @type {import('../types.js').Rule} */
 export default {

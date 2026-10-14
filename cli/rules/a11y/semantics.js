@@ -7,6 +7,8 @@ import { TEMPLATE_INCLUDE } from '../../src/rule-helpers.js';
  */
 function delegates(el) {
   if (/(^|[\s_-])(backdrop|overlay|scrim|mask)($|[\s_-])/i.test(el.classes.join(' '))) return true;
+  // A full-screen fixed layer (fixed inset-0) behind a drawer or modal is a backdrop too.
+  if (el.classes.includes('fixed') && el.classes.includes('inset-0')) return true;
   /** @param {import('../types.js').Element} e @returns {boolean} */
   // Items rendered in a loop by components (<FilterItem> per entry) are treated as controls too.
   const hasControl = (e) => e.children.some((c) => /^(a|button|input|select|textarea|summary)$/.test(c.tag) || /^[A-Z]\w*(Link|Button)$|^(Link|Button|RouterLink|NuxtLink)$/.test(c.tag) || (c.inLoop && /^[A-Z]/.test(c.tag)) || hasControl(c));

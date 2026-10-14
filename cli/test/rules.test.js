@@ -86,6 +86,10 @@ test('false-positive cases from open-source repos stay quiet', () => {
   assert.deepEqual(lintFiles({ 'index.html': PAGE('<div class="hidden w-[572px] lg:block">Side</div><div aria-hidden="true"><div class="w-[480px]"></div></div>') }, ['rsp/viewport']), []);
   assert.deepEqual(lintFiles({ 'index.html': PAGE('<svg><style>.st0{fill:#0acf83}</style></svg>'), 'a.css': ':root { --a: #111; --b: #222; --c: #333; }' }, ['tok/hardcoded']), []);
   assert.deepEqual(lintFiles({ 'index.html': PAGE('<pre><code>&lt;p&gt;Lorem ipsum dolor sit amet&lt;/p&gt;</code></pre>') }, ['con/fabricated']), []);
+  assert.deepEqual(lintFiles({ 'a.css': ':root { --a: #111; --b: #222; --c: #333; }\n.x { color: hsl(var(--a)); background: hsl(var(--b) / 0.5); }\n.token.tag { color: #267f99; }' }, ['tok/hardcoded']), []);
+  assert.deepEqual(lintFiles({ 'a.jsx': 'export const A = () => <div><div aria-hidden className="absolute w-[1800px]" /><div className="max-md:overflow-x-auto"><table className="min-w-[720px]" /></div></div>;' }, ['rsp/viewport']), []);
+  assert.deepEqual(lintFiles({ 'a.jsx': 'export const B = ({ close }) => <div className="fixed inset-0 bg-black/50" onClick={close} />;' }, ['a11y/semantics']), []);
+  assert.deepEqual(lintFiles({ 'a.css': ':root { --background: #fff; }', 'a.jsx': 'export const D = () => <div className="[--peek:1rem] translate-y-[var(--peek)]" style={{ marginTop: "var(--peek)" }} />;' }, ['tok/unknown-var']), []);
   // Custom property names are case-sensitive.
   assert.deepEqual(lintFiles({ 'a.css': '.a { --text-GRAD: 1; } .b { font-weight: var(--text-GRAD); }' }, ['tok/unknown-var']), []);
 });

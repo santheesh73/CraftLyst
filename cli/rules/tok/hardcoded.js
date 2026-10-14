@@ -13,7 +13,7 @@ const STEP_SIZE = new RegExp(`(^--|-)(font-size|text|fs|step|type)-(${STEP.slice
  * @param {import('../types.js').Element} el
  */
 const decorative = (el) => {
-  for (let e = /** @type {import('../types.js').Element | null} */ (el); e; e = e.parent) if (e.attrs['aria-hidden']?.value === 'true') return true;
+  for (let e = /** @type {import('../types.js').Element | null} */ (el); e; e = e.parent) if (e.attrs['aria-hidden'] && e.attrs['aria-hidden'].value !== 'false') return true;
   return false;
 };
 
@@ -105,6 +105,8 @@ export default {
           if (d.prop.startsWith('--') || inSvg(d.line)) continue;
           if (d.rule && /^@(theme|font-face|property|keyframes)/.test(d.rule.selector)) continue;
           if (d.rule?.media.some((m) => /print/.test(m))) continue;
+          // Syntax-highlighting palettes (Prism .token, highlight.js, Shiki, CodeMirror) are their own color system.
+          if (d.rule && /\.(token|hljs|shiki|cm-)/.test(d.rule.selector)) continue;
           const { flagged, skipped } = literals(d.prop, d.value, doc.file);
           note(skipped, doc.file, d.line);
           if (flagged.length) {

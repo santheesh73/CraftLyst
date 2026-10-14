@@ -49,7 +49,8 @@ export function colorLiterals(value) {
   /** @type {string[]} */
   const out = [];
   for (const m of v.matchAll(new RegExp(HEX.source, 'gi'))) out.push(m[0]);
-  for (const m of v.matchAll(/\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\([^)]*\)/gi)) out.push(m[0]);
+  // hsl(var(--primary)) builds a color from a token's channels; only literal channels count.
+  for (const m of v.matchAll(/\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\([^)]*\)/gi)) if (!/^\w+\(\s*VAR/.test(m[0])) out.push(m[0]);
   for (const word of v.toLowerCase().split(/[\s,/()]+/)) if (NAMED_COLORS.has(word)) out.push(word);
   return out;
 }
@@ -173,12 +174,15 @@ export function visualTraits(el, classes) {
 /** Files that render images (Open Graph cards via satori/next/og), not interface. */
 /**
  * Is the element (or an ancestor) hidden at the smallest viewport or marked decorative?
- * Covers aria-hidden="true", an unprefixed Tailwind hidden/invisible class, and the hidden attribute.
+ * Covers aria-hidden (JSX boolean or "true"), an unprefixed Tailwind hidden/invisible class, the hidden
+ * attribute, and boxes inside a horizontal scroll container (overflow-x-auto), which scroll rather than overflow.
  * @param {Element} el
  */
 export function isHiddenOrDecorative(el) {
   for (let e = /** @type {Element | null} */ (el); e; e = e.parent) {
-    if (e.attrs['aria-hidden']?.value === 'true' || 'hidden' in e.attrs || e.classes.some((c) => c === 'hidden' || c === 'invisible')) return true;
+    const ariaHidden = e.attrs['aria-hidden'];
+    if ((ariaHidden && ariaHidden.value !== 'false') || 'hidden' in e.attrs || e.classes.some((c) => c === 'hidden' || c === 'invisible')) return true;
+    if (e !== el && e.classes.some((c) => /(^|:)overflow-(x-)?(auto|scroll)$/.test(c))) return true;
   }
   return false;
 }

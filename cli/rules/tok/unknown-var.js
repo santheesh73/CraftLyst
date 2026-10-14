@@ -6,9 +6,10 @@ const TAILWIND_V4 = /^--(color|spacing|radius|font|text|tracking|leading|shadow|
 
 /**
  * Family of a custom property: everything before its last segment (--vp-c-shadow-3 -> --vp-c-).
+ * A one-word name (--peek) has no family beyond itself.
  * @param {string} name
  */
-const family = (name) => name.replace(/-[^-]+$/, '-');
+const family = (name) => (/^--[^-]+$/.test(name) ? name : name.replace(/-[^-]+$/, '-'));
 
 /** @type {import('../types.js').Rule} */
 export default {
@@ -23,6 +24,8 @@ export default {
     const defined = new Set([...ctx.definedVars, ...ctx.tokenVars]);
     // Variables assigned from JavaScript (style.setProperty('--x') or style={{'--x': ...}}) count as defined.
     for (const m of ctx.text().matchAll(/['"`](--[\w-]+)['"`]/g)) defined.add(m[1]);
+    // Tailwind arbitrary properties ([--peek:1rem]) define variables on the element.
+    for (const m of ctx.text().matchAll(/\[(--[\w-]+):/g)) defined.add(m[1]);
     const tailwind4 = ctx.docs.some((d) => d.css.some((c) => c.atRules.some((a) => a.name === 'import' && /["']tailwindcss["']/.test(a.params) || a.name === 'theme')));
     const families = new Set([...defined].map(family));
     // A dependency's own variables (--pagefind-*, --docsearch-*) are set by its stylesheet at runtime.
