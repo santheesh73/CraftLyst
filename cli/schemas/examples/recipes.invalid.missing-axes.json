@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1.0",
+  "axes": {
+    "density": {
+      "label": "Density",
+      "question": "How much information per screen?",
+      "poles": ["compact", "airy"],
+      "positions": { "compact": { "summary": "Tight spacing for data", "fitsWhen": ["dashboards"], "tokens": { "spaceBaseUnit": { "min": 4, "max": 4, "unit": "px" } } } }
+    }
+  },
+  "precedence": ["density"],
+  "conflicts": []
+}

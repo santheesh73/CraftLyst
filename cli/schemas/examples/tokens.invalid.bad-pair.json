@@ -1,0 +1,8 @@
+{
+  "schemaVersion": "1.0",
+  "name": "broken-pair",
+  "themes": ["light"],
+  "primitive": { "color": { "ink": "#000" } },
+  "semantic": { "color": { "text": "{primitive.color.ink}" } },
+  "pairs": [{ "fg": "text", "bg": "color.surface", "use": "body" }]
+}

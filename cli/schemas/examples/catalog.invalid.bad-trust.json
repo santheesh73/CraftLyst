@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0",
+  "id": "Bad_ID",
+  "title": "Bad",
+  "category": "widget",
+  "description": "short",
+  "intent": "x",
+  "source": { "kind": "original-spec", "url": "not a url", "attribution": "" },
+  "characteristics": [],
+  "axes": {},
+  "compatibility": { "frameworks": [], "styling": ["any"] },
+  "license": { "name": "MIT", "spdx": "MIT", "redistribution": "allowed" },
+  "trust": "L4",
+  "verified_on": "yesterday",
+  "status": "production-ready",
+  "limitations": []
+}

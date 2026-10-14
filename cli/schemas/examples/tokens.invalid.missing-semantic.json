@@ -1,0 +1,6 @@
+{
+  "schemaVersion": "1.0",
+  "name": "broken",
+  "themes": ["light"],
+  "primitive": { "color": { "ink": "#000" } }
+}

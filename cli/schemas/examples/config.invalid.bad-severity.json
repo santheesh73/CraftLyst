@@ -1,0 +1,4 @@
+{
+  "schemaVersion": "1.0",
+  "rules": { "a11y/focus": { "severity": "error" } }
+}

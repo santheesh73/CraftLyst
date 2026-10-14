@@ -1,0 +1,17 @@
+{
+  "schemaVersion": "1.0",
+  "stack": { "framework": "next", "styling": "tailwind-v4", "touch": true },
+  "failOn": "block",
+  "rules": {
+    "vis/default-stack": { "severity": "off" },
+    "lay/card-depth": { "severity": "warn", "options": { "maxDepth": 1 } }
+  },
+  "thresholds": { "cardShare": 0.6, "cardDepth": 1, "touchTarget": 44, "touchTargetMin": 24, "glowBlurPx": 24 },
+  "ignore": ["**/*.stories.tsx", "public/vendor/**"],
+  "exceptions": [
+    { "rule": "tok/hardcoded", "glob": "src/legacy/**", "reason": "Legacy pages scheduled for removal; not tokenized." }
+  ],
+  "tier1": { "commands": { "typecheck": "npm run typecheck" } },
+  "tier2": { "startCommand": "npm run dev", "url": "http://localhost:3000", "routes": ["/", "/pricing"], "viewports": [320, 375, 768, 1280, 1920] },
+  "contract": { "maxDesignLines": 150 }
+}

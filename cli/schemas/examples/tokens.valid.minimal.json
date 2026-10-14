@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "name": "minimal-example",
+  "themes": ["light", "dark"],
+  "primitive": {
+    "color": { "ink-900": "#16181d", "ink-50": "#f5f6f8", "blue-600": "#1f5fd1", "blue-300": "#8db3f5" },
+    "space": { "1": "4px", "2": "8px", "4": "16px" }
+  },
+  "semantic": {
+    "color": {
+      "text": { "light": "{primitive.color.ink-900}", "dark": "{primitive.color.ink-50}" },
+      "surface": { "light": "{primitive.color.ink-50}", "dark": "{primitive.color.ink-900}" },
+      "accent": { "light": "{primitive.color.blue-600}", "dark": "{primitive.color.blue-300}" }
+    },
+    "space": { "inline": "{primitive.space.2}", "stack": "{primitive.space.4}" }
+  },
+  "component": { "button": { "padding-inline": "{semantic.space.stack}" } },
+  "pairs": [
+    { "fg": "color.text", "bg": "color.surface", "use": "text" },
+    { "fg": "color.accent", "bg": "color.surface", "use": "ui" }
+  ],
+  "meta": { "source": "hand-written" }
+}

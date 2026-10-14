@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:frontend-craft:schema:recipes:1.0",
+  "title": "Direction Engine recipes (tokens/recipes.json)",
+  "description": "Maps each design axis position to concrete token ranges. See references/direction-engine.md.",
+  "type": "object",
+  "required": ["schemaVersion", "axes", "precedence", "conflicts"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": "1.0" },
+    "axes": {
+      "type": "object",
+      "required": ["density", "temperature", "formality", "motion", "shape", "contrast", "voice", "imagery"],
+      "additionalProperties": false,
+      "properties": {
+        "density": { "$ref": "#/$defs/axis" },
+        "temperature": { "$ref": "#/$defs/axis" },
+        "formality": { "$ref": "#/$defs/axis" },
+        "motion": { "$ref": "#/$defs/axis" },
+        "shape": { "$ref": "#/$defs/axis" },
+        "contrast": { "$ref": "#/$defs/axis" },
+        "voice": { "$ref": "#/$defs/axis" },
+        "imagery": { "$ref": "#/$defs/axis" }
+      }
+    },
+    "precedence": {
+      "description": "When two axes constrain the same token key and their ranges do not overlap, the axis listed first wins.",
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": { "enum": ["density", "temperature", "formality", "motion", "shape", "contrast", "voice", "imagery"] }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["when", "message"],
+        "additionalProperties": false,
+        "properties": {
+          "when": {
+            "type": "object",
+            "minProperties": 2,
+            "propertyNames": { "enum": ["density", "temperature", "formality", "motion", "shape", "contrast", "voice", "imagery"] },
+            "additionalProperties": { "type": "string" }
+          },
+          "message": { "type": "string", "minLength": 10 }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "axis": {
+      "type": "object",
+      "required": ["label", "question", "poles", "positions"],
+      "additionalProperties": false,
+      "properties": {
+        "label": { "type": "string" },
+        "question": { "type": "string", "minLength": 10 },
+        "poles": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "string" } },
+        "positions": {
+          "type": "object",
+          "minProperties": 2,
+          "propertyNames": { "type": "string", "pattern": "^[a-z][a-z-]*$" },
+          "additionalProperties": { "$ref": "#/$defs/position" }
+        }
+      }
+    },
+    "position": {
+      "type": "object",
+      "required": ["summary", "fitsWhen", "tokens"],
+      "additionalProperties": false,
+      "properties": {
+        "summary": { "type": "string", "minLength": 10 },
+        "fitsWhen": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "tokens": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "enum": [
+            "spaceBaseUnit", "spaceScale", "sectionSpacing", "controlHeight", "bodySize", "lineHeight", "measure",
+            "typeScaleRatio", "headingWeight", "bodyWeight", "letterSpacingHeadings", "caseStyle", "fontCategories",
+            "radius", "borderWidth", "shadowPolicy", "elevationLevels", "surfaceSteps",
+            "neutralHue", "neutralChroma", "accentChroma", "accentCount",
+            "durationMs", "easing", "motionDistancePx", "motionUses",
+            "mediaShare", "mediaAspectRatios", "displaySize"
+          ] },
+          "additionalProperties": { "$ref": "#/$defs/tokenValue" }
+        },
+        "avoid": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "range": {
+      "type": "object",
+      "required": ["min", "max"],
+      "additionalProperties": false,
+      "properties": {
+        "min": { "type": "number" },
+        "max": { "type": "number" },
+        "unit": { "enum": ["px", "rem", "ms", "ratio", "deg", "ch", "percent", "count"] }
+      }
+    },
+    "tokenValue": {
+      "anyOf": [
+        { "$ref": "#/$defs/range" },
+        { "type": "number" },
+        { "type": "string" },
+        { "type": "array", "items": { "type": ["number", "string"] } },
+        {
+          "type": "object",
+          "additionalProperties": { "anyOf": [{ "$ref": "#/$defs/range" }, { "type": "number" }, { "type": "string" }] }
+        }
+      ]
+    }
+  }
+}

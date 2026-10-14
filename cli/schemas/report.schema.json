@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:frontend-craft:schema:report:1.0",
+  "title": "Frontend Craft proof report (.craft/reports/latest.json)",
+  "description": "A receipt: the agent may only claim checks recorded here as verified.",
+  "type": "object",
+  "required": ["schemaVersion", "runId", "tool", "startedAt", "finishedAt", "project", "tooling", "tiersAttempted", "highestTier", "checks", "findings", "exceptions", "summary"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": "1.0" },
+    "runId": { "type": "string", "pattern": "^[a-zA-Z0-9-]{8,64}$" },
+    "tool": {
+      "type": "object",
+      "required": ["name", "version"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "const": "frontend-craft" },
+        "version": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+(-[0-9A-Za-z.-]+)?$" }
+      }
+    },
+    "startedAt": { "type": "string", "format": "date-time" },
+    "finishedAt": { "type": "string", "format": "date-time" },
+    "project": {
+      "type": "object",
+      "required": ["contentHash"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string" },
+        "contentHash": {
+          "type": "object",
+          "required": ["algorithm", "value", "fileCount"],
+          "additionalProperties": false,
+          "properties": {
+            "algorithm": { "const": "sha256" },
+            "value": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+            "fileCount": { "type": "integer", "minimum": 0 }
+          }
+        }
+      }
+    },
+    "tooling": {
+      "type": "object",
+      "required": ["node"],
+      "additionalProperties": false,
+      "properties": {
+        "node": { "type": "string" },
+        "packageManager": { "type": ["string", "null"] },
+        "framework": { "type": ["string", "null"] },
+        "styling": { "type": ["string", "null"] },
+        "playwright": { "type": ["string", "null"] },
+        "axe": { "type": ["string", "null"] },
+        "projectScripts": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tiersAttempted": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/tier" } },
+    "highestTier": { "enum": ["none", "T0", "T1", "T2", "T3"] },
+    "checks": { "type": "array", "items": { "$ref": "#/$defs/check" } },
+    "findings": { "type": "array", "items": { "$ref": "#/$defs/finding" } },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ruleId", "file", "reason", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "ruleId": { "$ref": "#/$defs/ruleId" },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "reason": { "type": "string", "minLength": 1 },
+          "source": { "enum": ["inline", "config"] }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": ["block", "warn", "info"],
+      "additionalProperties": false,
+      "properties": {
+        "block": { "type": "integer", "minimum": 0 },
+        "warn": { "type": "integer", "minimum": 0 },
+        "info": { "type": "integer", "minimum": 0 }
+      }
+    }
+  },
+  "$defs": {
+    "tier": { "enum": ["T0", "T1", "T2", "T3"] },
+    "ruleId": { "type": "string", "pattern": "^[a-z0-9]+/[a-z0-9-]+$" },
+    "check": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": ["id", "tier", "status", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "tier": { "$ref": "#/$defs/tier" },
+            "status": { "const": "verified" },
+            "evidence": { "type": "string", "minLength": 1 },
+            "durationMs": { "type": "integer", "minimum": 0 }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["id", "tier", "status", "reason"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "tier": { "$ref": "#/$defs/tier" },
+            "status": { "const": "not_verified" },
+            "reason": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "required": ["id", "tier", "status", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "id": { "type": "string", "minLength": 1 },
+            "tier": { "$ref": "#/$defs/tier" },
+            "status": { "const": "failed" },
+            "evidence": { "type": "string", "minLength": 1 },
+            "durationMs": { "type": "integer", "minimum": 0 }
+          }
+        }
+      ]
+    },
+    "finding": {
+      "type": "object",
+      "required": ["ruleId", "file", "severity", "confidence", "message", "remediation"],
+      "additionalProperties": false,
+      "properties": {
+        "ruleId": { "$ref": "#/$defs/ruleId" },
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 },
+        "column": { "type": "integer", "minimum": 1 },
+        "severity": { "enum": ["block", "warn", "info"] },
+        "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "remediation": { "type": "string", "minLength": 1 },
+        "tier": { "$ref": "#/$defs/tier" }
+      }
+    }
+  }
+}

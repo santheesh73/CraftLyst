@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0",
+  "id": "split-hero-with-proof-strip",
+  "title": "Split hero with proof strip",
+  "category": "page-composition",
+  "description": "Two-column opening section: product statement and primary action on one side, a real product view on the other, followed by a strip of verifiable proof points.",
+  "intent": "Open a product page with what it does and evidence it works, not decoration.",
+  "tags": ["hero", "landing", "saas"],
+  "source": { "kind": "original-spec", "url": null, "attribution": "Frontend Craft contributors" },
+  "characteristics": ["asymmetric two-column grid", "product screenshot instead of illustration", "proof points backed by data sources"],
+  "axes": { "density": ["balanced"], "imagery": ["balanced", "imagery-led"] },
+  "compatibility": { "frameworks": ["any"], "styling": ["any"] },
+  "dependencies": [],
+  "interaction": "Primary and secondary actions only; no autoplaying media.",
+  "responsive": "Stacks to one column below 768px with the statement first.",
+  "accessibility": "Single h1; screenshot has descriptive alt text; proof strip is a list.",
+  "license": { "name": "CC-BY-4.0", "spdx": "CC-BY-4.0", "redistribution": "allowed" },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "draft",
+  "limitations": ["Needs a real product view; weak when the product has no visual surface."]
+}

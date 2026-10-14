@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "20261014-0002-ff00aa",
+  "tool": { "name": "frontend-craft", "version": "0.1.0" },
+  "startedAt": "2026-10-14T08:00:00Z",
+  "finishedAt": "2026-10-14T08:00:02Z",
+  "project": { "contentHash": { "algorithm": "sha256", "value": "3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a", "fileCount": 1 } },
+  "tooling": { "node": "22.22.0" },
+  "tiersAttempted": ["T2"],
+  "highestTier": "T2",
+  "checks": [{ "id": "t2.axe", "tier": "T2", "status": "verified" }],
+  "findings": [],
+  "exceptions": [],
+  "summary": { "block": 0, "warn": 0, "info": 0 }
+}

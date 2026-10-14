@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "20261014-0001-ab12cd",
+  "tool": { "name": "frontend-craft", "version": "0.1.0" },
+  "startedAt": "2026-10-14T08:00:00Z",
+  "finishedAt": "2026-10-14T08:00:02Z",
+  "project": {
+    "name": "example",
+    "contentHash": { "algorithm": "sha256", "value": "3b4c5d6e7f8091a2b3c4d5e6f708192a3b4c5d6e7f8091a2b3c4d5e6f708192a", "fileCount": 42 }
+  },
+  "tooling": { "node": "22.22.0", "packageManager": "npm", "framework": "react", "styling": "tailwind-v4", "playwright": null, "axe": null, "projectScripts": ["lint", "build"] },
+  "tiersAttempted": ["T0", "T1", "T2"],
+  "highestTier": "T0",
+  "checks": [
+    { "id": "t0.slop-lint", "tier": "T0", "status": "verified", "evidence": "42 files scanned, 0 block, 2 warn", "durationMs": 812 },
+    { "id": "t1.build", "tier": "T1", "status": "failed", "evidence": "npm run build exited 1: Type error in src/app/page.tsx:12" },
+    { "id": "t2.screenshots", "tier": "T2", "status": "not_verified", "reason": "Playwright is not installed; user declined install." }
+  ],
+  "findings": [
+    { "ruleId": "tok/hardcoded", "file": "src/app/page.tsx", "line": 18, "column": 22, "severity": "warn", "confidence": 0.8, "message": "Arbitrary color bg-[#0b0b0f] is not a token.", "remediation": "Use a semantic color token such as bg-surface, or add the value to .craft/tokens.json with a role.", "tier": "T0" }
+  ],
+  "exceptions": [
+    { "ruleId": "vis/gradient-text", "file": "src/app/hero.tsx", "line": 7, "reason": "Brand wordmark uses the logo gradient per brand guide.", "source": "inline" }
+  ],
+  "summary": { "block": 0, "warn": 1, "info": 0 }
+}

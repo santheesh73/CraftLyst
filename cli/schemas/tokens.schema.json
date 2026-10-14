@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:frontend-craft:schema:tokens:1.0",
+  "title": "Frontend Craft design tokens",
+  "description": "Primitive -> semantic -> component tokens with per-theme mappings. Values may reference other tokens as {group.path}.",
+  "type": "object",
+  "required": [
+    "schemaVersion",
+    "name",
+    "themes",
+    "primitive",
+    "semantic"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 80
+    },
+    "description": {
+      "type": "string",
+      "maxLength": 500
+    },
+    "themes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/name"
+      }
+    },
+    "primitive": {
+      "$ref": "#/$defs/groups"
+    },
+    "semantic": {
+      "$ref": "#/$defs/themedGroups"
+    },
+    "component": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/name"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "propertyNames": {
+          "$ref": "#/$defs/leafName"
+        },
+        "additionalProperties": {
+          "$ref": "#/$defs/themedValue"
+        }
+      }
+    },
+    "pairs": {
+      "description": "Foreground/background semantic color pairs checked for WCAG AA contrast in every theme.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "fg",
+          "bg",
+          "use"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "fg": {
+            "$ref": "#/$defs/semanticRef"
+          },
+          "bg": {
+            "$ref": "#/$defs/semanticRef"
+          },
+          "use": {
+            "enum": [
+              "text",
+              "large-text",
+              "ui"
+            ]
+          },
+          "note": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "meta": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {
+          "enum": [
+            "template",
+            "direction-engine",
+            "extracted",
+            "hand-written"
+          ]
+        },
+        "generatedBy": {
+          "type": "string"
+        },
+        "updated": {
+          "type": "string",
+          "format": "date"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9-]*$"
+    },
+    "value": {
+      "type": [
+        "string",
+        "number"
+      ]
+    },
+    "themedValue": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/value"
+        },
+        {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": {
+            "$ref": "#/$defs/name"
+          },
+          "additionalProperties": {
+            "$ref": "#/$defs/value"
+          }
+        }
+      ]
+    },
+    "semanticRef": {
+      "type": "string",
+      "pattern": "^[a-zA-Z][a-zA-Z0-9-]*\\.[a-zA-Z0-9-]+$"
+    },
+    "groups": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/name"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "propertyNames": {
+          "$ref": "#/$defs/leafName"
+        },
+        "additionalProperties": {
+          "$ref": "#/$defs/value"
+        }
+      }
+    },
+    "themedGroups": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/name"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "propertyNames": {
+          "$ref": "#/$defs/leafName"
+        },
+        "additionalProperties": {
+          "$ref": "#/$defs/themedValue"
+        }
+      }
+    },
+    "leafName": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9][a-zA-Z0-9-]*$"
+    }
+  }
+}

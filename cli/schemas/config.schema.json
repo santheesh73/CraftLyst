@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:frontend-craft:schema:config:1.0",
+  "title": "Frontend Craft configuration (.craft/craft.config.json)",
+  "type": "object",
+  "required": ["schemaVersion"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": "1.0" },
+    "stack": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "framework": { "enum": ["auto", "react", "next", "vue", "svelte", "astro", "html", "other"] },
+        "styling": { "enum": ["auto", "tailwind-v3", "tailwind-v4", "css", "css-modules", "scss", "css-in-js", "other"] },
+        "touch": { "type": "boolean", "description": "Whether layouts target touch devices (affects a11y/target)." }
+      }
+    },
+    "failOn": { "enum": ["block", "warn"] },
+    "rules": {
+      "type": "object",
+      "propertyNames": { "$ref": "#/$defs/ruleId" },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "severity": { "enum": ["block", "warn", "info", "off"] },
+          "options": { "type": "object" }
+        }
+      }
+    },
+    "thresholds": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cardShare": { "type": "number", "minimum": 0, "maximum": 1 },
+        "cardDepth": { "type": "integer", "minimum": 0 },
+        "cloneGridMin": { "type": "integer", "minimum": 2 },
+        "defaultStackShare": { "type": "number", "minimum": 0, "maximum": 1 },
+        "touchTarget": { "type": "integer", "minimum": 16 },
+        "touchTargetMin": { "type": "integer", "minimum": 16 },
+        "glowBlurPx": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "ignore": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+    "exceptions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["rule", "glob", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "rule": { "$ref": "#/$defs/ruleId" },
+          "glob": { "type": "string", "minLength": 1 },
+          "reason": { "type": "string", "minLength": 8 }
+        }
+      }
+    },
+    "tier1": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "commands": {
+          "type": "object",
+          "description": "Override auto-detected project commands. Only commands present here or in package.json are run.",
+          "additionalProperties": false,
+          "properties": {
+            "lint": { "type": "string" },
+            "typecheck": { "type": "string" },
+            "test": { "type": "string" },
+            "build": { "type": "string" }
+          }
+        }
+      }
+    },
+    "tier2": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "url": { "type": "string", "format": "uri" },
+        "startCommand": { "type": "string" },
+        "routes": { "type": "array", "items": { "type": "string", "pattern": "^/" } },
+        "viewports": { "type": "array", "items": { "type": "integer", "minimum": 200, "maximum": 4000 }, "uniqueItems": true }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxDesignLines": { "type": "integer", "minimum": 20, "maximum": 150 }
+      }
+    }
+  },
+  "$defs": {
+    "ruleId": { "type": "string", "pattern": "^[a-z0-9]+/[a-z0-9-]+$" }
+  }
+}
