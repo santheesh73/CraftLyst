@@ -6,7 +6,7 @@
   "type": "module",
   "private": true,
   "engines": {
-    "node": ">=20"
+    "node": ">=20.19"
   },
   "bin": {
     "craft": "cli/bin/craft.js"
@@ -24,6 +24,13 @@
   },
   "devDependencies": {
     "@types/node": "22.10.2",
+    "axe-core": "4.13.0",
+    "playwright": "1.56.1",
     "typescript": "5.7.2"
+  },
+  "dependencies": {
+    "@babel/parser": "7.29.8",
+    "parse5": "8.0.1",
+    "postcss": "8.5.28"
   }
 }
