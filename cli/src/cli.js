@@ -1,8 +1,9 @@
 // craft command-line interface. Exit codes: 0 ok, 1 findings at/above --fail-on,
-// 2 usage error, 3 environment or tool unavailable (including commands not in this version).
+// 2 usage error, 3 environment or tool unavailable.
 import { parseArgs } from 'node:util';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, relative, isAbsolute, sep } from 'node:path';
+import { buildTokens } from './tokens-build.js';
 import { VERSION } from './version.js';
 import { detect } from './doctor.js';
 import { init } from './init.js';
@@ -19,16 +20,11 @@ import { BUNDLED_CATALOG, LOCAL_ENTRIES_DIR, LOCAL_INDEX_FILE, buildIndex, diges
 
 export const EXIT = { OK: 0, FINDINGS: 1, USAGE: 2, UNAVAILABLE: 3 };
 
-/** Commands planned in the spec and the version that adds them. */
-const PLANNED = {
-  tokens: '0.5.0'
-};
-
 const HELP = `craft ${VERSION}: design contract, checks, and proof for frontend work
 
 Usage: craft <command> [path] [options]
 
-Commands available in this version:
+Commands:
   doctor            Detect Node, package manager, framework, styling, Playwright, axe
   init              Scaffold .craft/ from templates (never overwrites existing files)
   init --from-repo  Same, with tokens.json drafted from the project's custom properties and Tailwind config
@@ -46,14 +42,17 @@ Commands available in this version:
   search "<intent>" Offline catalog search: 3-5 compact cards (id, trust, intent, file to read).
                     Filters: --axes density=compact,... --stack react,tailwind-v4 --trust L1,L2
                     --category component --limit 5 (1-10)
+  tokens build      Emit .craft/build/tokens.css (CSS variables, light/dark), tailwind.v3.cjs/.mjs
+                    (v3 preset), and tailwind.v4.css (@theme) from .craft/tokens.json
+                    (--tokens <file>, --out <dir inside .craft/>)
 
-Planned (exit 3 until released): ${Object.entries(PLANNED).map(([c, v]) => `${c} (${v})`).join(', ')}
 
 Options:
   --json            Machine-readable output
   --fail-on <lvl>   block | warn (default: config failOn, else block)
   --cwd <dir>       Project root (default: current directory)
-  --tokens <file>   Token file for contrast (default: .craft/tokens.json)
+  --tokens <file>   Token file for contrast and tokens build (default: .craft/tokens.json)
+  --out <dir>       tokens build: output directory inside .craft/ (default: .craft/build)
   --rules <ids>     Comma-separated rule ids for lint
   --scripts <names> Comma-separated scripts for audit (default: all detected)
   --timeout <sec>   Per-script timeout for audit (default: ${DEFAULT_TIMEOUT_MS / 1000})
@@ -113,6 +112,7 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
         limit: { type: 'string' },
         today: { type: 'string' },
         catalog: { type: 'string' },
+        out: { type: 'string' },
         version: { type: 'boolean', short: 'v', default: false },
         help: { type: 'boolean', short: 'h', default: false }
       }
@@ -146,13 +146,6 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
   if (failOnArg !== undefined && failOnArg !== 'block' && failOnArg !== 'warn') {
     io.stderr(`craft: --fail-on must be "block" or "warn", got "${failOnArg}".\n`);
     return EXIT.USAGE;
-  }
-
-  if (command in PLANNED) {
-    const since = PLANNED[/** @type {keyof typeof PLANNED} */ (command)];
-    const msg = `craft ${command} is not available in ${VERSION}; it is planned for ${since}. Report this check as not verified and check by inspection instead.`;
-    out({ command, ok: false, status: 'unavailable', availableIn: since, message: msg }, `${msg}\n`);
-    return EXIT.UNAVAILABLE;
   }
 
   switch (command) {
@@ -442,11 +435,77 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
       }, text + '\n');
       return EXIT.OK;
     }
+    case 'tokens':
+      return tokensCommand(root, rest, values, out, io);
 
     default:
       io.stderr(`craft: unknown command "${command}". Run "craft --help" for the list.\n`);
       return EXIT.USAGE;
   }
+}
+
+/**
+ * craft tokens build: read the token file, validate, and write the adapters inside .craft/.
+ * @param {string} root
+ * @param {string[]} rest positionals after "tokens"
+ * @param {Record<string, any>} values parsed options
+ * @param {(payload: object, text: string) => void} out
+ * @param {IO} io
+ * @returns {number}
+ */
+function tokensCommand(root, rest, values, out, io) {
+  if (rest[0] !== 'build' || rest.length > 1) {
+    io.stderr(`craft tokens: expected "craft tokens build", got "craft tokens ${rest.join(' ')}".\n`);
+    return EXIT.USAGE;
+  }
+  const craftDir = join(root, '.craft');
+  const outDir = values.out ? resolve(root, String(values.out)) : join(craftDir, 'build');
+  const rel = relative(craftDir, outDir);
+  if (rel.startsWith('..') || isAbsolute(rel)) {
+    io.stderr(`craft tokens build: --out must be inside ${craftDir} (got ${outDir}). craft only writes inside .craft/; copy or import the files from there.\n`);
+    return EXIT.USAGE;
+  }
+  const file = values.tokens ? resolve(root, String(values.tokens)) : join(craftDir, 'tokens.json');
+  if (!existsSync(file)) {
+    const msg = `No token file at ${file}. Run craft init or pass --tokens <file>.`;
+    out({ command: 'tokens build', ok: false, status: 'unavailable', message: msg }, msg + '\n');
+    return EXIT.UNAVAILABLE;
+  }
+  /** @type {any} */
+  let tokens;
+  try {
+    tokens = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (err) {
+    const msg = `${file} is not valid JSON: ${/** @type {Error} */ (err).message}`;
+    out({ command: 'tokens build', ok: false, status: 'invalid', errors: [msg] }, msg + '\n');
+    return EXIT.FINDINGS;
+  }
+  const schema = validateAgainst('tokens', tokens);
+  if (!schema.valid) {
+    const errors = schema.errors.map((e) => `${e.path} ${e.message}`);
+    out({ command: 'tokens build', ok: false, status: 'invalid', errors }, `Token file does not match the schema:\n${errors.map((e) => `  ${e}`).join('\n')}\n`);
+    return EXIT.FINDINGS;
+  }
+  const r = buildTokens(tokens);
+  if (r.problems.length) {
+    out({ command: 'tokens build', ok: false, status: 'invalid', errors: r.problems }, `Cannot build tokens:\n${r.problems.map((p) => `  ${p}`).join('\n')}\n`);
+    return EXIT.FINDINGS;
+  }
+  mkdirSync(outDir, { recursive: true });
+  const written = [];
+  for (const f of r.files) {
+    writeFileSync(join(outDir, f.name), f.content);
+    written.push(relative(root, join(outDir, f.name)).split(sep).join('/'));
+  }
+  const text = [
+    ...written.map((w) => `wrote ${w}`),
+    '',
+    'Plain CSS: import tokens.css once. Tailwind v3: tokens.css + presets: [require(\'./.craft/build/tailwind.v3.cjs\')].',
+    'Tailwind v4: @import "tailwindcss"; @import "./.craft/build/tailwind.v4.css"; (instead of tokens.css).',
+    'Copy the files into your source tree if your build cannot read .craft/; re-run after editing tokens.json.'
+  ].join('\n');
+  out({ command: 'tokens build', ok: true, files: written, themes: tokens.themes }, text + '\n');
+  return EXIT.OK;
 }
 
 /**

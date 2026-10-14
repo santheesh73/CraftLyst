@@ -140,7 +140,9 @@ Recorded in `docs/decisions/`. Status in brackets.
 - ADR-0011 Ship a minimal CLI in v0.1 [accepted]
 - ADR-0012 Loopback connections for rendered checks [accepted]
 - ADR-0013 Playwright and axe-core as dev dependencies for testing Tier 2 [accepted]
-- Planned: catalog index format (P4), conformance harness design (P5).
+- ADR-0014 Catalog index format and offline search [accepted]
+- ADR-0015 Conformance harness for component contracts [accepted]
+- ADR-0016 Token adapters (CSS variables, Tailwind v3 and v4) [accepted]
 
 ## 6. Conventions
 

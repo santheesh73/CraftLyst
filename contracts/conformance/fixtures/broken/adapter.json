@@ -1,0 +1,21 @@
+{
+  "name": "broken-fixture",
+  "library": { "name": "deliberately broken fixture", "version": null },
+  "trust": "L1 (negative test fixture)",
+  "notes": "Every component violates its contract on purpose; the kit must report failures for each.",
+  "page": { "file": "index.html" },
+  "components": {
+    "button": { "button": "#btn-save", "toggle": "#btn-bold", "disabled": "#btn-off", "region": "#c-button" },
+    "text-field": { "input": "#email", "required": true, "invalidValue": "nope", "region": "#c-text-field" },
+    "select-combobox": { "trigger": "#fruit", "region": "#c-select" },
+    "dialog": { "trigger": "#dlg-open", "dialog": "#dlg" },
+    "menu": { "trigger": "#menu-btn", "menu": "#menu-list", "region": "#c-menu" },
+    "tabs": { "tablist": "#tabs", "region": "#c-tabs" },
+    "tooltip-popover": { "tooltipTrigger": "#tip-btn", "popoverTrigger": "#pop-btn", "popover": "#pop-1", "region": "#c-tooltip" },
+    "accordion-disclosure": { "triggers": "#c-accordion .acc", "region": "#c-accordion" },
+    "toast-alert": { "trigger": "#toast-btn", "alert": "#inline-alert", "region": "#c-toast" },
+    "table": { "table": "#people", "filterInput": "#filter", "filterValue": "zz", "region": "#c-table" },
+    "pagination": { "nav": "#pager" },
+    "navigation": { "nav": "#site-nav" }
+  }
+}

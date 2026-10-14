@@ -19,3 +19,5 @@ Each ADR records one decision: context, decision, consequences. Status is one of
 | [0012](0012-loopback-for-rendered-checks.md) | Loopback connections for rendered checks | accepted |
 | [0013](0013-tier2-dev-dependencies.md) | Playwright and axe-core as dev dependencies | accepted |
 | [0014](0014-catalog-index-format.md) | Catalog index format and offline search | accepted |
+| [0015](0015-conformance-harness.md) | Conformance harness for component contracts | accepted |
+| [0016](0016-token-adapters.md) | Token adapters (CSS variables, Tailwind v3 and v4) | accepted |

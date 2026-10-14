@@ -53,7 +53,13 @@ test('package contains the skill and no repo-only files', () => {
     assert.ok(files.includes(required), `missing ${required}`);
   }
   assert.equal(files.filter((f) => f.startsWith('references/')).length, 16);
-  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs)\//.test(f) && !f.startsWith('cli/node_modules/')), []);
+  // The conformance kit's reference and broken fixtures are part of the shipped kit.
+  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs)\//.test(f) && !f.startsWith('cli/node_modules/') && !f.startsWith('contracts/conformance/fixtures/')), []);
+  for (const required of ['contracts/README.md', 'contracts/components/dialog.md', 'contracts/conformance/run.js', 'contracts/conformance/lib/checks.js', 'contracts/conformance/fixtures/reference/adapter.json', 'cli/src/tokens-build.js']) {
+    assert.ok(files.includes(required), `missing ${required}`);
+  }
+  assert.equal(files.filter((f) => f.startsWith('contracts/components/')).length, 12);
+  assert.ok(!files.some((f) => f.startsWith('contracts/conformance/targets/')), 'external demo targets are repo-only');
   assert.ok(files.includes('cli/rules/index.js'), 'rules ship with the CLI');
   const vendored = new Set(files.filter((f) => f.startsWith('cli/node_modules/')).map((f) => f.split('/').slice(2, f.split('/')[2].startsWith('@') ? 4 : 3).join('/')));
   assert.deepEqual([...vendored].sort(), ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js']);

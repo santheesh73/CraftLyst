@@ -1,0 +1,173 @@
+<!doctype html>
+<!--
+  Frontend Craft conformance kit: reference fixture.
+  Trust: L1 (test fixture, not a component library). Hand-rolled plain HTML + JS written for
+  this repository so the kit has a passing baseline. Do not copy it into products; use your
+  design system or a maintained accessible library and run the kit against that.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conformance reference fixture</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <nav id="site-nav" aria-label="Main">
+    <ul class="nav-list">
+      <li><a href="#home">Home</a></li>
+      <li><a href="#docs" aria-current="page">Docs</a></li>
+      <li class="has-sub">
+        <button type="button" id="nav-more" aria-expanded="false" aria-controls="nav-more-list">More</button>
+        <ul id="nav-more-list" hidden>
+          <li><a href="#blog">Blog</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</header>
+<main id="main">
+  <h1>Reference fixture</h1>
+  <p class="note">Trust L1: a test fixture for the conformance kit, not a component library.</p>
+
+  <section id="c-button" aria-labelledby="h-button">
+    <h2 id="h-button">Button</h2>
+    <button type="button" id="btn-save">Save draft</button>
+    <button type="button" id="btn-bold" aria-pressed="false">Bold</button>
+    <button type="button" id="btn-off" disabled>Publish</button>
+  </section>
+
+  <section id="c-text-field" aria-labelledby="h-text-field">
+    <h2 id="h-text-field">Text field</h2>
+    <form id="email-form" novalidate>
+      <div class="field">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" required aria-describedby="email-hint" autocomplete="email">
+        <p id="email-hint" class="hint">We only use this for receipts.</p>
+        <p id="email-error" class="error" hidden></p>
+      </div>
+      <button type="submit" id="email-submit">Save email</button>
+    </form>
+  </section>
+
+  <section id="c-select" aria-labelledby="h-select">
+    <h2 id="h-select">Select</h2>
+    <span id="fruit-label">Fruit</span>
+    <div id="fruit" class="combo" role="combobox" tabindex="0" aria-haspopup="listbox" aria-expanded="false" aria-controls="fruit-list" aria-labelledby="fruit-label fruit">Apple</div>
+    <ul id="fruit-list" role="listbox" aria-labelledby="fruit-label" hidden>
+      <li role="option" id="fruit-apple" aria-selected="true">Apple</li>
+      <li role="option" id="fruit-banana" aria-selected="false">Banana</li>
+      <li role="option" id="fruit-cherry" aria-selected="false">Cherry</li>
+    </ul>
+  </section>
+
+  <section id="c-dialog" aria-labelledby="h-dialog">
+    <h2 id="h-dialog">Dialog</h2>
+    <button type="button" id="dlg-open">Rename project</button>
+  </section>
+
+  <section id="c-menu" aria-labelledby="h-menu">
+    <h2 id="h-menu">Menu</h2>
+    <button type="button" id="menu-btn" aria-haspopup="menu" aria-expanded="false" aria-controls="menu-list">Actions</button>
+    <ul id="menu-list" role="menu" aria-labelledby="menu-btn" hidden>
+      <li role="menuitem" tabindex="-1">Duplicate</li>
+      <li role="menuitem" tabindex="-1">Archive</li>
+      <li role="menuitem" tabindex="-1">Delete</li>
+    </ul>
+  </section>
+
+  <section id="c-tabs" aria-labelledby="h-tabs">
+    <h2 id="h-tabs">Tabs</h2>
+    <div role="tablist" aria-label="Billing" id="tabs">
+      <button type="button" role="tab" id="tab-1" aria-selected="true" aria-controls="panel-1">Plan</button>
+      <button type="button" role="tab" id="tab-2" aria-selected="false" aria-controls="panel-2" tabindex="-1">Invoices</button>
+      <button type="button" role="tab" id="tab-3" aria-selected="false" aria-controls="panel-3" tabindex="-1">Payment</button>
+    </div>
+    <div role="tabpanel" id="panel-1" aria-labelledby="tab-1" tabindex="0"><p>You are on the monthly plan.</p></div>
+    <div role="tabpanel" id="panel-2" aria-labelledby="tab-2" tabindex="0" hidden><p>No invoices yet.</p></div>
+    <div role="tabpanel" id="panel-3" aria-labelledby="tab-3" tabindex="0" hidden><p>Card ending 4242.</p></div>
+  </section>
+
+  <section id="c-tooltip" aria-labelledby="h-tooltip">
+    <h2 id="h-tooltip">Tooltip and popover</h2>
+    <span class="tip-wrap">
+      <button type="button" id="tip-btn" aria-describedby="tip-1">Copy link</button>
+      <span role="tooltip" id="tip-1" class="tooltip" hidden>Copies the share link</span>
+    </span>
+    <button type="button" id="pop-btn" aria-expanded="false" aria-controls="pop-1">Filters</button>
+    <div role="dialog" id="pop-1" aria-label="Filters" class="popover" hidden>
+      <label><input type="checkbox"> Only open items</label>
+      <button type="button" id="pop-close">Done</button>
+    </div>
+  </section>
+
+  <section id="c-accordion" aria-labelledby="h-accordion">
+    <h2 id="h-accordion">Accordion</h2>
+    <div id="faq">
+      <h3><button type="button" class="acc" id="acc-1" aria-expanded="true" aria-controls="acc-p1">Shipping</button></h3>
+      <div id="acc-p1" role="region" aria-labelledby="acc-1"><p>Ships in two days.</p></div>
+      <h3><button type="button" class="acc" id="acc-2" aria-expanded="false" aria-controls="acc-p2">Returns</button></h3>
+      <div id="acc-p2" role="region" aria-labelledby="acc-2" hidden><p>Thirty days, no questions.</p></div>
+      <h3><button type="button" class="acc" id="acc-3" aria-expanded="false" aria-controls="acc-p3">Warranty</button></h3>
+      <div id="acc-p3" role="region" aria-labelledby="acc-3" hidden><p>One year.</p></div>
+    </div>
+  </section>
+
+  <section id="c-toast" aria-labelledby="h-toast">
+    <h2 id="h-toast">Toast and alert</h2>
+    <div role="alert" id="inline-alert" class="alert">Your trial ends in 3 days.</div>
+    <button type="button" id="toast-btn">Save settings</button>
+    <div id="toasts" role="status" aria-live="polite" class="toasts"></div>
+  </section>
+
+  <section id="c-table" aria-labelledby="h-table">
+    <h2 id="h-table">Table</h2>
+    <label for="filter">Filter by name</label>
+    <input id="filter" type="search">
+    <table id="people">
+      <caption>Team members</caption>
+      <thead>
+        <tr>
+          <th scope="col" id="th-name"><button type="button" id="sort-name">Name</button></th>
+          <th scope="col">Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Mira</td><td>Design</td></tr>
+        <tr><td>Arun</td><td>Engineering</td></tr>
+        <tr><td>Zoe</td><td>Support</td></tr>
+        <tr><td>Bao</td><td>Finance</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="c-pagination" aria-labelledby="h-pagination">
+    <h2 id="h-pagination">Pagination</h2>
+    <nav id="pager" aria-label="Pagination">
+      <ul class="pager">
+        <li><a href="#p1" aria-label="Previous page">&larr;</a></li>
+        <li><a href="#p1">1</a></li>
+        <li><a href="#p2" aria-current="page">2</a></li>
+        <li><a href="#p3">3</a></li>
+        <li><a href="#p3" aria-label="Next page">&rarr;</a></li>
+      </ul>
+    </nav>
+  </section>
+</main>
+
+<div id="dlg" class="dialog-backdrop" hidden>
+  <div role="dialog" aria-modal="true" aria-labelledby="dlg-title" class="dialog" id="dlg-box">
+    <h2 id="dlg-title">Rename project</h2>
+    <label for="dlg-name">Project name</label>
+    <input id="dlg-name" type="text" value="Atlas">
+    <div class="actions">
+      <button type="button" id="dlg-cancel">Cancel</button>
+      <button type="button" id="dlg-save">Save</button>
+    </div>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

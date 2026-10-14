@@ -41,6 +41,10 @@ These are enforced in code and, where noted, by CI (see ADR-0007):
 | `scripts/eval/sample.js` | a `craft lint --json` report | nothing | no | no |
 | `cli/test/shoot.test.js` | test fixtures | temp dirs | Chromium via Playwright | a loopback test server only |
 | `evals/triggers/run.js` | prompt list, packaged skill | a temp project and `evals/triggers/results/` | `claude -p` (headless Claude Code), run manually, not in CI | via Claude Code only |
+| `craft tokens build` | `.craft/tokens.json` or `--tokens <file>` | `.craft/build/` (or `--out`, refused with exit 2 unless inside `.craft/`) | nothing | none |
+| `node contracts/conformance/run.js` | the adapter JSON and the page it names; Playwright and axe-core from the project or the CLI's install location | nothing (stdout only) | Chromium via Playwright | `file://` and loopback only; every other request is aborted unless `--allow-network` |
+| `node contracts/conformance/targets/build.js` (repo-only, not packaged) | demo `main.jsx` files and `--modules <dir>` | `contracts/conformance/targets/<lib>/build/app.js` (gitignored) | nothing (esbuild JS API in process; esbuild itself runs its native binary) | none |
+
 | `cli/bin/craft.js catalog validate` | bundled `catalog/entries/` (or `--catalog <dir>`), project `.craft/catalog/*.json` | nothing | no | no |
 | `cli/bin/craft.js index build` | bundled entries, project `.craft/catalog/*.json` | `.craft/catalog-index.json` only | no | no |
 | `cli/bin/craft.js search` | `.craft/catalog-index.json` if present, else the shipped `catalog/index/index.json`; `tokens/recipes.json` for axis names | nothing | no | no |

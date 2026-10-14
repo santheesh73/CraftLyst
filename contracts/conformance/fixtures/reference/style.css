@@ -1,0 +1,36 @@
+/* Reference fixture styles: plain, legible, and enough to make states visible. */
+:root {
+  --surface: #ffffff;
+  --text: #1b1e22;
+  --muted: #565c66;
+  --border: #6b727d;
+  --accent: #2f5fc4;
+  --danger: #b4261d;
+  --focus: #2f5fc4;
+}
+* { box-sizing: border-box; }
+body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: var(--text); background: var(--surface); }
+main, header { max-width: 48rem; margin: 0 auto; padding: 16px; }
+section { margin-block: 32px; }
+button, .combo, input { font: inherit; min-height: 44px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); color: var(--text); }
+button[aria-pressed="true"] { background: var(--accent); color: #ffffff; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.hint { color: var(--muted); margin: 4px 0; }
+.error { color: var(--danger); margin: 4px 0; }
+.combo { display: inline-block; min-width: 10rem; cursor: default; }
+[role="listbox"], [role="menu"], .popover, #nav-more-list { list-style: none; margin: 4px 0; padding: 4px; border: 1px solid var(--border); border-radius: 6px; background: var(--surface); }
+[role="option"], [role="menuitem"] { padding: 8px 12px; }
+[role="option"].active, [role="menuitem"]:focus { background: #dfe7f7; outline: 2px solid var(--focus); }
+.tip-wrap { position: relative; }
+.tooltip { position: absolute; left: 0; top: 100%; margin-top: 4px; padding: 4px 8px; background: var(--text); color: var(--surface); border-radius: 4px; white-space: nowrap; }
+.nav-list, .pager { display: flex; gap: 12px; list-style: none; padding: 0; flex-wrap: wrap; }
+.nav-list a, .pager a { display: inline-block; min-height: 44px; min-width: 44px; padding: 10px; color: var(--accent); }
+[aria-current="page"] { font-weight: 700; text-decoration: underline; }
+.dialog-backdrop { position: fixed; inset: 0; background: rgb(17 19 22 / 0.5); display: grid; place-items: center; }
+.dialog-backdrop[hidden] { display: none; }
+.dialog { background: var(--surface); padding: 24px; border-radius: 10px; max-width: min(28rem, calc(100vw - 32px)); }
+.actions { display: flex; gap: 8px; margin-top: 16px; }
+.alert { border-left: 4px solid var(--danger); padding: 8px 12px; margin-bottom: 12px; }
+.toast { display: flex; gap: 12px; align-items: center; border: 1px solid var(--border); padding: 8px 12px; margin-top: 8px; }
+table { border-collapse: collapse; margin-top: 12px; }
+th, td { text-align: start; padding: 8px 12px; border-bottom: 1px solid var(--border); }

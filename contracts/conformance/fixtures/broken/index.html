@@ -1,0 +1,88 @@
+<!doctype html>
+<!--
+  Frontend Craft conformance kit: deliberately broken fixture.
+  Every component here violates its contract on purpose so tests can prove the checks fail.
+  Never use any of this markup.
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Conformance broken fixture</title>
+<style>
+  body { font: 16px/1.5 system-ui, sans-serif; color: #1b1e22; background: #ffffff; }
+  .hidden { display: none; }
+  .overlay { position: fixed; inset: 20% 20%; background: #ffffff; border: 1px solid #333333; padding: 16px; }
+</style>
+</head>
+<body>
+<div class="nav" id="site-nav">
+  <div role="menubar"><a href="#a" role="menuitem">Home</a> <a href="#b" role="menuitem">Docs</a></div>
+</div>
+<main>
+  <h1>Broken fixture</h1>
+  <div id="c-button">
+    <div class="btn" id="btn-save" onclick="window.saved = true"><svg width="16" height="16" aria-hidden="true"><rect width="16" height="16"></rect></svg></div>
+    <div class="btn" id="btn-bold" onclick="this.classList.toggle('on')">Bold</div>
+    <span class="btn" id="btn-off" style="opacity: 0.4">Publish</span>
+  </div>
+  <div id="c-text-field">
+    <input id="email" placeholder="Email">
+    <span id="email-error" class="hidden">Bad email</span>
+  </div>
+  <div id="c-select">
+    <div id="fruit" tabindex="0">Apple</div>
+    <ul id="fruit-list" class="hidden"><li>Apple</li><li>Banana</li></ul>
+  </div>
+  <div id="c-dialog">
+    <button type="button" id="dlg-open">Rename project</button>
+    <div id="dlg" class="overlay hidden"><input id="dlg-name" value="Atlas"> <button type="button" id="dlg-close">Close</button></div>
+  </div>
+  <div id="c-menu">
+    <button type="button" id="menu-btn">Actions</button>
+    <ul id="menu-list" class="hidden"><li><button type="button">Duplicate</button></li><li><button type="button">Delete</button></li></ul>
+  </div>
+  <div id="c-tabs">
+    <div id="tabs"><button type="button" class="tab">Plan</button><button type="button" class="tab">Invoices</button></div>
+    <div>Plan details</div>
+  </div>
+  <div id="c-tooltip">
+    <button type="button" id="tip-btn" title="Copies the share link">Copy link</button>
+    <button type="button" id="pop-btn">Filters</button>
+    <div id="pop-1" class="hidden">Only open items</div>
+  </div>
+  <div id="c-accordion">
+    <div class="acc" id="acc-1">Shipping</div><div>Ships in two days.</div>
+    <div class="acc" id="acc-2">Returns</div><div>Thirty days.</div>
+  </div>
+  <div id="c-toast">
+    <div id="inline-alert" style="color: #b4261d">Your trial ends in 3 days.</div>
+    <button type="button" id="toast-btn">Save settings</button>
+  </div>
+  <div id="c-table">
+    <input id="filter">
+    <div id="people">
+      <div class="row"><span>Name</span><span>Role</span></div>
+      <div class="row"><span>Mira</span><span>Design</span></div>
+    </div>
+  </div>
+  <div id="c-pagination">
+    <div id="pager"><a href="#p1">&larr;</a> <a href="#p1">1</a> <a href="#p2" class="current">2</a> <a href="#p3">&rarr;</a></div>
+  </div>
+</main>
+<script>
+  // Mouse-only behavior on purpose: no keyboard handling, no ARIA state.
+  document.getElementById('dlg-open').addEventListener('click', function () { document.getElementById('dlg').classList.remove('hidden'); });
+  document.getElementById('dlg-close').addEventListener('click', function () { document.getElementById('dlg').classList.add('hidden'); });
+  document.getElementById('menu-btn').addEventListener('click', function () { document.getElementById('menu-list').classList.toggle('hidden'); });
+  document.getElementById('pop-btn').addEventListener('click', function () { document.getElementById('pop-1').classList.toggle('hidden'); });
+  document.getElementById('email').addEventListener('blur', function () { document.getElementById('email-error').classList.remove('hidden'); });
+  document.getElementById('toast-btn').addEventListener('click', function () {
+    var t = document.createElement('div');
+    t.textContent = 'Settings saved.';
+    document.body.appendChild(t);
+    document.getElementById('toast-btn').blur();
+  });
+</script>
+</body>
+</html>
