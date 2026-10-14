@@ -1,8 +1,7 @@
-import { baseClass } from '../../src/rule-helpers.js';
+import { baseClass, INTERACTIVE_COMPONENT } from '../../src/rule-helpers.js';
 
 const REPLACEMENT = /^(?:[\w-]+:)*(focus|focus-visible|focus-within|group-focus-visible|peer-focus-visible|data-\[highlighted\]|data-highlighted|data-\[selected[^\]]*\]|aria-selected|data-\[state=(open|on|checked|active)\]):(ring|outline|shadow|border|underline|decoration|bg|text)/;
 const INTERACTIVE_TAG = /^(a|button|input|select|textarea|summary|area)$/;
-const INTERACTIVE_COMPONENT = /(Item|Trigger|Input|Button|Link|Tab|Checkbox|Radio|Switch|Select|Textarea|TextArea|Toggle|Slider|Thumb|Option|Field|Control)$|^(Button|Link|Input|Select|Textarea|Checkbox|Radio|Switch)/;
 
 /**
  * Focus can land here: native controls, tabindex, widget roles, or components named like controls.

@@ -1,4 +1,4 @@
-import { visualTraits, isCardLike } from '../../src/rule-helpers.js';
+import { visualTraits, isCardLike, INTERACTIVE_COMPONENT } from '../../src/rule-helpers.js';
 
 const OVERLAY = /dropdown|popover|tooltip|menu|modal|dialog|drawer|toast|listbox|combobox/i;
 
@@ -25,7 +25,11 @@ export default {
       const card = new Map();
       // Controls (buttons, links, inputs) have borders and padding but are not containers.
       // Inline badges are not containers, and menus, popovers, tooltips, and dialogs float above the card they sit in.
-      for (const el of doc.all) card.set(el, !/^(button|a|input|select|textarea|label|summary|span|small|em|strong|code|kbd|mark|abbr|td|th|dialog|Button|Link|Badge)$/.test(el.tag) && !isOverlay(el) && isCardLike(visualTraits(el, ctx.classes)));
+      for (const el of doc.all) {
+        const name = el.tag.split('.').pop() ?? '';
+        const control = /^(button|a|input|select|textarea|label|summary|span|small|em|strong|code|kbd|mark|abbr|td|th|dialog|Badge)$/.test(name) || (/^[A-Z]/.test(name) && INTERACTIVE_COMPONENT.test(name)) || /^motion\.(button|a|input)$/.test(el.tag);
+        card.set(el, !control && !isOverlay(el) && isCardLike(visualTraits(el, ctx.classes)));
+      }
       for (const el of doc.all) {
         if (!card.get(el)) continue;
         let depth = 1;

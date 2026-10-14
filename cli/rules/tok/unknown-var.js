@@ -31,6 +31,8 @@ export default {
     // A dependency's own variables (--pagefind-*, --docsearch-*) are set by its stylesheet at runtime.
     /** @type {Set<string>} */
     const depPrefixes = new Set();
+    // A stylesheet imported from a package (@radix-ui/themes/styles.css) defines variables lint cannot see.
+    const thirdPartyCss = ctx.docs.some((d) => d.imports.some((i) => /\.css$/.test(i) && !/^[./~@]\/|^\.|^\//.test(i) && !/^@\//.test(i)) || d.css.some((c) => c.atRules.some((a) => a.name === 'import' && /^["']?(?![./]|https?:|url\()[@\w]/.test(a.params.trim()) && !/["']tailwindcss/.test(a.params))));
     for (const d of ctx.docs) for (const i of d.imports) depPrefixes.add(i.replace(/^@[^/]+\//, '').split(/[/.-]/)[0].toLowerCase());
     for (const doc of ctx.docs) {
       if (doc.isTest || doc.isFixture) continue;
@@ -46,9 +48,10 @@ export default {
           const name = m[1];
           if (m[2] || defined.has(name) || LIBRARY_PREFIXES.test(name) || (tailwind4 && TAILWIND_V4.test(name))) continue;
           if (depPrefixes.has(name.slice(2).split('-')[0].toLowerCase())) continue;
-          // A sibling of defined variables (--vp-c-shadow-3 next to --vp-c-*) is likely a typo: warn.
+          // A sibling of defined variables (--vp-c-shadow-3 next to --vp-c-*) is likely a typo: warn,
+          // unless a package stylesheet is imported, which may define the rest of the family.
           // A name from an unknown family may come from a library stylesheet: informational.
-          const sibling = families.has(family(name));
+          const sibling = families.has(family(name)) && !thirdPartyCss;
           out.push({ file: doc.file, line, severity: sibling ? 'warn' : 'info', confidence: sibling ? 0.75 : 0.4, message: `var(${name}) is not defined in the project CSS or .craft/tokens.json${sibling ? ', though related variables are' : ' (it may come from a library stylesheet)'}.`, remediation: `Define ${name} (or the matching token), fix the name, or add a fallback value.` });
         }
       }

@@ -1,4 +1,5 @@
-import { baseClass, hasColorLiteral, withoutVars, OG_IMAGE_FILE } from '../../src/rule-helpers.js';
+import { baseClass, colorLiterals, withoutVars, OG_IMAGE_FILE } from '../../src/rule-helpers.js';
+import { parseColor } from '../../src/color.js';
 
 /**
  * Blur radius of the largest shadow layer in a box-shadow/text-shadow value, if colored.
@@ -8,8 +9,12 @@ import { baseClass, hasColorLiteral, withoutVars, OG_IMAGE_FILE } from '../../sr
 function coloredBlur(value) {
   let max = 0;
   for (const layer of withoutVars(value).split(/,(?![^(]*\))/)) {
-    if (!hasColorLiteral(layer)) continue;
-    if (/rgba?\(\s*0\s*[, ]\s*0\s*[, ]\s*0|#000\b|#0000|black|hsla?\(\s*0\s*[, ]\s*0%/i.test(layer)) continue;
+    // A glow is a visible hue; gray or near-black shadows (elevation) are not.
+    const chromatic = colorLiterals(layer).some((lit) => {
+      const c = parseColor(lit);
+      return c !== null && c.a >= 0.15 && Math.max(c.r, c.g, c.b) - Math.min(c.r, c.g, c.b) >= 40;
+    });
+    if (!chromatic) continue;
     const lengths = layer.replace(/\b(?:rgba?|hsla?|oklch|oklab|lab|lch|hwb|color)\([^)]*\)/gi, ' ').replace(/#[0-9a-f]{3,8}\b/gi, ' ');
     const nums = [...lengths.matchAll(/(?:^|\s)(-?\d*\.?\d+)(px)?(?=\s|$)/g)].map((m) => Number(m[1]));
     const blur = nums.length >= 3 ? nums[2] : 0;

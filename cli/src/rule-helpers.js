@@ -187,6 +187,9 @@ export function isHiddenOrDecorative(el) {
   return false;
 }
 
+/** Component names that render a control (Toolbar.ToggleItem, Select.Trigger, <Input>). */
+export const INTERACTIVE_COMPONENT = /(Item|Trigger|Input|Button|Link|Tab|Checkbox|Radio|Switch|Select|Textarea|TextArea|Toggle|Slider|Thumb|Option|Field|Control)$|^(Button|Link|Input|Select|Textarea|Checkbox|Radio|Switch)/;
+
 /** Server-side template includes (Hugo, Go, Jinja, Liquid, Nunjucks, Handlebars, PHP): the page is assembled from other files. */
 export const TEMPLATE_INCLUDE = /\{\{-?\s*(block|partial|template|include|yield)\b|\{%-?\s*(include|extends|block|render)\b|\{\{>\s*[\w/]|<\?php[^?]*\b(include|require)(_once)?\b/;
 

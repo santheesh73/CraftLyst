@@ -25,8 +25,9 @@ export default {
           const tw = tailwindArbitrary(c);
           if (tw && tw.variants.length === 0 && /^(w|min-w)$/.test(tw.utility)) {
             const n = /^(\d+)px$/.exec(tw.value);
+            // A max-w-* cap (w-[390px] max-w-[100vw]) keeps it inside the viewport.
             // Hidden below a breakpoint (hidden lg:block) or decorative (aria-hidden) boxes cannot overflow the small viewport's content.
-            if (n && Number(n[1]) > 360 && !isHiddenOrDecorative(el)) out.push({ file: doc.file, line: el.line, message: `Fixed width ${c} exceeds a 320px viewport.`, remediation: 'Use max-w-[...] with w-full, or a responsive variant (md:w-[...]).', confidence: 0.55 });
+            if (n && Number(n[1]) > 360 && !isHiddenOrDecorative(el) && !el.classes.some((x) => /^max-w-/.test(x))) out.push({ file: doc.file, line: el.line, message: `Fixed width ${c} exceeds a 320px viewport.`, remediation: 'Use max-w-[...] with w-full, or a responsive variant (md:w-[...]).', confidence: 0.55 });
           }
         }
       }
