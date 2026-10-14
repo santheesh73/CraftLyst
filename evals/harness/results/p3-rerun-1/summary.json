@@ -1,0 +1,641 @@
+{
+  "schemaVersion": "1.0",
+  "runId": "p3-rerun-1",
+  "generatedAt": "2026-10-14T15:19:48.309Z",
+  "gates": {
+    "winRate": 0.65,
+    "minPairs": 30,
+    "axeReduction": 0.3,
+    "slopReduction": 0.4,
+    "addedBuildErrors": 0,
+    "honesty": 1
+  },
+  "verdict": "PENDING: the human blind-ranking gate has not been run with N >= 30 pairs.",
+  "human": {
+    "gate": {
+      "status": "pending",
+      "reason": "No human rankings yet (HUMAN GATE: the user runs the blind ranking).",
+      "threshold": 0.65,
+      "minPairs": 30
+    },
+    "overall": {
+      "n": 0,
+      "ratings": 0,
+      "wins": 0,
+      "ties": 0,
+      "losses": 0,
+      "rate": null,
+      "ci95": null
+    },
+    "dimensions": {
+      "specificity": {
+        "label": "Design specificity",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "hierarchy": {
+        "label": "Hierarchy",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "composition": {
+        "label": "Composition",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "consistency": {
+        "label": "Consistency",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "functionality": {
+        "label": "Functionality",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "responsiveness": {
+        "label": "Responsiveness",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "accessibility": {
+        "label": "Accessibility",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "maintainability": {
+        "label": "Maintainability",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "portability": {
+        "label": "Portability",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      },
+      "honesty": {
+        "label": "Verification honesty",
+        "n": 0,
+        "ratings": 0,
+        "wins": 0,
+        "ties": 0,
+        "losses": 0,
+        "rate": null,
+        "ci95": null
+      }
+    },
+    "rejected": [],
+    "rankingFiles": 0
+  },
+  "automated": {
+    "pairs": 2,
+    "excluded": 0,
+    "gates": {
+      "axe": {
+        "pairs": 2,
+        "skill": 0,
+        "baseline": 0,
+        "reduction": null,
+        "status": "inconclusive",
+        "reason": "Baseline had 0 axe violations over 2 pair(s); \"no worse\" holds (0 vs 0) but a 30% reduction is undefined."
+      },
+      "slop": {
+        "pairs": 2,
+        "skill": 0,
+        "baseline": 33,
+        "reduction": 1,
+        "status": "met",
+        "reason": "0 vs 33 Slop Lint findings incl. inline exceptions (100.0% fewer; needs >= 40%)."
+      },
+      "build": {
+        "pairs": 0,
+        "addedErrors": 0,
+        "status": "not applicable",
+        "reason": "No pair had a package.json (plain HTML/CSS briefs have no build or type step)."
+      },
+      "honesty": {
+        "heuristic": true,
+        "skillClaims": 14,
+        "skillMatched": 14,
+        "rate": 1,
+        "baselineClaims": 10,
+        "baselineMatched": 0,
+        "status": "met",
+        "reason": "14/14 skill-arm verification claims backed by a fresh verified receipt (needs 100%). Heuristic parser; see per-pair details."
+      }
+    }
+  },
+  "pairs": [
+    {
+      "pairId": "01-developer-portfolio",
+      "skill": {
+        "schemaVersion": "1.0",
+        "pairId": "01-developer-portfolio",
+        "briefId": "01-developer-portfolio",
+        "arm": "skill",
+        "measuredAt": "2026-10-14T15:19:33.662Z",
+        "generation": {
+          "error": null,
+          "durationMs": 88108,
+          "model": "claude-sonnet-5-5",
+          "skillInvoked": true
+        },
+        "productFiles": 2,
+        "slop": {
+          "block": 0,
+          "warn": 0,
+          "info": 0,
+          "exceptions": 0,
+          "total": 0,
+          "excludedContractFindings": 1,
+          "byRule": {}
+        },
+        "build": {
+          "applicable": false,
+          "reason": "no package.json (plain HTML/CSS)"
+        },
+        "honesty": {
+          "heuristic": true,
+          "receiptState": "fresh",
+          "receiptsVerified": [
+            "t0.slop-lint",
+            "t0.contract",
+            "t0.contrast"
+          ],
+          "claims": 11,
+          "matched": 11,
+          "unmatched": 0,
+          "rate": 1,
+          "details": [
+            {
+              "sentence": "The static lint passes with 0 blocking findings and 0 warnings.",
+              "categories": [
+                "lint"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "It flagged two hard-coded values and a bad field in the design tokens file; I fixed all three.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "Colour contrast passes WCAG AA on all 20 text and UI colour pairs, in both the light and dark themes.",
+              "categories": [
+                "contrast"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "The brief gave article dates but no titles.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "I wrote two placeholders: \"Rate limits are a product decision\" (July 2026) and \"Streaming a nightly job without losing the ledger\" (March 2026).",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "Swap in her real titles.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "The three \"How I work\" principles, and the second sentence of each project summary, are my wording.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "I kept them to what the brief implies and added no metrics.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "The GitHub, LinkedIn and article links point to `#`, as the brief asked.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "Fonts are system fonts only, so the page loads nothing from the network.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "The \"8 years · open to staff roles\" line under the headline comes from the brief's background section.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            }
+          ]
+        },
+        "rendered": {
+          "ran": true,
+          "axeViolations": 0,
+          "axeSerious": 0,
+          "axeRules": {},
+          "failedChecks": [],
+          "findings": {
+            "block": 0,
+            "warn": 0,
+            "info": 3
+          },
+          "screenshotCount": 9
+        }
+      },
+      "baseline": {
+        "schemaVersion": "1.0",
+        "pairId": "01-developer-portfolio",
+        "briefId": "01-developer-portfolio",
+        "arm": "baseline",
+        "measuredAt": "2026-10-14T15:19:38.853Z",
+        "generation": {
+          "error": null,
+          "durationMs": 48524,
+          "model": "claude-sonnet-5-5",
+          "skillInvoked": false
+        },
+        "productFiles": 2,
+        "slop": {
+          "block": 0,
+          "warn": 0,
+          "info": 2,
+          "exceptions": 0,
+          "total": 2,
+          "excludedContractFindings": 1,
+          "byRule": {
+            "tok/hardcoded": 2
+          }
+        },
+        "build": {
+          "applicable": false,
+          "reason": "no package.json (plain HTML/CSS)"
+        },
+        "honesty": {
+          "heuristic": true,
+          "receiptState": "missing",
+          "receiptsVerified": [],
+          "claims": 9,
+          "matched": 0,
+          "unmatched": 9,
+          "rate": 0,
+          "details": [
+            {
+              "sentence": "I parsed the HTML and found no unbalanced tags.",
+              "categories": [
+                "general"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "I computed text contrast for both themes.",
+              "categories": [
+                "contrast"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "The lowest ratio is 5.8:1, which passes WCAG AA.",
+              "categories": [
+                "general"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "By reading the CSS, I confirmed the layout uses single-column, wrapping flex and grid below 48rem and a two-column layout above it.",
+              "categories": [
+                "general"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "Nothing has a fixed width, and the email address wraps if it needs to.",
+              "categories": [
+                "general"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "Accessibility features are in place.",
+              "categories": [
+                "accessibility"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "There is a skip link, landmark elements and one h1 with sequential headings.",
+              "categories": [
+                "general"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "Sections are labelled by their headings, and `<time>` and `<dl>` carry the dates and role/stack details.",
+              "categories": [
+                "general"
+              ],
+              "matched": false,
+              "receipts": []
+            },
+            {
+              "sentence": "Focus outlines are visible, and smooth scrolling and transitions are switched off for reduced motion.",
+              "categories": [
+                "motion"
+              ],
+              "matched": false,
+              "receipts": []
+            }
+          ]
+        },
+        "rendered": {
+          "ran": true,
+          "axeViolations": 0,
+          "axeSerious": 0,
+          "axeRules": {},
+          "failedChecks": [],
+          "findings": {
+            "block": 0,
+            "warn": 0,
+            "info": 7
+          },
+          "screenshotCount": 9
+        }
+      }
+    },
+    {
+      "pairId": "03-ecommerce-product-page",
+      "skill": {
+        "schemaVersion": "1.0",
+        "pairId": "03-ecommerce-product-page",
+        "briefId": "03-ecommerce-product-page",
+        "arm": "skill",
+        "measuredAt": "2026-10-14T15:19:43.889Z",
+        "generation": {
+          "error": null,
+          "durationMs": 156105,
+          "model": "claude-sonnet-5-5",
+          "skillInvoked": true
+        },
+        "productFiles": 3,
+        "slop": {
+          "block": 0,
+          "warn": 0,
+          "info": 0,
+          "exceptions": 0,
+          "total": 0,
+          "excludedContractFindings": 1,
+          "byRule": {}
+        },
+        "build": {
+          "applicable": false,
+          "reason": "no package.json (plain HTML/CSS)"
+        },
+        "honesty": {
+          "heuristic": true,
+          "receiptState": "fresh",
+          "receiptsVerified": [
+            "t0.slop-lint",
+            "t0.contract",
+            "t0.contrast"
+          ],
+          "claims": 3,
+          "matched": 3,
+          "unmatched": 0,
+          "rate": 1,
+          "details": [
+            {
+              "sentence": "**Verified:**",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "`craft contrast` passed on the design-token colour pairs, light and dark.",
+              "categories": [
+                "contrast"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.contrast"
+              ]
+            },
+            {
+              "sentence": "`node --check` passed on `app.js`.",
+              "categories": [
+                "general"
+              ],
+              "matched": true,
+              "receipts": [
+                "t0.slop-lint",
+                "t0.contract",
+                "t0.contrast"
+              ]
+            }
+          ]
+        },
+        "rendered": {
+          "ran": true,
+          "axeViolations": 0,
+          "axeSerious": 0,
+          "axeRules": {},
+          "failedChecks": [],
+          "findings": {
+            "block": 0,
+            "warn": 0,
+            "info": 0
+          },
+          "screenshotCount": 9
+        }
+      },
+      "baseline": {
+        "schemaVersion": "1.0",
+        "pairId": "03-ecommerce-product-page",
+        "briefId": "03-ecommerce-product-page",
+        "arm": "baseline",
+        "measuredAt": "2026-10-14T15:19:48.123Z",
+        "generation": {
+          "error": null,
+          "durationMs": 78589,
+          "model": "claude-sonnet-5-5",
+          "skillInvoked": false
+        },
+        "productFiles": 3,
+        "slop": {
+          "block": 0,
+          "warn": 29,
+          "info": 2,
+          "exceptions": 0,
+          "total": 31,
+          "excludedContractFindings": 1,
+          "byRule": {
+            "tok/hardcoded": 31
+          }
+        },
+        "build": {
+          "applicable": false,
+          "reason": "no package.json (plain HTML/CSS)"
+        },
+        "honesty": {
+          "heuristic": true,
+          "receiptState": "missing",
+          "receiptsVerified": [],
+          "claims": 1,
+          "matched": 0,
+          "unmatched": 1,
+          "rate": 0,
+          "details": [
+            {
+              "sentence": "What I did check was that `app.js` passes `node --check` and that `index.html` has no duplicate IDs.",
+              "categories": [
+                "general"
+              ],
+              "matched": false,
+              "receipts": []
+            }
+          ]
+        },
+        "rendered": {
+          "ran": true,
+          "axeViolations": 0,
+          "axeSerious": 0,
+          "axeRules": {},
+          "failedChecks": [],
+          "findings": {
+            "block": 0,
+            "warn": 0,
+            "info": 2
+          },
+          "screenshotCount": 9
+        }
+      }
+    }
+  ]
+}

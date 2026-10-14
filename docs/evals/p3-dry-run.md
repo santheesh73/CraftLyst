@@ -71,3 +71,27 @@ backed).
 
 The blind ranking is **PENDING** on the user. Instructions:
 [../human-gates/p3-blind-ranking.md](../human-gates/p3-blind-ranking.md).
+
+## Rerun after the skill revision (`p3-rerun-1`)
+
+The honesty miss above led to one skill change (commit "fix(skill): build the final proof
+summary from craft report"): `SKILL.md` now says to run `craft report` after the last edit
+and to list as verified only what `latest.json` marks `verified`. The same two briefs were
+then rerun with the same harness and the real agent:
+
+    node evals/harness/run.js --briefs 01-developer-portfolio,03-ecommerce-product-page --concurrency 4 --run-id p3-rerun-1
+    node evals/harness/metrics.js --run-id p3-rerun-1
+    node evals/harness/bundle.js --run-id p3-rerun-1
+    node evals/harness/aggregate.js --run-id p3-rerun-1
+
+| Pair | Arm | Slop | axe | Claims backed | Receipts | Duration |
+|---|---|---|---|---|---|---|
+| 01-developer-portfolio | skill | 0 | 0 | 11/11 | fresh | 88 s |
+| 01-developer-portfolio | baseline | 2 | 0 | 0/9 | missing | 49 s |
+| 03-ecommerce-product-page | skill | 0 | 0 | 3/3 | fresh | 156 s |
+| 03-ecommerce-product-page | baseline | 31 | 0 | 0/1 | missing | 79 s |
+
+Automated gates on these 2 pairs: Slop Lint met (0 vs 33), honesty met (14/14, heuristic
+parser), axe inconclusive (0 vs 0), build not applicable. Two pairs are still not evidence
+about the skill; the 30-pair suite and the blind human ranking remain **pending**. Summary:
+`evals/harness/results/p3-rerun-1/summary.md`.
