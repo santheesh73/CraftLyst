@@ -1,0 +1,27 @@
+{
+  "name": "frontend-craft",
+  "version": "0.1.0",
+  "description": "An installable skill and CLI that gives AI coding agents a design contract, executable frontend checks, and proof reports.",
+  "license": "Apache-2.0",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "craft": "cli/bin/craft.js"
+  },
+  "scripts": {
+    "lint": "node scripts/lint.js",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "node --test --test-reporter=spec \"cli/test/**/*.test.js\" \"scripts/test/**/*.test.js\"",
+    "validate": "node scripts/validate-schemas.js",
+    "package": "node scripts/package.js",
+    "verify-package": "node scripts/verify-package.js",
+    "check": "npm run lint && npm run typecheck && npm test && npm run validate"
+  },
+  "devDependencies": {
+    "@types/node": "22.10.2",
+    "typescript": "5.7.2"
+  }
+}
