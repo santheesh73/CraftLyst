@@ -19,16 +19,16 @@ This project is built in gated phases. Nothing below is claimed beyond what is m
 | Phase | Scope | State |
 |---|---|---|
 | P0 Foundation | plan, ADRs, schemas, CI skeleton | done (CI green on Node 20 and 22) |
-| P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | built; waiting on the human gate (use on 3 real projects) |
-| P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | built, CI green, gate items met (FP rate judged by Claude) |
-| P3 Evaluation (v0.3) | briefs, rubric, paired harness | not started |
-| P4 Catalog (v0.4) | pattern catalog and offline search | not started |
-| P5 Contracts and tokens (v0.5) | component contracts, conformance kit, token adapters | not started |
-| P6 1.0 | other-agent adapters, release | not started |
+| P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | built; trigger accuracy 96 %; the human gate (3 real projects) was waived by the user for lack of time, not run |
+| P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | built, CI green; false-positive rate 9.4 % on held-out repos (judged by Claude) |
+| P3 Evaluation (v0.3) | 12 briefs, rubric, paired harness | built; two-brief dry run with the real agent; **blind human ranking pending** |
+| P4 Catalog (v0.4) | 30 entries, validation, offline search | built; precision on 20 queries judged by Claude (top-1 relevant 18/20) |
+| P5 Contracts and tokens (v0.5) | 12 contracts, conformance kit, token adapters | built; kit run on Radix (71 pass, 2 fail) and React Aria (75 pass, 0 fail) |
+| P6 1.0 | other-agent adapters, release prep | built; Codex, Cursor, others untested; `v1.0.0` tag held for the user's decision |
 
 See [PLAN.md](PLAN.md) for gates and [docs/decisions/](docs/decisions/README.md) for ADRs.
 
-## Install (v0.2)
+## Install
 
 ```sh
 npm ci && npm run package
@@ -38,7 +38,11 @@ node scripts/install-claude-code.js --user     # or --project <dir>; add --dry-r
 See [docs/installation.md](docs/installation.md) and [docs/usage.md](docs/usage.md).
 The CLI ships `doctor`, `init` (with `--from-repo`), `lint` (20 Slop Lint rules, see
 [docs/rules.md](docs/rules.md)), `contrast`, `audit` (Tier 1), `shoot` (Tier 2, needs
-Playwright and axe-core), and `report`.
+Playwright and axe-core), `report`, `catalog validate`, `index build`, `search`, and
+`tokens build`. Other agents: `node scripts/install-agent.js --agent codex|cursor|generic`
+(untested, see [docs/compatibility.md](docs/compatibility.md)).
+
+Steps that need a person are listed in [docs/human-gates/](docs/human-gates/README.md).
 
 ## Development
 

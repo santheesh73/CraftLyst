@@ -15,9 +15,12 @@ The CLI and scripts require Node 20 or newer. CI runs on Node 20 and 22.
 
 ## Project stacks
 
-| Stack | v0.1 | v0.2 plan |
+| Stack | Static checks (Tier 0) | Rendered checks (Tier 2) |
 |---|---|---|
-| any | contract validation, token contrast | |
-| React, Next.js, Tailwind | | full static rules + rendered checks |
-| Plain HTML and CSS | | full static rules + rendered checks |
-| Vue, Svelte, Astro | | CSS-level static rules + rendered checks |
+| any | contract validation, token contrast, `tokens build`, catalog search | |
+| React, Next.js, Tailwind | all static rules | `craft shoot` on a running dev server or built HTML |
+| Plain HTML and CSS | all static rules | `craft shoot --file` |
+| Vue, Svelte, Astro | CSS-level rules and template markup rules | `craft shoot` on a running dev server |
+
+Component conformance (`contracts/conformance/run.js`) was run against Radix Primitives and
+React Aria Components; see `docs/evals/conformance-results.md`.

@@ -167,3 +167,13 @@ Recorded in `docs/decisions/`. Status in brackets.
 - [x] P1 trigger tests
 - [x] P1 automatic gate
 - [x] P1 HUMAN GATE: waived by the user for lack of time (2026-10-14), not run
+- [x] P3 briefs, rubric, harness, metrics, aggregation
+- [x] P3 dry run on 2 briefs (real agent), skill revised, rerun
+- [ ] P3 HUMAN GATE: blind ranking, N ≥ 30 pairs (pending, docs/human-gates/p3-blind-ranking.md)
+- [x] P4 catalog validate, index, search, 30 entries, license gate, NOTICE generator
+- [x] P4 precision spot-check on 20 queries (judged by Claude)
+- [x] P5 12 contracts, conformance kit, tokens build (CSS, Tailwind v3/v4)
+- [x] P5 kit run against Radix and React Aria (results in docs/evals/conformance-results.md)
+- [x] P6 installers for Codex, Cursor, generic (untested in live agents)
+- [x] P6 security table, docs pass, release notes, SHA256SUMS via npm run package
+- [ ] P6 tag v1.0.0 (held for the user's decision)

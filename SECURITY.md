@@ -18,6 +18,21 @@ These are enforced in code and, where noted, by CI (see ADR-0007):
 - No telemetry.
 - Releases ship `SHA256SUMS`.
 
+## Security review for 1.0 (2026-10-14)
+
+Done by Claude, not by an independent reviewer. Checked:
+
+- Every file write in `cli/src/` lands inside `.craft/` (`init`, `report`, `audit`, `shoot`,
+  `index build`, `tokens build`); `tokens build --out` is refused outside `.craft/`.
+- Process spawning and network imports are limited to the allowlists in `scripts/lint.js`;
+  the new CLI commands (`catalog validate`, `index build`, `search`, `tokens build`) spawn
+  nothing and run under the no-network guard in `scripts/test/no-network.test.js`.
+- The conformance kit loads only `file://` and loopback pages and aborts other requests
+  unless `--allow-network` is passed; it writes nothing.
+- The evaluation harness spawns the agent command and, through `craft audit`, the scripts of
+  agent-generated projects. It is a developer tool: never run in CI, not shipped in the package.
+- No `eval` or `new Function` anywhere (enforced by `scripts/lint.js`).
+
 ## Scripts and their capabilities
 
 | Script | Reads | Writes | Spawns processes | Network |

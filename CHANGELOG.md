@@ -7,6 +7,45 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-14
+
+P3 (evaluation), P4 (catalog), P5 (contracts and tokens), and P6 (adapters, release prep).
+The `v1.0.0` tag is not created yet: it waits on the user's decision about the pending
+P3 blind ranking (see `docs/human-gates/README.md`).
+
+### Added
+
+- Added 12 evaluation briefs (`evals/briefs/`, with a seed codebase for the redesign brief) and a 10-dimension rubric with anchored 1-5 descriptions (`evals/rubric.md`).
+- Added the paired evaluation harness (`evals/harness/`): `run.js` (paired generations with and without the skill through a configurable agent command), `metrics.js` (Slop Lint, axe and screenshots, build/type, heuristic claims-vs-receipts honesty audit), `bundle.js` (anonymized A/B bundles with seeded order, private key, leak scan, static ranking form), `aggregate.js` (unblinding, win rate with Wilson 95% interval, automated gates, human and automated results reported separately).
+- Recorded a two-brief dry run with the real agent (`docs/evals/p3-dry-run.md`); the human blind-ranking gate is pending.
+- Pattern catalog: 30 independently authored L1 entry cards (8 page compositions, 10 components, 3 motion patterns, 6 specialized product surfaces, 3 design-system recipes), all CC-BY-4.0, status reviewed (author self-review).
+- `craft catalog validate`: schema plus cross-field rules (L3 and tested need evidence, deprecation needs a note and a live replacement, link-only or unknown-redistribution entries stay draft and below L2, null `verified_on` means draft, L0 is reference-only, galleries are L0, license allowlist for bundled third-party code, no "production-ready" below L3, unique ids equal to file names); `verified_on` older than 12 months warns (`--today` for deterministic runs, `--fail-on warn` to fail).
+- `craft index build`: indexes the bundled entries plus project entries in `.craft/catalog/` into `.craft/catalog-index.json`.
+- `craft search "<intent>"`: offline BM25F search returning compact cards, with `--axes`, `--stack`, `--trust`, `--category`, `--limit` (default 5, 1-10); exits 3 with remediation when no index exists.
+- ADR-0014: catalog index format and offline search.
+- `scripts/build-index.js` (prebuilt `catalog/index/index.json`, `--check` in CI), `scripts/check-licenses.js` (license gate), `scripts/generate-notice.js` (NOTICE.md provenance section, `--check` in CI), `npm run catalog`.
+- `docs/catalog-contribution.md`; catalog precision spot-check on 20 queries (`docs/evals/catalog-precision.md`, `scripts/eval/catalog-precision.js`).
+- Component contracts for 12 components in `contracts/components/` (button, text field and validation, select/combobox, dialog, menu, tabs, tooltip/popover, accordion/disclosure, toast/alert, table with sort and filter, pagination, navigation): purpose, when not to use, states matrix, keyboard map, ARIA pattern, responsive rules, failure cases, guidance, and the check ids that cover each requirement.
+- Conformance kit `contracts/conformance/`: JSON adapter format, 85 Playwright checks (keyboard, focus management, ARIA roles and states, axe-core per component region), Markdown and JSON results, and `run.js` with exit codes 0/1/2/3 (ADR-0015).
+- Reference fixture (trust L1: test fixture, not a component library) that passes every check, and a deliberately broken fixture that fails checks in every component.
+- Conformance runs against Radix Primitives and React Aria Components with demo pages and adapters in `contracts/conformance/targets/`; results, including failures and kit bugs found, in `docs/evals/conformance-results.md`.
+- `craft tokens build`: writes `.craft/build/tokens.css` (CSS custom properties with light/dark mappings via `[data-theme]` and `prefers-color-scheme`), `tailwind.v3.cjs`/`.mjs` (Tailwind v3 preset), and `tailwind.v4.css` (Tailwind v4 `@theme`) from `.craft/tokens.json`; deterministic output; `--out` must stay inside `.craft/` (ADR-0016).
+- Installer for other agents, `scripts/install-agent.js` (`--agent codex|cursor|generic`): copies the skill to `<project>/.frontend-craft/` and adds a marked `AGENTS.md` block or a Cursor project rule; adapter docs in `adapters/codex/`, `adapters/cursor/`, `adapters/other-agents/`. All three are untested in live agent sessions.
+- `docs/human-gates/README.md`: every step reserved for a person, with its status.
+- Release notes for 1.0.0 (`docs/release-notes/v1.0.0.md`).
+
+### Changed
+
+- The package ships `catalog/entries/` and a prebuilt `catalog/index/index.json`, so the installed skill searches offline.
+- `NOTICE.md` third-party section is generated from catalog provenance between markers.
+- `SKILL.md` step 4 (Discover) tells the agent to use `craft search` and read only the entries it uses.
+- CI runs `npm run catalog` (validation, license gate, index and NOTICE freshness).
+- The package now ships `contracts/` (specs, kit, fixtures; not the external demo targets) and `cli/src/tokens-build.js`.
+- `references/color-and-tokens.md` no longer suggests a self-referencing Tailwind v4 `@theme` mapping; it points to `craft tokens build`.
+- `SKILL.md` step 7: build the final proof summary from `craft report` (`latest.json`), not from raw command output. The P3 dry run showed claims without a fresh receipt; the rerun backed 14 of 14 claims.
+- The "planned command" mechanism (exit 3 with a version) is removed: every command in the spec is available.
+- PLAN.md records the P1 human gate as waived by the user for lack of time (2026-10-14), not passed.
+
 ## [0.2.0] - 2026-10-14
 
 P2 (CLI). Built and CI-green; not yet released.
