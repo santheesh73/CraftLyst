@@ -21,7 +21,11 @@
     "verify-package": "node scripts/verify-package.js",
     "check": "npm run lint && npm run typecheck && npm test && npm run validate && npm run catalog",
     "coverage": "node --test --experimental-test-coverage cli/test/*.test.js",
-    "triggers": "node evals/triggers/run.js"
+    "triggers": "node evals/triggers/run.js",
+    "eval:run": "node evals/harness/run.js",
+    "eval:metrics": "node evals/harness/metrics.js",
+    "eval:bundle": "node evals/harness/bundle.js",
+    "eval:aggregate": "node evals/harness/aggregate.js"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
