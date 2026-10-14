@@ -1,0 +1,20 @@
+/* Shared, minimal demo styles. The libraries are unstyled; this only makes states visible. */
+body { margin: 0; font: 16px/1.5 system-ui, sans-serif; color: #1b1e22; background: #ffffff; }
+main { max-width: 48rem; margin: 0 auto; padding: 16px; }
+section { margin-block: 24px; }
+button, input { font: inherit; min-height: 44px; padding: 8px 12px; border: 1px solid #6b727d; border-radius: 6px; background: #ffffff; color: #1b1e22; }
+:focus-visible { outline: 3px solid #2f5fc4; outline-offset: 2px; }
+[data-state="on"], [data-selected="true"], [aria-pressed="true"] { font-weight: 700; }
+.overlay { position: fixed; inset: 0; background: rgb(17 19 22 / 0.5); }
+.dialog { position: fixed; top: 20%; left: 50%; transform: translateX(-50%); background: #ffffff; padding: 24px; border-radius: 10px; min-width: 18rem; }
+.popup { background: #ffffff; border: 1px solid #6b727d; border-radius: 6px; padding: 4px; }
+.popup [role="option"], .popup [role="menuitem"] { padding: 8px 12px; }
+.popup [data-highlighted], .popup [data-focused] { background: #dfe7f7; }
+.tooltip { background: #1b1e22; color: #ffffff; padding: 4px 8px; border-radius: 4px; }
+.toast-viewport { position: fixed; bottom: 16px; right: 16px; list-style: none; margin: 0; padding: 0; }
+.toast { display: flex; gap: 12px; align-items: center; background: #ffffff; border: 1px solid #6b727d; padding: 8px 12px; }
+table { border-collapse: collapse; }
+th, td { text-align: start; padding: 8px 12px; border-bottom: 1px solid #6b727d; }
+nav ul { display: flex; gap: 12px; list-style: none; padding: 0; }
+nav a { display: inline-block; min-height: 44px; padding: 10px; color: #2f5fc4; }
+.error { color: #b4261d; }

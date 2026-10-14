@@ -1,0 +1,25 @@
+{
+  "name": "react-aria-components",
+  "library": {
+    "name": "React Aria Components",
+    "version": "1.22.1",
+    "packages": { "react": "19.3.0", "react-dom": "19.3.0", "react-aria-components": "1.22.1" }
+  },
+  "trust": "external library under test (demo page written for this kit)",
+  "notes": "Build first: see ../README.md. Toast uses the UNSTABLE_ exports of this version.",
+  "page": { "file": "index.html", "ready": "#demo" },
+  "components": {
+    "button": { "button": ".ra-save", "activationSignal": ".ra-presses","toggle": ".ra-bold", "disabled": ".ra-off", "region": "#c-button" },
+    "text-field": { "input": ".ra-email", "required": true, "invalidValue": "not-an-email", "submit": ".ra-email-submit", "region": "#c-text-field" },
+    "select-combobox": { "trigger": ".ra-select", "region": "#c-select" },
+    "dialog": { "trigger": ".ra-dialog-open" },
+    "menu": { "trigger": ".ra-menu-btn", "region": "#c-menu" },
+    "tabs": { "tablist": ".ra-tabs", "region": "#c-tabs" },
+    "tooltip-popover": { "tooltipTrigger": ".ra-tip-btn", "popoverTrigger": ".ra-pop-btn", "region": "#c-tooltip" },
+    "accordion-disclosure": { "triggers": "#c-accordion .acc", "region": "#c-accordion" },
+    "toast-alert": { "trigger": ".ra-toast-btn", "toast": ".toast", "region": "#c-toast" },
+    "table": { "table": ".ra-table", "sortButton": ".ra-sort", "filterInput": ".ra-filter", "filterValue": "ar", "region": "#c-table" },
+    "pagination": { "notApplicable": "React Aria Components has no pagination component." },
+    "navigation": { "notApplicable": "React Aria Components has no site-navigation component (it has Link and Breadcrumbs)." }
+  }
+}
