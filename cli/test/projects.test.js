@@ -97,3 +97,13 @@ test('Tier 0 lints 500 files in under 10 seconds', () => {
   assert.ok(ms < 10000, `took ${Math.round(ms)} ms`);
   process.stdout.write(`# perf: 500 files in ${Math.round(ms)} ms\n`);
 });
+
+test('an installed skill under .claude/ is not linted as product code', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'craft-skilldir-'));
+  cpSync(join(PROJECTS, 'clean-site'), dir, { recursive: true });
+  mkdirSync(join(dir, '.claude', 'skills', 'x'), { recursive: true });
+  writeFileSync(join(dir, '.claude', 'skills', 'x', 'rule.js'), "const re = /lorem ipsum|Acme/; // 'Lorem ipsum dolor sit amet'\n");
+  const r = runLint(dir);
+  assert.ok(!r.files.some((f) => f.startsWith('.claude/')));
+  assert.equal(r.summary.block, 0);
+});

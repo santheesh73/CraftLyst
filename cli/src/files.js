@@ -6,7 +6,9 @@ import { globToRegExp } from './glob.js';
 
 export const DEFAULT_IGNORES = [
   'node_modules', '.git', '.hg', '.svn', 'dist', 'build', 'out', '.next', '.nuxt', '.svelte-kit',
-  '.astro', '.output', '.vercel', '.turbo', '.cache', 'coverage', 'vendor', '.craft/reports', 'storybook-static'
+  '.astro', '.output', '.vercel', '.turbo', '.cache', 'coverage', 'vendor', '.craft/reports', 'storybook-static',
+  // Agent configuration and installed skills (including this one) are not the product's UI.
+  '.claude', '.cursor', '.codex', '.agents', '.windsurf', '.github'
 ];
 
 /** File extensions Slop Lint reads. */
