@@ -1,0 +1,79 @@
+{
+  "schemaVersion": "1.0",
+  "id": "code-review-diff-view",
+  "title": "Code review diff view",
+  "category": "specialized-product",
+  "description": "A diff viewer for reviewing changes: file list with change counts, unified or split view per user preference, syntax highlighting, collapsed unchanged context with expand controls, and inline comment threads anchored to lines. Additions and deletions are marked by symbols and text, not color alone.",
+  "intent": "Let reviewers read changes accurately, navigate files fast, and discuss specific lines.",
+  "tags": [
+    "diff",
+    "code-review",
+    "developer",
+    "pull-request",
+    "comments",
+    "syntax-highlighting",
+    "git"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "file tree or list with per-file +/- counts and review status",
+    "unified and split modes with a remembered preference",
+    "plus/minus gutters in addition to color",
+    "collapsed context hunks with expand up/down",
+    "inline threads anchored to line ranges"
+  ],
+  "axes": {
+    "density": [
+      "compact"
+    ],
+    "temperature": [
+      "cool",
+      "neutral"
+    ],
+    "formality": [
+      "formal"
+    ],
+    "motion": [
+      "still"
+    ],
+    "contrast": [
+      "medium",
+      "high"
+    ],
+    "voice": [
+      "technical-mono",
+      "neutral-sans"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Keyboard shortcuts for next/previous file and change; clicking a line number starts a comment, shift-click selects a range; mark file as viewed collapses it.",
+  "responsive": "Split view falls back to unified below a width threshold; long lines wrap optionally (user toggle) instead of forcing page scroll; file list becomes a drawer.",
+  "accessibility": "Each line exposes its change type in text (visually hidden \"added\"/\"removed\"); highlight colors meet contrast against both add and delete backgrounds; line comment buttons are focusable and labeled with the line number.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Very large diffs need virtualization, which complicates find-in-page and screen readers.",
+    "Syntax highlighting needs a tokenizer per language; not covered by this spec."
+  ]
+}

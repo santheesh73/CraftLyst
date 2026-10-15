@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0",
+  "id": "docs-layout-sidebar-toc",
+  "title": "Documentation layout with sidebar and on-page TOC",
+  "category": "page-composition",
+  "description": "A three-region documentation page: section navigation on the left, the article in the middle at a readable measure, and an on-this-page table of contents on the right that tracks the current heading. Includes search entry, version selector, previous/next links, and an edit-this-page link.",
+  "intent": "Let readers find the right page, orient within it, and move to the next step without losing their place.",
+  "tags": [
+    "docs",
+    "documentation",
+    "sidebar",
+    "toc",
+    "navigation",
+    "reference",
+    "developer"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "collapsible section nav with the current page marked",
+    "article column held to about 70ch, code blocks may run wider",
+    "right-hand TOC of h2/h3 with current-section highlight",
+    "previous/next links at the end of the article",
+    "code blocks with copy buttons and language labels"
+  ],
+  "axes": {
+    "density": [
+      "balanced",
+      "compact"
+    ],
+    "temperature": [
+      "neutral",
+      "cool"
+    ],
+    "formality": [
+      "formal",
+      "approachable"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "voice": [
+      "neutral-sans",
+      "technical-mono"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "TOC highlight follows scroll position (IntersectionObserver), clicking a TOC item moves focus to the heading; sidebar sections expand and collapse; search opens with a keyboard shortcut and a visible button.",
+  "responsive": "Below about 1200px the TOC moves into a collapsible \"On this page\" disclosure above the article; below about 800px the sidebar becomes a drawer opened from the header.",
+  "accessibility": "nav landmarks with distinct labels (site, section, on this page); aria-current=\"page\" on the active link; skip link to the article; drawer traps focus while open and returns it on close.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Scroll-tracking TOC needs JavaScript; without it the TOC still works as plain anchor links.",
+    "Very deep hierarchies (more than three levels) overload the sidebar; split the docs instead."
+  ]
+}

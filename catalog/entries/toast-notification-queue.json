@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "1.0",
+  "id": "toast-notification-queue",
+  "title": "Toast notification queue",
+  "category": "component",
+  "description": "Short, non-blocking status messages that confirm actions or report background events: queued so they never stack into a wall, with a consistent position, optional single action (such as Undo), pause on hover or focus, and timeouts long enough to read. Critical errors do not use toasts.",
+  "intent": "Confirm what just happened without interrupting the task, and offer a quick undo where it helps.",
+  "tags": [
+    "toast",
+    "notification",
+    "snackbar",
+    "feedback",
+    "undo",
+    "status"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "one visible at a time (or max three) with a queue",
+    "timeout scales with message length; no timeout when there is an action",
+    "pause on hover and focus",
+    "single optional action, typically Undo",
+    "consistent placement that avoids primary controls"
+  ],
+  "axes": {
+    "density": [
+      "balanced",
+      "compact"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "subtle"
+    ],
+    "shape": [
+      "soft",
+      "mixed"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Appears with a short enter transition; actions are reachable by keyboard without stealing focus; a keyboard shortcut or landmark lets users reach the toast region; dismiss button on every toast.",
+  "responsive": "Bottom, full width minus gutters on narrow screens, above any bottom navigation; corner position on wide screens.",
+  "accessibility": "Region with role=\"status\" (polite) for confirmations; never put critical errors or required decisions in a toast; respect reduced motion; provide a way to review recent notifications if messages matter.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Easy to miss for screen magnifier users; important information also needs a persistent place.",
+    "Undo requires the action to be reversible on the backend for the toast duration."
+  ]
+}

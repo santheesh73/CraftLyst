@@ -49,11 +49,17 @@ test('verify-package accepts the build', () => {
 
 test('package contains the skill and no repo-only files', () => {
   const files = list(join(dist, 'frontend-craft'));
-  for (const required of ['SKILL.md', 'LICENSE', 'LICENSE-docs', 'NOTICE.md', 'cli/bin/craft.js', 'cli/package.json', 'tokens/recipes.json', 'templates/DESIGN.md', 'cli/schemas/catalog-schema.json']) {
+  for (const required of ['SKILL.md', 'LICENSE', 'LICENSE-docs', 'NOTICE.md', 'cli/bin/craft.js', 'cli/package.json', 'tokens/recipes.json', 'templates/DESIGN.md', 'cli/schemas/catalog-schema.json', 'catalog/index/index.json', 'catalog/entries/data-table-sort-filter.json']) {
     assert.ok(files.includes(required), `missing ${required}`);
   }
   assert.equal(files.filter((f) => f.startsWith('references/')).length, 16);
-  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs)\//.test(f) && !f.startsWith('cli/node_modules/')), []);
+  // The conformance kit's reference and broken fixtures are part of the shipped kit.
+  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs)\//.test(f) && !f.startsWith('cli/node_modules/') && !f.startsWith('contracts/conformance/fixtures/')), []);
+  for (const required of ['contracts/README.md', 'contracts/components/dialog.md', 'contracts/conformance/run.js', 'contracts/conformance/lib/checks.js', 'contracts/conformance/fixtures/reference/adapter.json', 'cli/src/tokens-build.js']) {
+    assert.ok(files.includes(required), `missing ${required}`);
+  }
+  assert.equal(files.filter((f) => f.startsWith('contracts/components/')).length, 12);
+  assert.ok(!files.some((f) => f.startsWith('contracts/conformance/targets/')), 'external demo targets are repo-only');
   assert.ok(files.includes('cli/rules/index.js'), 'rules ship with the CLI');
   const vendored = new Set(files.filter((f) => f.startsWith('cli/node_modules/')).map((f) => f.split('/').slice(2, f.split('/')[2].startsWith('@') ? 4 : 3).join('/')));
   assert.deepEqual([...vendored].sort(), ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js']);
@@ -90,6 +96,12 @@ test('extracted zip installs into a clean project and the CLI works there', () =
   assert.equal(sh(process.execPath, [craft, 'lint', '--cwd', app]).status, 0);
   assert.equal(sh(process.execPath, [craft, 'contrast', '--cwd', app]).status, 0);
   assert.equal(JSON.parse(sh(process.execPath, [craft, 'doctor', '--json', '--cwd', app]).stdout).environment.contract, true);
+  const found = sh(process.execPath, [craft, 'search', 'sortable data table', '--json', '--cwd', app]);
+  assert.equal(found.status, 0, found.stderr);
+  const card = JSON.parse(found.stdout).results[0];
+  assert.equal(card.id, 'data-table-sort-filter');
+  assert.ok(existsSync(card.file) && card.file.startsWith(skill), 'cards point into the installed skill');
+  assert.equal(sh(process.execPath, [craft, 'catalog', 'validate', '--cwd', app]).status, 0);
 });
 
 test('installer usage errors', () => {

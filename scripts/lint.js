@@ -6,7 +6,7 @@ import { join, relative, dirname, extname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'coverage', '.work']);
+const SKIP_DIRS = new Set(['node_modules', '.git', 'dist', 'coverage', '.work', '.claude', 'runs']);
 /** Fixture files are deliberately sloppy input for rules; only the security checks skip them too. */
 const FIXTURE_PREFIX = `cli${sep}fixtures${sep}`;
 
@@ -15,6 +15,9 @@ const CHILD_PROCESS_ALLOW = new Set([
   'scripts/verify-package.js',
   'cli/src/audit.js',
   'evals/triggers/run.js',
+  'evals/harness/run.js',
+  'evals/harness/metrics.js',
+  'evals/test/harness.test.js',
   'scripts/test/package.test.js',
   'scripts/test/no-network.test.js'
 ]);
@@ -37,6 +40,8 @@ function walk(dir) {
   for (const name of readdirSync(dir)) {
     if (SKIP_DIRS.has(name)) continue;
     const p = join(dir, name);
+    // Bundled conformance demo pages (gitignored build output, see contracts/conformance/targets/README.md).
+    if (name === 'build' && relative(root, dir).split(sep).join('/').startsWith('contracts/conformance/targets/')) continue;
     if (statSync(p).isDirectory()) out.push(...walk(p));
     else out.push(p);
   }

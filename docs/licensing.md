@@ -6,8 +6,10 @@
 
 ## Third-party code
 
-No third-party code is bundled in v0.1. From P4, catalog entries record source,
-license, and SPDX id. Code may be bundled only when its SPDX id is on the allowlist:
+No catalog entry bundles third-party code. The packaged CLI vendors its runtime
+parser dependencies (postcss, parse5, @babel/parser and their runtime dependencies);
+their licenses are listed in the package's `cli/THIRD-PARTY.md`. Catalog entries record
+source, license, and SPDX id. Code may be bundled only when its SPDX id is on the allowlist:
 MIT, Apache-2.0, BSD-2-Clause, BSD-3-Clause, ISC, 0BSD. Everything else is link-only
 metadata. `NOTICE.md` is generated from catalog provenance.
 

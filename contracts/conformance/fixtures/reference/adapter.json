@@ -1,0 +1,21 @@
+{
+  "name": "reference-fixture",
+  "library": { "name": "hand-rolled reference fixture", "version": null },
+  "trust": "L1 (test fixture, not a component library)",
+  "notes": "Passing baseline for the kit. Every component is implemented in plain HTML and JS in this directory.",
+  "page": { "file": "index.html" },
+  "components": {
+    "button": { "button": "#btn-save", "toggle": "#btn-bold", "disabled": "#btn-off", "region": "#c-button" },
+    "text-field": { "input": "#email", "required": true, "invalidValue": "not-an-email", "region": "#c-text-field" },
+    "select-combobox": { "trigger": "#fruit", "region": "#c-select" },
+    "dialog": { "trigger": "#dlg-open" },
+    "menu": { "trigger": "#menu-btn", "region": "#c-menu" },
+    "tabs": { "tablist": "#tabs", "region": "#c-tabs" },
+    "tooltip-popover": { "tooltipTrigger": "#tip-btn", "popoverTrigger": "#pop-btn", "region": "#c-tooltip" },
+    "accordion-disclosure": { "triggers": "#faq .acc", "region": "#c-accordion" },
+    "toast-alert": { "trigger": "#toast-btn", "toast": "#toasts .toast", "alert": "#inline-alert", "region": "#c-toast" },
+    "table": { "table": "#people", "sortButton": "#sort-name", "filterInput": "#filter", "filterValue": "ar", "region": "#c-table" },
+    "pagination": { "nav": "#pager" },
+    "navigation": { "nav": "#site-nav", "submenuTrigger": "#nav-more" }
+  }
+}

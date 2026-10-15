@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0",
+  "id": "search-results-page",
+  "title": "Search results page",
+  "category": "page-composition",
+  "description": "A results page with the query echoed in an editable search field, a result count, sort control, faceted filters, and results that show why they matched (highlighted terms, matched field). Covers zero results with suggestions, spelling hints, and a path to broaden filters.",
+  "intent": "Help users judge relevance at a glance, narrow results, and recover from an empty result set.",
+  "tags": [
+    "search",
+    "results",
+    "filters",
+    "facets",
+    "query",
+    "listing"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "editable query field at the top with result count",
+    "result items with title, snippet with highlighted matches, and metadata",
+    "facets in a side column with counts",
+    "zero-results state with concrete recovery actions",
+    "pagination or load-more with stable URLs"
+  ],
+  "axes": {
+    "density": [
+      "balanced",
+      "compact"
+    ],
+    "temperature": [
+      "neutral"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "imagery": [
+      "type-led",
+      "balanced"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Query, filters, sort, and page live in the URL; changing a filter updates results without losing scroll position of the filter panel; result count updates are announced.",
+  "responsive": "Facets move into a filter sheet opened by a button that shows the active filter count; sort stays visible above results.",
+  "accessibility": "Results are a list with headings or links as item titles; highlight uses mark, not color alone; result count change announced via a polite live region; filter sheet is a modal dialog with focus management.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Relevance depends on the backend; the page cannot fix poor ranking.",
+    "Snippet highlighting requires match offsets from the search service."
+  ]
+}

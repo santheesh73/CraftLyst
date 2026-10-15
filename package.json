@@ -1,6 +1,6 @@
 {
   "name": "frontend-craft",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "An installable skill and CLI that gives AI coding agents a design contract, executable frontend checks, and proof reports.",
   "license": "Apache-2.0",
   "type": "module",
@@ -16,11 +16,16 @@
     "typecheck": "tsc -p tsconfig.json",
     "test": "node scripts/run-tests.js",
     "validate": "node scripts/validate-schemas.js && node scripts/validate-skill.js",
+    "catalog": "node cli/bin/craft.js catalog validate && node scripts/check-licenses.js && node scripts/build-index.js --check && node scripts/generate-notice.js --check",
     "package": "node scripts/package.js",
     "verify-package": "node scripts/verify-package.js",
-    "check": "npm run lint && npm run typecheck && npm test && npm run validate",
+    "check": "npm run lint && npm run typecheck && npm test && npm run validate && npm run catalog",
     "coverage": "node --test --experimental-test-coverage cli/test/*.test.js",
-    "triggers": "node evals/triggers/run.js"
+    "triggers": "node evals/triggers/run.js",
+    "eval:run": "node evals/harness/run.js",
+    "eval:metrics": "node evals/harness/metrics.js",
+    "eval:bundle": "node evals/harness/bundle.js",
+    "eval:aggregate": "node evals/harness/aggregate.js"
   },
   "devDependencies": {
     "@types/node": "22.10.2",

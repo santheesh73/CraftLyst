@@ -2,7 +2,7 @@
 
 How to build or adapt components so they are functional, accessible, and consistent.
 Frontend Craft ships component *contracts* (specs plus a conformance kit, v0.5), not a
-competing UI kit. Prefer the project's existing components and established libraries.
+competing UI kit: [contracts/](../contracts/README.md). Prefer the project's existing components and established libraries.
 
 ## Contents
 
@@ -54,7 +54,9 @@ Data components also need: zero, one, many, and very many items; very long strin
 
 ## 4. Contract summaries
 
-Keyboard and ARIA essentials; full contracts arrive with the conformance kit.
+Keyboard and ARIA essentials. Full contracts (states, keyboard map, failure cases) are in
+[contracts/components/](../contracts/README.md); check any implementation with
+`node <skill>/contracts/conformance/run.js --adapter <adapter.json>` (needs Playwright).
 
 - **Button**: native `button`; `type="button"` unless submitting; Enter and Space activate;
   icon-only needs an accessible name.

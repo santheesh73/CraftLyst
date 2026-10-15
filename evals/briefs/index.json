@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0",
+  "note": "Paired-evaluation briefs (P3). Every product, person, and figure in the briefs is fictional and illustrative.",
+  "briefs": [
+    { "id": "01-developer-portfolio", "title": "Developer portfolio", "size": "S", "stack": "html-css", "path": "01-developer-portfolio.md", "entry": "index.html" },
+    { "id": "02-saas-dashboard", "title": "Data-heavy SaaS usage dashboard", "size": "L", "stack": "html-css", "path": "02-saas-dashboard.md", "entry": "index.html" },
+    { "id": "03-ecommerce-product-page", "title": "E-commerce product page", "size": "M", "stack": "html-css", "path": "03-ecommerce-product-page.md", "entry": "index.html" },
+    { "id": "04-ai-assistant-interface", "title": "AI assistant chat interface", "size": "L", "stack": "react-vite", "path": "04-ai-assistant-interface.md", "entry": "dist/index.html" },
+    { "id": "05-education-platform", "title": "Education platform lesson page", "size": "M", "stack": "html-css", "path": "05-education-platform.md", "entry": "index.html" },
+    { "id": "06-redesign-existing-codebase", "title": "Redesign of an existing styled codebase", "size": "M", "stack": "html-css", "path": "06-redesign-existing-codebase.md", "entry": "index.html", "seed": "seeds/06-redesign-existing-codebase" },
+    { "id": "07-immersive-3d-site", "title": "3D / immersive launch site", "size": "L", "stack": "react-vite", "path": "07-immersive-3d-site.md", "entry": "dist/index.html" },
+    { "id": "08-form-heavy-flow", "title": "Form-heavy multi-step application", "size": "M", "stack": "html-css", "path": "08-form-heavy-flow.md", "entry": "index.html" },
+    { "id": "09-docs-site", "title": "Documentation site", "size": "M", "stack": "html-css", "path": "09-docs-site.md", "entry": "index.html" },
+    { "id": "10-mobile-first-app", "title": "Mobile-first habit tracker app", "size": "M", "stack": "html-css", "path": "10-mobile-first-app.md", "entry": "index.html" },
+    { "id": "11-rtl-localized-page", "title": "RTL-localized (Arabic) landing page", "size": "S", "stack": "html-css", "path": "11-rtl-localized-page.md", "entry": "index.html" },
+    { "id": "12-strict-brand-constraints", "title": "Membership page under strict brand constraints", "size": "S", "stack": "html-css", "path": "12-strict-brand-constraints.md", "entry": "index.html" }
+  ]
+}

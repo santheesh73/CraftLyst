@@ -1,0 +1,80 @@
+{
+  "schemaVersion": "1.0",
+  "id": "data-table-sort-filter",
+  "title": "Data table with sort, filter, and row actions",
+  "category": "component",
+  "description": "A dense tabular component for comparing records: sortable column headers, a filter row or toolbar, column-appropriate alignment and formatting, row selection with bulk actions, and per-row actions. Includes loading, empty, no-results, and error states and keeps the header visible while scrolling.",
+  "intent": "Let users scan, compare, sort, and act on many records without leaving the table.",
+  "tags": [
+    "table",
+    "data-grid",
+    "sort",
+    "filter",
+    "bulk-actions",
+    "admin",
+    "list"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "semantic table with header cells and aria-sort on the sorted column",
+    "numbers right-aligned in tabular numerals; text left-aligned",
+    "sticky header and optional sticky first column",
+    "selection checkbox column with bulk action bar",
+    "explicit loading, empty, no-results, and error rows"
+  ],
+  "axes": {
+    "density": [
+      "compact",
+      "balanced"
+    ],
+    "temperature": [
+      "neutral",
+      "cool"
+    ],
+    "formality": [
+      "formal"
+    ],
+    "motion": [
+      "still"
+    ],
+    "contrast": [
+      "medium",
+      "high"
+    ],
+    "voice": [
+      "neutral-sans",
+      "technical-mono"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Sort cycles ascending, descending, none via the header button; filters apply on change with debounce for text; bulk action bar appears when rows are selected and states the count; row actions live in a menu button per row.",
+  "responsive": "The table scrolls horizontally inside a labeled, focusable region with a sticky first column; below a breakpoint, an optional card list view shows the key columns.",
+  "accessibility": "Sort controls are buttons inside th; aria-sort only on the active column; selection checkboxes labeled by row name; the scroll container has tabindex=\"0\" and an accessible name; avoid role=\"grid\" unless implementing full grid keyboard navigation.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Not a spreadsheet: in-cell editing and full grid keyboard navigation need a separate pattern.",
+    "Very large datasets need server-side sort/filter and virtualization, which changes the a11y approach."
+  ]
+}

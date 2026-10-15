@@ -1,0 +1,151 @@
+{
+  "schemaVersion": "1.0",
+  "name": "project-tokens",
+  "description": "Starter tokens written by craft init. The neutral palette and single accent are placeholders that pass WCAG AA; replace them with values derived from the project's direction (references/direction-engine.md).",
+  "themes": ["light", "dark"],
+  "primitive": {
+    "color": {
+      "neutral-0": "#ffffff",
+      "neutral-50": "#f6f7f8",
+      "neutral-100": "#eceef1",
+      "neutral-200": "#d9dde2",
+      "neutral-400": "#8a919b",
+      "neutral-500": "#6b727d",
+      "neutral-600": "#565c66",
+      "neutral-700": "#3f444c",
+      "neutral-800": "#2a2e34",
+      "neutral-900": "#1b1e22",
+      "neutral-950": "#111316",
+      "accent-300": "#93b4f2",
+      "accent-400": "#6d97ea",
+      "accent-600": "#2f5fc4",
+      "accent-700": "#244a9c",
+      "red-300": "#f29a94",
+      "red-700": "#b4261d",
+      "green-300": "#7fd1a0",
+      "green-700": "#1d6f42",
+      "amber-300": "#f0c56b",
+      "amber-800": "#7a4d00"
+    },
+    "space": {
+      "0": "0",
+      "1": "4px",
+      "2": "8px",
+      "3": "12px",
+      "4": "16px",
+      "6": "24px",
+      "8": "32px",
+      "12": "48px",
+      "16": "64px",
+      "24": "96px"
+    },
+    "fontFamily": {
+      "sans": "system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif",
+      "mono": "ui-monospace, SFMono-Regular, Menlo, Consolas, \"Liberation Mono\", monospace"
+    },
+    "fontSize": {
+      "1": "0.8rem",
+      "2": "1rem",
+      "3": "1.25rem",
+      "4": "1.563rem",
+      "5": "1.953rem",
+      "6": "2.441rem"
+    },
+    "lineHeight": { "tight": 1.2, "snug": 1.35, "normal": 1.55 },
+    "fontWeight": { "regular": 400, "medium": 500, "bold": 650 },
+    "radius": { "none": "0", "sm": "4px", "md": "6px", "lg": "10px", "full": "9999px" },
+    "shadow": {
+      "none": "none",
+      "1": "0 1px 2px rgb(17 19 22 / 0.08)",
+      "2": "0 4px 12px rgb(17 19 22 / 0.12)"
+    },
+    "duration": { "fast": "120ms", "base": "200ms", "slow": "320ms" },
+    "easing": { "standard": "cubic-bezier(0.2, 0, 0, 1)", "exit": "cubic-bezier(0.3, 0, 1, 1)" },
+    "breakpoint": { "sm": "480px", "md": "768px", "lg": "1024px", "xl": "1440px" }
+  },
+  "semantic": {
+    "color": {
+      "surface": { "light": "{primitive.color.neutral-0}", "dark": "{primitive.color.neutral-950}" },
+      "surface-raised": { "light": "{primitive.color.neutral-50}", "dark": "{primitive.color.neutral-900}" },
+      "surface-sunken": { "light": "{primitive.color.neutral-100}", "dark": "{primitive.color.neutral-800}" },
+      "text": { "light": "{primitive.color.neutral-900}", "dark": "{primitive.color.neutral-50}" },
+      "text-muted": { "light": "{primitive.color.neutral-600}", "dark": "{primitive.color.neutral-400}" },
+      "border": { "light": "{primitive.color.neutral-200}", "dark": "{primitive.color.neutral-700}" },
+      "border-strong": { "light": "{primitive.color.neutral-500}", "dark": "{primitive.color.neutral-400}" },
+      "accent": { "light": "{primitive.color.accent-600}", "dark": "{primitive.color.accent-400}" },
+      "accent-strong": { "light": "{primitive.color.accent-700}", "dark": "{primitive.color.accent-300}" },
+      "on-accent": { "light": "{primitive.color.neutral-0}", "dark": "{primitive.color.neutral-950}" },
+      "focus": { "light": "{primitive.color.accent-600}", "dark": "{primitive.color.accent-300}" },
+      "danger": { "light": "{primitive.color.red-700}", "dark": "{primitive.color.red-300}" },
+      "success": { "light": "{primitive.color.green-700}", "dark": "{primitive.color.green-300}" },
+      "warning": { "light": "{primitive.color.amber-800}", "dark": "{primitive.color.amber-300}" }
+    },
+    "space": {
+      "inline-xs": "{primitive.space.1}",
+      "inline-sm": "{primitive.space.2}",
+      "inline-md": "{primitive.space.4}",
+      "stack-sm": "{primitive.space.2}",
+      "stack-md": "{primitive.space.4}",
+      "stack-lg": "{primitive.space.8}",
+      "section": "{primitive.space.16}",
+      "gutter": "{primitive.space.4}"
+    },
+    "font": {
+      "body": "{primitive.fontFamily.sans}",
+      "heading": "{primitive.fontFamily.sans}",
+      "code": "{primitive.fontFamily.mono}"
+    },
+    "text": {
+      "small": "{primitive.fontSize.1}",
+      "body": "{primitive.fontSize.2}",
+      "lead": "{primitive.fontSize.3}",
+      "h3": "{primitive.fontSize.4}",
+      "h2": "{primitive.fontSize.5}",
+      "h1": "{primitive.fontSize.6}"
+    },
+    "radius": {
+      "control": "{primitive.radius.md}",
+      "container": "{primitive.radius.lg}",
+      "pill": "{primitive.radius.full}"
+    },
+    "elevation": {
+      "flat": "{primitive.shadow.none}",
+      "raised": "{primitive.shadow.1}",
+      "overlay": "{primitive.shadow.2}"
+    },
+    "motion": {
+      "fast": "{primitive.duration.fast}",
+      "base": "{primitive.duration.base}",
+      "slow": "{primitive.duration.slow}",
+      "ease": "{primitive.easing.standard}",
+      "ease-exit": "{primitive.easing.exit}"
+    }
+  },
+  "component": {
+    "button": {
+      "radius": "{semantic.radius.control}",
+      "padding-inline": "{semantic.space.inline-md}",
+      "min-height": "44px"
+    },
+    "input": {
+      "radius": "{semantic.radius.control}",
+      "border": "{semantic.color.border-strong}"
+    }
+  },
+  "pairs": [
+    { "fg": "color.text", "bg": "color.surface", "use": "text" },
+    { "fg": "color.text", "bg": "color.surface-raised", "use": "text" },
+    { "fg": "color.text", "bg": "color.surface-sunken", "use": "text" },
+    { "fg": "color.text-muted", "bg": "color.surface", "use": "text" },
+    { "fg": "color.text-muted", "bg": "color.surface-raised", "use": "text" },
+    { "fg": "color.accent", "bg": "color.surface", "use": "text", "note": "links and accent text" },
+    { "fg": "color.accent-strong", "bg": "color.surface-raised", "use": "text" },
+    { "fg": "color.on-accent", "bg": "color.accent", "use": "text", "note": "primary button label" },
+    { "fg": "color.border-strong", "bg": "color.surface", "use": "ui", "note": "input borders" },
+    { "fg": "color.focus", "bg": "color.surface", "use": "ui", "note": "focus ring" },
+    { "fg": "color.danger", "bg": "color.surface", "use": "text" },
+    { "fg": "color.success", "bg": "color.surface", "use": "text" },
+    { "fg": "color.warning", "bg": "color.surface", "use": "text" }
+  ],
+  "meta": { "source": "template", "generatedBy": "craft init" }
+}

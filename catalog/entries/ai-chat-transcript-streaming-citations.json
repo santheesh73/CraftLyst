@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "1.0",
+  "id": "ai-chat-transcript-streaming-citations",
+  "title": "AI chat transcript with streaming and citations",
+  "category": "specialized-product",
+  "description": "A conversation view for an AI assistant: user and assistant turns with clear authorship, streamed responses that render incrementally without jumping the scroll, inline citation markers linking to a source list, a stop button during generation, copy and retry per message, and visible errors and limits.",
+  "intent": "Make AI answers readable while they stream, show where claims come from, and keep the user in control of generation.",
+  "tags": [
+    "ai",
+    "chat",
+    "llm",
+    "streaming",
+    "citations",
+    "assistant",
+    "transcript",
+    "conversation"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "turns distinguished by label and alignment, not color alone",
+    "streamed markdown rendered incrementally with stable layout",
+    "numbered citation markers linking to a source list with titles and domains",
+    "stop generation control visible while streaming",
+    "auto-scroll only while the user is at the bottom"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "temperature": [
+      "neutral",
+      "warm"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "subtle",
+      "still"
+    ],
+    "voice": [
+      "neutral-sans",
+      "humanist"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Enter sends, Shift+Enter adds a line; while streaming, a Stop button replaces Send; scrolling up pauses auto-scroll and shows a \"jump to latest\" button; citations open sources in a new tab with an indicator; retry regenerates a single answer.",
+  "responsive": "Transcript column max width about 75ch centered; composer pinned to the bottom with safe-area padding; source list becomes a disclosure under each answer on narrow screens.",
+  "accessibility": "Transcript is a log region; do not announce every streamed token, announce when an answer completes; citation markers have accessible names (\"Source 2: <title>\"); composer has a label; stop button reachable by keyboard during streaming.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Incremental markdown rendering can briefly show broken syntax; render conservatively (complete blocks).",
+    "Citations are only as trustworthy as the retrieval behind them; the UI must not imply verification it does not do."
+  ]
+}

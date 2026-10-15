@@ -1,8 +1,9 @@
 // craft command-line interface. Exit codes: 0 ok, 1 findings at/above --fail-on,
-// 2 usage error, 3 environment or tool unavailable (including commands not in this version).
+// 2 usage error, 3 environment or tool unavailable.
 import { parseArgs } from 'node:util';
 import { existsSync, mkdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { join, resolve, relative, isAbsolute, sep } from 'node:path';
+import { buildTokens } from './tokens-build.js';
 import { VERSION } from './version.js';
 import { detect } from './doctor.js';
 import { init } from './init.js';
@@ -15,22 +16,15 @@ import { shoot } from './shoot.js';
 import { extractTokens } from './extract.js';
 import { loadConfig } from './lint.js';
 import { buildReport, writeReport, checkReport, saveTierResult } from './report.js';
+import { BUNDLED_CATALOG, LOCAL_ENTRIES_DIR, LOCAL_INDEX_FILE, buildIndex, digestEntries, loadCatalog, locateIndex, parseFilters, search, serializeIndex, validateCatalog } from './catalog.js';
 
 export const EXIT = { OK: 0, FINDINGS: 1, USAGE: 2, UNAVAILABLE: 3 };
-
-/** Commands planned in the spec and the version that adds them. */
-const PLANNED = {
-  index: '0.4.0',
-  search: '0.4.0',
-  catalog: '0.4.0',
-  tokens: '0.5.0'
-};
 
 const HELP = `craft ${VERSION}: design contract, checks, and proof for frontend work
 
 Usage: craft <command> [path] [options]
 
-Commands available in this version:
+Commands:
   doctor            Detect Node, package manager, framework, styling, Playwright, axe
   init              Scaffold .craft/ from templates (never overwrites existing files)
   init --from-repo  Same, with tokens.json drafted from the project's custom properties and Tailwind config
@@ -42,14 +36,23 @@ Commands available in this version:
                     RTL, 200% zoom, forced colors (needs Playwright + axe-core in the project)
   report            Run Tier 0, fold in fresh Tier 1/2 results, write .craft/reports/latest.{json,md}
   report --check    Exit 0 if latest.json still matches the files, 1 if stale, missing, or invalid
+  catalog validate  Validate catalog entries (bundled + .craft/catalog/): schema, trust, lifecycle,
+                    license allowlist; stale verified_on dates are warnings
+  index build       Build .craft/catalog-index.json from the bundled entries plus .craft/catalog/*.json
+  search "<intent>" Offline catalog search: 3-5 compact cards (id, trust, intent, file to read).
+                    Filters: --axes density=compact,... --stack react,tailwind-v4 --trust L1,L2
+                    --category component --limit 5 (1-10)
+  tokens build      Emit .craft/build/tokens.css (CSS variables, light/dark), tailwind.v3.cjs/.mjs
+                    (v3 preset), and tailwind.v4.css (@theme) from .craft/tokens.json
+                    (--tokens <file>, --out <dir inside .craft/>)
 
-Planned (exit 3 until released): ${Object.entries(PLANNED).map(([c, v]) => `${c} (${v})`).join(', ')}
 
 Options:
   --json            Machine-readable output
   --fail-on <lvl>   block | warn (default: config failOn, else block)
   --cwd <dir>       Project root (default: current directory)
-  --tokens <file>   Token file for contrast (default: .craft/tokens.json)
+  --tokens <file>   Token file for contrast and tokens build (default: .craft/tokens.json)
+  --out <dir>       tokens build: output directory inside .craft/ (default: .craft/build)
   --rules <ids>     Comma-separated rule ids for lint
   --scripts <names> Comma-separated scripts for audit (default: all detected)
   --timeout <sec>   Per-script timeout for audit (default: ${DEFAULT_TIMEOUT_MS / 1000})
@@ -58,6 +61,14 @@ Options:
   --file <path>     shoot: local HTML file, repeatable
   --allow-network   Allow non-loopback hosts and requests (off by default)
   --check           report: check freshness instead of writing
+  --axes <k=v,...>  search: entries that fit these axis positions (entries silent on an axis pass)
+  --stack <list>    search: frameworks and/or styling (any, react, next, vue, svelte, astro, html,
+                    css, tailwind-v3, tailwind-v4, css-modules, scss, css-in-js)
+  --trust <levels>  search: L0, L1, L2, L3 (comma-separated)
+  --category <c>    search: page-composition, component, motion, specialized-product, design-system
+  --limit <n>       search: number of cards (default 5, clamped to 1-10)
+  --today <date>    catalog validate: evaluate staleness as of YYYY-MM-DD (deterministic runs)
+  --catalog <dir>   catalog root with entries/ and index/ (default: the catalog shipped with craft)
   -v, --version     Print version
   -h, --help        Print this help
 
@@ -94,6 +105,14 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
         file: { type: 'string', multiple: true },
         'from-repo': { type: 'boolean', default: false },
         'allow-network': { type: 'boolean', default: false },
+        axes: { type: 'string' },
+        stack: { type: 'string' },
+        trust: { type: 'string' },
+        category: { type: 'string' },
+        limit: { type: 'string' },
+        today: { type: 'string' },
+        catalog: { type: 'string' },
+        out: { type: 'string' },
         version: { type: 'boolean', short: 'v', default: false },
         help: { type: 'boolean', short: 'h', default: false }
       }
@@ -127,13 +146,6 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
   if (failOnArg !== undefined && failOnArg !== 'block' && failOnArg !== 'warn') {
     io.stderr(`craft: --fail-on must be "block" or "warn", got "${failOnArg}".\n`);
     return EXIT.USAGE;
-  }
-
-  if (command in PLANNED) {
-    const since = PLANNED[/** @type {keyof typeof PLANNED} */ (command)];
-    const msg = `craft ${command} is not available in ${VERSION}; it is planned for ${since}. Report this check as not verified and check by inspection instead.`;
-    out({ command, ok: false, status: 'unavailable', availableIn: since, message: msg }, `${msg}\n`);
-    return EXIT.UNAVAILABLE;
   }
 
   switch (command) {
@@ -329,10 +341,171 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
       return counts.fail ? EXIT.FINDINGS : EXIT.OK;
     }
 
+    case 'catalog': {
+      if (rest[0] !== 'validate') {
+        io.stderr(`craft catalog: unknown or missing subcommand${rest[0] ? ` "${rest[0]}"` : ''}. Use "craft catalog validate".\n`);
+        return EXIT.USAGE;
+      }
+      const today = values.today === undefined ? undefined : String(values.today);
+      if (today !== undefined && !(/^\d{4}-\d{2}-\d{2}$/.test(today) && !Number.isNaN(Date.parse(today + 'T00:00:00Z')))) {
+        io.stderr(`craft catalog validate: --today must be a date as YYYY-MM-DD, got "${today}".\n`);
+        return EXIT.USAGE;
+      }
+      const catalogRoot = values.catalog ? resolve(root, String(values.catalog)) : BUNDLED_CATALOG;
+      const loaded = loadCatalog({ catalogRoot, projectRoot: root });
+      if (!loaded.length) {
+        const msg = `No catalog entries found in ${join(catalogRoot, 'entries')} or ${LOCAL_ENTRIES_DIR}/. Pass --catalog <dir> or reinstall the skill.`;
+        out({ command, ok: false, status: 'unavailable', message: msg }, msg + '\n');
+        return EXIT.UNAVAILABLE;
+      }
+      const r = validateCatalog(loaded, { today });
+      const failOn = failOnArg ?? 'block';
+      const failing = r.errors.length + (failOn === 'warn' ? r.warnings.length : 0);
+      const text = [
+        ...r.errors.map((e) => `ERROR ${e.file} [${e.rule}] ${e.message}\n      fix: ${e.remediation}`),
+        ...r.warnings.map((w) => `WARN  ${w.file} [${w.rule}] ${w.message}\n      fix: ${w.remediation}`),
+        `${loaded.length} entries (${loaded.filter((l) => l.origin === 'local').length} local): ${r.errors.length} error(s), ${r.warnings.length} warning(s)`
+      ].join('\n');
+      out({ command: 'catalog validate', ok: failing === 0, entries: loaded.length, valid: r.valid.length, errors: r.errors, warnings: r.warnings }, text + '\n');
+      return failing ? EXIT.FINDINGS : EXIT.OK;
+    }
+
+    case 'index': {
+      if (rest[0] !== 'build') {
+        io.stderr(`craft index: unknown or missing subcommand${rest[0] ? ` "${rest[0]}"` : ''}. Use "craft index build".\n`);
+        return EXIT.USAGE;
+      }
+      const catalogRoot = values.catalog ? resolve(root, String(values.catalog)) : BUNDLED_CATALOG;
+      const loaded = loadCatalog({ catalogRoot, projectRoot: root });
+      if (!loaded.length) {
+        const msg = `No catalog entries found in ${join(catalogRoot, 'entries')} or ${LOCAL_ENTRIES_DIR}/. Pass --catalog <dir> or reinstall the skill.`;
+        out({ command: 'index build', ok: false, status: 'unavailable', message: msg }, msg + '\n');
+        return EXIT.UNAVAILABLE;
+      }
+      const r = validateCatalog(loaded);
+      const bundledDigest = digestEntries(validateCatalog(loaded.filter((l) => l.origin === 'bundled')).valid);
+      const index = buildIndex(r.valid, { bundledDigest });
+      mkdirSync(join(root, '.craft'), { recursive: true });
+      writeFileSync(join(root, LOCAL_INDEX_FILE), serializeIndex(index));
+      const text = [
+        ...r.errors.map((e) => `SKIP  ${e.file} [${e.rule}] ${e.message}\n      fix: ${e.remediation}`),
+        `Wrote ${LOCAL_INDEX_FILE}: ${index.entryCount} entries (${r.valid.filter((l) => l.origin === 'local').length} local), ${Object.keys(index.terms).length} terms.${r.errors.length ? ` ${new Set(r.errors.map((e) => e.file)).size} invalid entr(ies) left out.` : ''}`
+      ].join('\n');
+      out({ command: 'index build', ok: r.errors.length === 0, file: LOCAL_INDEX_FILE, entries: index.entryCount, terms: Object.keys(index.terms).length, skipped: r.errors }, text + '\n');
+      return r.errors.length ? EXIT.FINDINGS : EXIT.OK;
+    }
+
+    case 'search': {
+      const query = rest.join(' ').trim();
+      if (!query) {
+        io.stderr('craft search: give an intent to search for, for example: craft search "sortable data table" --limit 5\n');
+        return EXIT.USAGE;
+      }
+      const parsedFilters = parseFilters({
+        axes: /** @type {string | undefined} */ (values.axes),
+        stack: /** @type {string | undefined} */ (values.stack),
+        trust: /** @type {string | undefined} */ (values.trust),
+        category: /** @type {string | undefined} */ (values.category),
+        limit: /** @type {string | undefined} */ (values.limit)
+      });
+      if ('error' in parsedFilters) {
+        io.stderr(`craft search: ${parsedFilters.error}\n`);
+        return EXIT.USAGE;
+      }
+      const catalogRoot = values.catalog ? resolve(root, String(values.catalog)) : BUNDLED_CATALOG;
+      const loc = locateIndex({ catalogRoot, projectRoot: root });
+      if (loc.status !== 'ok') {
+        out({ command, ok: false, status: 'unavailable', message: loc.message }, loc.message + '\n');
+        return EXIT.UNAVAILABLE;
+      }
+      const r = search(loc.index, query, parsedFilters.filters);
+      const results = r.results.map((x) => ({ ...x, file: x.origin === 'local' ? join(root, x.path) : join(loc.catalogRoot, x.path) }));
+      const staleNote = loc.stale ? `Note: ${LOCAL_INDEX_FILE} was built from an older bundled catalog; run craft index build.` : '';
+      const text = [
+        ...results.map((x, i) => `${i + 1}. ${x.id}  [${x.trust} ${x.status} ${x.category}]  score ${x.score}\n   ${x.title}: ${x.intent}\n   read: ${x.file}`),
+        results.length
+          ? `${results.length} of ${r.matched} matching entries${r.filteredOut ? ` (${r.filteredOut} removed by filters)` : ''}. Read only the entry files you will use.`
+          : `No entries matched${r.filteredOut ? ` after filters (${r.filteredOut} matched the words but not the filters; relax --axes, --stack, --trust, or --category)` : '; try other words for the intent'}.`,
+        staleNote
+      ].filter(Boolean).join('\n');
+      out({
+        command, ok: true, query, terms: r.terms, filters: parsedFilters.filters,
+        index: { file: loc.file, origin: loc.origin, entries: loc.index.entryCount, stale: loc.stale },
+        matched: r.matched, filteredOut: r.filteredOut, results
+      }, text + '\n');
+      return EXIT.OK;
+    }
+    case 'tokens':
+      return tokensCommand(root, rest, values, out, io);
+
     default:
       io.stderr(`craft: unknown command "${command}". Run "craft --help" for the list.\n`);
       return EXIT.USAGE;
   }
+}
+
+/**
+ * craft tokens build: read the token file, validate, and write the adapters inside .craft/.
+ * @param {string} root
+ * @param {string[]} rest positionals after "tokens"
+ * @param {Record<string, any>} values parsed options
+ * @param {(payload: object, text: string) => void} out
+ * @param {IO} io
+ * @returns {number}
+ */
+function tokensCommand(root, rest, values, out, io) {
+  if (rest[0] !== 'build' || rest.length > 1) {
+    io.stderr(`craft tokens: expected "craft tokens build", got "craft tokens ${rest.join(' ')}".\n`);
+    return EXIT.USAGE;
+  }
+  const craftDir = join(root, '.craft');
+  const outDir = values.out ? resolve(root, String(values.out)) : join(craftDir, 'build');
+  const rel = relative(craftDir, outDir);
+  if (rel.startsWith('..') || isAbsolute(rel)) {
+    io.stderr(`craft tokens build: --out must be inside ${craftDir} (got ${outDir}). craft only writes inside .craft/; copy or import the files from there.\n`);
+    return EXIT.USAGE;
+  }
+  const file = values.tokens ? resolve(root, String(values.tokens)) : join(craftDir, 'tokens.json');
+  if (!existsSync(file)) {
+    const msg = `No token file at ${file}. Run craft init or pass --tokens <file>.`;
+    out({ command: 'tokens build', ok: false, status: 'unavailable', message: msg }, msg + '\n');
+    return EXIT.UNAVAILABLE;
+  }
+  /** @type {any} */
+  let tokens;
+  try {
+    tokens = JSON.parse(readFileSync(file, 'utf8'));
+  } catch (err) {
+    const msg = `${file} is not valid JSON: ${/** @type {Error} */ (err).message}`;
+    out({ command: 'tokens build', ok: false, status: 'invalid', errors: [msg] }, msg + '\n');
+    return EXIT.FINDINGS;
+  }
+  const schema = validateAgainst('tokens', tokens);
+  if (!schema.valid) {
+    const errors = schema.errors.map((e) => `${e.path} ${e.message}`);
+    out({ command: 'tokens build', ok: false, status: 'invalid', errors }, `Token file does not match the schema:\n${errors.map((e) => `  ${e}`).join('\n')}\n`);
+    return EXIT.FINDINGS;
+  }
+  const r = buildTokens(tokens);
+  if (r.problems.length) {
+    out({ command: 'tokens build', ok: false, status: 'invalid', errors: r.problems }, `Cannot build tokens:\n${r.problems.map((p) => `  ${p}`).join('\n')}\n`);
+    return EXIT.FINDINGS;
+  }
+  mkdirSync(outDir, { recursive: true });
+  const written = [];
+  for (const f of r.files) {
+    writeFileSync(join(outDir, f.name), f.content);
+    written.push(relative(root, join(outDir, f.name)).split(sep).join('/'));
+  }
+  const text = [
+    ...written.map((w) => `wrote ${w}`),
+    '',
+    'Plain CSS: import tokens.css once. Tailwind v3: tokens.css + presets: [require(\'./.craft/build/tailwind.v3.cjs\')].',
+    'Tailwind v4: @import "tailwindcss"; @import "./.craft/build/tailwind.v4.css"; (instead of tokens.css).',
+    'Copy the files into your source tree if your build cannot read .craft/; re-run after editing tokens.json.'
+  ].join('\n');
+  out({ command: 'tokens build', ok: true, files: written, themes: tokens.themes }, text + '\n');
+  return EXIT.OK;
 }
 
 /**

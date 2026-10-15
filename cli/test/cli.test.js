@@ -33,15 +33,6 @@ test('usage errors exit 2', async () => {
   assert.equal((await run(['--help'])).code, EXIT.OK);
 });
 
-test('planned commands exit 3 and name their version', async () => {
-  for (const cmd of ['search', 'index', 'catalog', 'tokens']) {
-    const r = await run([cmd, '--json']);
-    assert.equal(r.code, EXIT.UNAVAILABLE, cmd);
-    assert.equal(r.json().status, 'unavailable');
-    assert.match(r.json().availableIn, /^\d+\.\d+\.\d+$/);
-  }
-});
-
 test('doctor detects a Next + Tailwind v4 project from files', async () => {
   const dir = tmp();
   writeFileSync(join(dir, 'package.json'), JSON.stringify({ dependencies: { next: '15.0.0', react: '19.0.0' }, devDependencies: { tailwindcss: '^4.0.0' }, scripts: { build: 'next build', lint: 'next lint', dev: 'next dev' } }));

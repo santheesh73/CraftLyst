@@ -1,0 +1,73 @@
+{
+  "schemaVersion": "1.0",
+  "id": "multi-step-stepper",
+  "title": "Multi-step flow with stepper",
+  "category": "component",
+  "description": "A step indicator and navigation for flows split into 3-6 stages (checkout, setup, application): shows step names, the current step, completed steps, and lets users go back to completed steps without losing data. Each step validates before advancing; a review step precedes final submission.",
+  "intent": "Break a long task into understandable stages so users know where they are, what is left, and can correct earlier answers.",
+  "tags": [
+    "stepper",
+    "wizard",
+    "multi-step",
+    "checkout",
+    "form",
+    "progress",
+    "onboarding"
+  ],
+  "source": {
+    "kind": "original-spec",
+    "url": null,
+    "attribution": "Frontend Craft contributors"
+  },
+  "characteristics": [
+    "ordered list of named steps with current and completed states",
+    "step count in text (\"Step 2 of 4\")",
+    "back never discards entered data",
+    "review step summarizing all answers with edit links",
+    "per-step validation before continuing"
+  ],
+  "axes": {
+    "density": [
+      "balanced"
+    ],
+    "formality": [
+      "approachable",
+      "formal"
+    ],
+    "motion": [
+      "still",
+      "subtle"
+    ],
+    "shape": [
+      "mixed",
+      "soft"
+    ],
+    "imagery": [
+      "type-led"
+    ]
+  },
+  "compatibility": {
+    "frameworks": [
+      "any"
+    ],
+    "styling": [
+      "any"
+    ]
+  },
+  "dependencies": [],
+  "interaction": "Continue validates the current step; completed steps are links, future steps are not interactive; each step has its own URL so browser back works; focus moves to the step heading on navigation.",
+  "responsive": "Full step list collapses to \"Step 2 of 4: Delivery\" with a disclosure to see all steps on narrow screens.",
+  "accessibility": "Stepper is an ol inside nav with a label; current step has aria-current=\"step\"; status of each step is in text, not only icons; step heading receives focus after navigation.",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx": "CC-BY-4.0",
+    "redistribution": "attribution-required"
+  },
+  "trust": "L1",
+  "verified_on": "2026-10-14",
+  "status": "reviewed",
+  "limitations": [
+    "Overkill for fewer than three short steps.",
+    "Branching flows need the step list to update, which can confuse if steps appear late."
+  ]
+}

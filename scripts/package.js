@@ -6,6 +6,7 @@ import { join, dirname, relative, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { createZip } from './lib/zip.js';
+import { buildShippedIndex } from './build-index.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
@@ -21,6 +22,11 @@ const INCLUDE = [
   ['references', 'references'],
   ['templates', 'templates'],
   ['tokens/recipes.json', 'tokens/recipes.json'],
+  ['contracts/README.md', 'contracts/README.md'],
+  ['contracts/components', 'contracts/components'],
+  ['contracts/conformance/run.js', 'contracts/conformance/run.js'],
+  ['contracts/conformance/lib', 'contracts/conformance/lib'],
+  ['contracts/conformance/fixtures', 'contracts/conformance/fixtures'],
   ['cli/bin', 'cli/bin'],
   ['cli/src', 'cli/src'],
   ['cli/rules', 'cli/rules'],
@@ -29,9 +35,14 @@ const INCLUDE = [
   ['cli/schemas/report.schema.json', 'cli/schemas/report.schema.json'],
   ['cli/schemas/recipes.schema.json', 'cli/schemas/recipes.schema.json'],
   ['catalog/catalog-schema.json', 'cli/schemas/catalog-schema.json'],
+  ['catalog/entries', 'catalog/entries'],
   ['adapters/claude-code', 'adapters/claude-code'],
   ['scripts/install-claude-code.js', 'scripts/install-claude-code.js'],
   ['scripts/install-claude-code', 'scripts/install-claude-code'],
+  ['scripts/install-agent.js', 'scripts/install-agent.js'],
+  ['adapters/codex', 'adapters/codex'],
+  ['adapters/cursor', 'adapters/cursor'],
+  ['adapters/other-agents', 'adapters/other-agents'],
   ['scripts/validate-skill.js', 'scripts/validate-skill.js']
 ];
 /**
@@ -42,7 +53,7 @@ const INCLUDE = [
 const VENDOR = ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js'];
 /** Files inside vendored packages that are not needed at runtime. */
 const VENDOR_SKIP = /\.(map|d\.ts|d\.mts|d\.cts|md)$|(^|\/)(bin)\//i;
-const EXECUTABLE = new Set(['adapters/claude-code/hooks/stop-proof.js', 'cli/bin/craft.js', 'scripts/install-claude-code', 'scripts/install-claude-code.js']);
+const EXECUTABLE = new Set(['adapters/claude-code/hooks/stop-proof.js', 'cli/bin/craft.js', 'scripts/install-claude-code', 'scripts/install-claude-code.js', 'scripts/install-agent.js']);
 
 /**
  * @param {string} src
@@ -77,6 +88,12 @@ const sha256 = (buf) => createHash('sha256').update(buf).digest('hex');
 rmSync(dist, { recursive: true, force: true });
 mkdirSync(out, { recursive: true });
 for (const [from, to] of INCLUDE) copy(join(root, from), join(out, to));
+
+// Prebuilt offline search index (ADR-0014), built fresh from the entries being shipped.
+const catalogIndex = buildShippedIndex(join(root, 'catalog'));
+if (catalogIndex.errors.length) throw new Error(`catalog entries are invalid; run craft catalog validate:\n${catalogIndex.errors.join('\n')}`);
+mkdirSync(join(out, 'catalog', 'index'), { recursive: true });
+writeFileSync(join(out, 'catalog', 'index', 'index.json'), catalogIndex.text);
 
 const lock = JSON.parse(readFileSync(join(root, 'package-lock.json'), 'utf8'));
 /** @type {string[]} */

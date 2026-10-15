@@ -104,10 +104,13 @@ CSS custom properties are the portable baseline (works in every stack):
 
 - Name variables `--<group>-<name>` from semantic and component tokens; primitives may be
   emitted for reference but components use semantic variables.
-- Tailwind v4: map variables in `@theme` (`--color-surface: var(--color-surface)` style) so
-  utilities like `bg-surface` exist. Tailwind v3: extend `theme.colors` with
-  `'surface': 'var(--color-surface)'`. Adapters in `craft tokens build` arrive in v0.5;
-  until then write the mapping by hand, following this pattern.
+- Run `craft tokens build`: it writes `.craft/build/tokens.css` (`:root` defaults, a
+  `[data-theme="dark"]` block, and the same under `prefers-color-scheme: dark`),
+  `tailwind.v3.cjs`/`.mjs` (a preset whose values are `var(--color-surface)` etc.; import
+  tokens.css too), and `tailwind.v4.css` (self-contained `@theme`; use it instead of
+  tokens.css). Import or copy them; craft never writes outside `.craft/`.
+- Writing it by hand in Tailwind v4: never declare `--color-surface: var(--color-surface)`
+  in `@theme` (a self-reference); declare the value, and override the same name per theme.
 - Never hardcode a value that has a token (`tok/hardcoded`).
 
 ## 8. Working with an existing system
