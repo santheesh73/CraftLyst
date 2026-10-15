@@ -134,8 +134,10 @@ writeFileSync(join(out, 'cli', 'package.json'), JSON.stringify({
 
 // The npm package is this directory. No lifecycle scripts: installing it runs nothing (ADR-0019).
 const runtimeDeps = Object.fromEntries(Object.keys(pkg.dependencies).sort().map((n) => [n, pkg.dependencies[n]]));
+// Scoped: the unscoped name "frontend-craft" belongs to an unrelated package on npm.
+const NPM_NAME = '@santheesh73/frontend-craft';
 writeFileSync(join(out, 'package.json'), JSON.stringify({
-  name: 'frontend-craft',
+  name: NPM_NAME,
   version: pkg.version,
   description: pkg.description,
   license: 'Apache-2.0',
@@ -144,7 +146,8 @@ writeFileSync(join(out, 'package.json'), JSON.stringify({
   bin: { 'frontend-craft': 'install.mjs', craft: 'cli/bin/craft.js' },
   files: ['SKILL.md', 'LICENSE', 'LICENSE-docs', 'NOTICE.md', 'README.md', 'install.mjs', 'installer/', 'adapters/', 'cli/', 'references/', 'templates/', 'tokens/', 'catalog/', 'contracts/', 'scripts/', 'node_modules/'],
   dependencies: runtimeDeps,
-  bundleDependencies: Object.keys(runtimeDeps)
+  bundleDependencies: Object.keys(runtimeDeps),
+  publishConfig: { access: 'public' }
 }, null, 2) + '\n');
 
 writeFileSync(join(out, 'README.md'), `# frontend-craft ${pkg.version}

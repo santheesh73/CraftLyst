@@ -1,5 +1,5 @@
 {
-  "name": "frontend-craft",
+  "name": "@santheesh73/frontend-craft",
   "version": "1.0.0",
   "description": "An installable skill and CLI that gives AI coding agents a design contract, executable frontend checks, and proof reports.",
   "license": "Apache-2.0",

@@ -67,6 +67,9 @@ test('package contains the skill and no repo-only files', () => {
   const npmPkg = JSON.parse(readFileSync(join(dist, 'frontend-craft', 'package.json'), 'utf8'));
   assert.equal(npmPkg.scripts, undefined, 'no lifecycle scripts in the npm package');
   assert.deepEqual(Object.keys(npmPkg.bin).sort(), ['craft', 'frontend-craft']);
+  // "frontend-craft" on npm is an unrelated package; ours is scoped and public.
+  assert.equal(npmPkg.name, '@santheesh73/frontend-craft');
+  assert.deepEqual(npmPkg.publishConfig, { access: 'public' });
 });
 
 test('extracted zip installs into a clean project and the CLI works there', () => {

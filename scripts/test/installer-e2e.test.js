@@ -113,7 +113,7 @@ test('the npm tarball installs offline in a clean directory and `frontend-craft 
   writeFileSync(join(consumer, 'package.json'), JSON.stringify({ name: 'consumer', version: '1.0.0', private: true }) + '\n');
   const i = npm(['install', '--offline', '--no-audit', '--no-fund', '--ignore-scripts', tarball], consumer);
   assert.equal(i.status, 0, i.stderr);
-  const installed = join(consumer, 'node_modules', 'frontend-craft');
+  const installed = join(consumer, 'node_modules', '@santheesh73', 'frontend-craft');
   assert.ok(existsSync(join(installed, 'node_modules', 'postcss')), 'bundled parsers are installed with the package');
   const app = join(consumer, 'app');
   mkdirSync(app);

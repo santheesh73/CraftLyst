@@ -7,6 +7,11 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed (gate follow-up, 2026-10-15)
+
+- The npm package is now `@santheesh73/frontend-craft`, with `publishConfig.access` set to `public`. The unscoped name `frontend-craft` belongs to an unrelated package (version 2.4.0 on npm). Publishing is still a human gate.
+- V2 load checks now pass for Codex (`codex debug prompt-input`), opencode (`opencode debug skill`), and Kilo Code (`kilo debug skill`), each with an empty control project. That makes 6 agents with a V2 pass. For each remaining agent, `adapters/verification.json` records the CLI version that was tried and the specific blocker.
+
 P1b: install for every coding agent. The old P6 adapter scope moved into P1b; P6 is now V3
 verification and release (see PLAN.md).
 

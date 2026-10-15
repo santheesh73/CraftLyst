@@ -25,6 +25,6 @@ returns. ADR-0007 already keeps the CLI offline by default.
 
 ## Consequences
 
-- `npx frontend-craft install` downloads the package itself (that is npm's job); nothing
+- `npx --package @santheesh73/frontend-craft frontend-craft install` downloads the package itself (that is npm's job); nothing
   else is fetched.
 - Updates are explicit (`update`), never automatic.
