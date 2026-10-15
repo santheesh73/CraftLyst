@@ -13,7 +13,7 @@ import { scoreHuman, scoreAutomated } from '../harness/aggregate.js';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const harness = join(here, '..', 'harness');
-const stub = join(here, 'fixtures', 'stub-agent.js');
+const stub = join(here, '..', 'fixtures', 'stub-agent.js');
 const tmp = () => mkdtempSync(join(tmpdir(), 'craft-harness-test-'));
 
 test('agent command template: {prompt} is one argument, never shell-split', () => {

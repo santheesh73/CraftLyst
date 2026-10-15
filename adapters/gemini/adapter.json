@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "id": "gemini",
+  "label": "Gemini CLI",
+  "aliases": [
+    "gemini-cli"
+  ],
+  "docsUrl": "https://geminicli.com/docs/cli/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".gemini",
+    "GEMINI.md"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Gemini CLI reads .gemini/skills/ or .agents/skills/ (and ~/.gemini/skills/ or ~/.agents/skills/). Docs read from google-gemini/gemini-cli docs/cli/skills.md.",
+  "caveats": [
+    "Gemini CLI skips project skills in folders it does not trust (\"Skipping project agents due to untrusted folder\"). Trust the project folder, or install with --scope user. Observed with gemini 0.64.0 on 2026-10-15."
+  ]
+}

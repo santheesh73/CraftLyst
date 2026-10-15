@@ -54,16 +54,19 @@ test('package contains the skill and no repo-only files', () => {
   }
   assert.equal(files.filter((f) => f.startsWith('references/')).length, 16);
   // The conformance kit's reference and broken fixtures are part of the shipped kit.
-  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs)\//.test(f) && !f.startsWith('cli/node_modules/') && !f.startsWith('contracts/conformance/fixtures/')), []);
+  assert.deepEqual(files.filter((f) => /(^|\/)(test|fixtures|examples|evals|docs)\//.test(f) && !f.startsWith('node_modules/') && !f.startsWith('contracts/conformance/fixtures/')), []);
   for (const required of ['contracts/README.md', 'contracts/components/dialog.md', 'contracts/conformance/run.js', 'contracts/conformance/lib/checks.js', 'contracts/conformance/fixtures/reference/adapter.json', 'cli/src/tokens-build.js']) {
     assert.ok(files.includes(required), `missing ${required}`);
   }
   assert.equal(files.filter((f) => f.startsWith('contracts/components/')).length, 12);
   assert.ok(!files.some((f) => f.startsWith('contracts/conformance/targets/')), 'external demo targets are repo-only');
   assert.ok(files.includes('cli/rules/index.js'), 'rules ship with the CLI');
-  const vendored = new Set(files.filter((f) => f.startsWith('cli/node_modules/')).map((f) => f.split('/').slice(2, f.split('/')[2].startsWith('@') ? 4 : 3).join('/')));
+  const vendored = new Set(files.filter((f) => f.startsWith('node_modules/')).map((f) => f.split('/').slice(1, f.split('/')[1].startsWith('@') ? 3 : 2).join('/')));
   assert.deepEqual([...vendored].sort(), ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js']);
-  assert.ok(!files.some((f) => f.startsWith('node_modules/')), 'no top-level node_modules');
+  assert.ok(!files.some((f) => f.startsWith('cli/node_modules/')), 'parsers are vendored at the package root (bundleDependencies)');
+  const npmPkg = JSON.parse(readFileSync(join(dist, 'frontend-craft', 'package.json'), 'utf8'));
+  assert.equal(npmPkg.scripts, undefined, 'no lifecycle scripts in the npm package');
+  assert.deepEqual(Object.keys(npmPkg.bin).sort(), ['craft', 'frontend-craft']);
 });
 
 test('extracted zip installs into a clean project and the CLI works there', () => {
@@ -84,7 +87,9 @@ test('extracted zip installs into a clean project and the CLI works there', () =
   assert.equal(inst.status, 0, inst.stderr);
   const skill = join(project, '.claude', 'skills', 'frontend-craft');
   assert.ok(existsSync(join(skill, 'SKILL.md')));
-  assert.equal(sh(process.execPath, [installer, '--project', project]).status, 3, 'refuses to overwrite without --force');
+  const again = sh(process.execPath, [installer, '--project', project]);
+  assert.equal(again.status, 0, 'a second run is idempotent');
+  assert.match(again.stdout, /unchanged/);
   assert.equal(sh(process.execPath, [installer, '--project', project, '--force']).status, 0);
 
   const craft = join(skill, 'cli', 'bin', 'craft.js');

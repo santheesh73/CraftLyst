@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "id": "goose",
+  "label": "Goose",
+  "aliases": [],
+  "docsUrl": "https://block.github.io/goose/docs/guides/context-engineering/using-skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".goose",
+    ".goosehints"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Goose reads .agents/skills/ (plus .goose/skills/ and .claude/skills/ for compatibility); user ~/.agents/skills/.",
+  "caveats": [
+    "If Claude Code is installed too, this agent may also read .claude/skills/ and list the skill twice."
+  ]
+}

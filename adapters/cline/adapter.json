@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "id": "cline",
+  "label": "Cline",
+  "aliases": [],
+  "docsUrl": "https://docs.cline.bot/customization/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".clinerules",
+    ".cline"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Cline reads .cline/skills/, .clinerules/skills/, .claude/skills/ and .agents/skills/; user ~/.cline/skills/ and ~/.agents/skills/.",
+  "caveats": [
+    "If Claude Code is installed too, this agent may also read .claude/skills/ and list the skill twice."
+  ]
+}

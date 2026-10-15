@@ -5,7 +5,7 @@ import layCardDepth from './lay/card-depth.js';
 import layCloneGrid from './lay/clone-grid.js';
 import visDefaultStack from './vis/default-stack.js';
 import visGradientText from './vis/gradient-text.js';
-import conFabricated from './con/fabricated.js';
+import conFabricated from './content/fabricated.js';
 import motNoReduced from './mot/no-reduced.js';
 import a11yFocus from './a11y/focus.js';
 import a11yTarget from './a11y/target.js';

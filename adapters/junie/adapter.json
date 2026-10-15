@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "id": "junie",
+  "label": "JetBrains Junie",
+  "aliases": [
+    "jetbrains"
+  ],
+  "docsUrl": "https://junie.jetbrains.com/docs/agent-skills.html",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".junie"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Junie reads .junie/skills/ and .agents/skills/ in a trusted project; user ~/.junie/skills/ and ~/.agents/skills/.",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.",
+    "Project skills load only in a trusted project."
+  ]
+}

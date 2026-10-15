@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "id": "kilo",
+  "label": "Kilo Code",
+  "aliases": [
+    "kilocode",
+    "kilo-code"
+  ],
+  "docsUrl": "https://kilo.ai/docs/agent-behavior/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".kilo",
+    ".kilocode",
+    "kilo.jsonc"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Kilo Code loads .agents/skills/ and ~/.agents/skills/ by default, besides .kilo/skills/.",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting."
+  ]
+}

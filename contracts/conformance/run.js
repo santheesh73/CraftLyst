@@ -5,7 +5,7 @@
 // 2 usage error (bad flags or adapter), 3 Playwright, axe-core, or Chromium unavailable.
 // Prints to stdout only; it writes no files.
 import { parseArgs } from 'node:util';
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { runConformance, toMarkdown } from './lib/harness.js';
@@ -77,6 +77,6 @@ export async function cli(argv, io) {
   return r.result.summary.fail ? 1 : 0;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   process.exitCode = await cli(process.argv.slice(2), { stdout: (s) => process.stdout.write(s), stderr: (s) => process.stderr.write(s) });
 }

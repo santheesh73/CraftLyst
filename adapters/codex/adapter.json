@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0",
+  "id": "codex",
+  "label": "Codex CLI",
+  "aliases": [
+    "openai-codex"
+  ],
+  "docsUrl": "https://learn.chatgpt.com/docs/build-skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".codex"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Codex loads skills from .agents/skills/ (cwd up to the repository root) and ~/.agents/skills/.",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting."
+  ]
+}

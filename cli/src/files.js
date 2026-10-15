@@ -6,9 +6,10 @@ import { globToRegExp } from './glob.js';
 
 export const DEFAULT_IGNORES = [
   'node_modules', '.git', '.hg', '.svn', 'dist', 'build', 'out', '.next', '.nuxt', '.svelte-kit',
-  '.astro', '.output', '.vercel', '.turbo', '.cache', 'coverage', 'vendor', '.craft/reports', 'storybook-static',
+  '.astro', '.output', '.vercel', '.turbo', '.cache', 'coverage', 'vendor', '.craft', 'storybook-static',
   // Agent configuration and installed skills (including this one) are not the product's UI.
-  '.claude', '.cursor', '.codex', '.agents', '.windsurf', '.github',
+  '.frontend-craft', '.claude', '.cursor', '.codex', '.agents', '.windsurf', '.github', '.gemini', '.roo',
+  '.clinerules', '.kilocode', '.continue', '.opencode', '.qwen', '.junie', '.trae', '.augment', '.amazonq', '.zed',
   // Scripts and styles in static asset folders are served verbatim, usually third-party or built.
   'public/**/*.js', 'public/**/*.css', 'static/**/*.js', 'static/**/*.css'
 ];

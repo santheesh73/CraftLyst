@@ -19,7 +19,9 @@ const CHILD_PROCESS_ALLOW = new Set([
   'evals/harness/metrics.js',
   'evals/test/harness.test.js',
   'scripts/test/package.test.js',
-  'scripts/test/no-network.test.js'
+  'scripts/test/no-network.test.js',
+  'scripts/test/installer-e2e.test.js',
+  'installer/main.js'
 ]);
 /** Files allowed to import network modules: tests that start a loopback server only. */
 /** @type {Set<string>} */

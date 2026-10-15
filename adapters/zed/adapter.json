@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0",
+  "id": "zed",
+  "label": "Zed",
+  "aliases": [],
+  "docsUrl": "https://zed.dev/docs/ai/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".zed"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Zed reads <worktree>/.agents/skills/ and ~/.agents/skills/ (skills replaced rules in Zed 1.4.0).",
+  "caveats": [
+    "Project skills load only in a trusted worktree."
+  ]
+}

@@ -4,7 +4,7 @@
 // and state each check with its verified / not verified / failed label before stopping.
 // It reads files only, never runs project code, and allows the stop on any internal error.
 // Input and output follow the Claude Code hooks reference (Stop event, decision control).
-import { existsSync, readFileSync } from 'node:fs';
+import { existsSync, readFileSync, realpathSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -62,7 +62,7 @@ function hasSources(root) {
   }
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   try {
     const raw = await readStdin();
     const input = raw.trim() ? JSON.parse(raw) : {};

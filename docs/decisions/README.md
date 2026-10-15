@@ -21,3 +21,6 @@ Each ADR records one decision: context, decision, consequences. Status is one of
 | [0014](0014-catalog-index-format.md) | Catalog index format and offline search | accepted |
 | [0015](0015-conformance-harness.md) | Conformance harness for component contracts | accepted |
 | [0016](0016-token-adapters.md) | Token adapters (CSS variables, Tailwind v3 and v4) | accepted |
+| [0017](0017-adapters-as-data.md) | Agent adapters are data, not code | accepted |
+| [0018](0018-pointer-versus-native-install.md) | Native skill install versus pointer install | accepted |
+| [0019](0019-no-install-scripts-or-network.md) | No install scripts and no network in the installer | accepted |

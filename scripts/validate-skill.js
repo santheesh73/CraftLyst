@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Validates SKILL.md against the Agent Skills constraints and our own packaging rules.
 // Usage: node scripts/validate-skill.js [skill-dir]   (defaults to the repository root)
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, realpathSync } from 'node:fs';
 import { join, resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -89,7 +89,7 @@ export function validateSkill(dir) {
   return problems;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const dir = resolve(process.argv[2] ?? join(dirname(fileURLToPath(import.meta.url)), '..'));
   const problems = validateSkill(dir);
   const fm = parseFrontmatter(readFileSync(join(dir, 'SKILL.md'), 'utf8'));

@@ -10,6 +10,7 @@ button on this repository's Security tab. Do not open a public issue.
 These are enforced in code and, where noted, by CI (see ADR-0007):
 
 - The CLI is read-only by default and writes only inside `.craft/` (and `dist/` during packaging).
+- The installer (`install.mjs`) writes only the paths its adapter files name plus `.frontend-craft/`, never overwrites a file it did not create without `--force`, runs no install or lifecycle scripts, and makes no network requests (ADR-0019; `scripts/test/installer.test.js` checks the installer source).
 - No network access unless `--allow-network` is passed. The repository lint (`scripts/lint.js`) rejects network module imports outside an allowlist, and `scripts/test/no-network.test.js` runs every command under a guard that fails CI if a socket, UDP send, or DNS lookup is attempted.
 - No `eval`, no `new Function` (enforced by `scripts/lint.js`).
 - Never downloads or executes remote code. Playwright and axe-core are installed only after explicit user approval, at pinned versions (`craft shoot` prints the install command and exits 3 when they are missing).
@@ -43,8 +44,12 @@ Done by Claude, not by an independent reviewer. Checked:
 | `scripts/run-tests.js` | test files | temp dirs (via tests) | test runner only | no |
 | `scripts/package.js` | repository files listed in the script | `dist/` only | no | no |
 | `scripts/verify-package.js` | `dist/` | nothing | `unzip -t`, `unzip -Z1` | no |
-| `scripts/install-claude-code.js` | the packaged skill | `~/.claude/skills/frontend-craft` or `<project>/.claude/skills/frontend-craft` only; replaces an existing install only with `--force`; `--dry-run` writes nothing | no | no |
-| `scripts/install-agent.js` (Codex, Cursor, generic) | the packaged skill, `SKILL.md` frontmatter, an existing `AGENTS.md` | `<project>/.frontend-craft/` and either the marked block in `<project>/AGENTS.md` (text outside the markers is kept) or `<project>/.cursor/rules/frontend-craft.mdc`; replaces only with `--force`; `--dry-run` writes nothing | no | no |
+| `install.mjs` and `installer/` (`install`, `update`, `uninstall`) | `adapters/*/adapter.json`, the packaged skill, existing files at the adapter paths | only the paths named in the selected adapters, under `--target` (project scope) or `--home` (user scope), plus `<target>/.frontend-craft/`; shared files change only between the `frontend-craft:begin`/`end` markers; files it did not create are replaced only with `--force`; `--dry-run`, `list`, `verify`, and `doctor` write nothing | `verify` only: `node <installed>/cli/bin/craft.js --version` with the current Node | no |
+| `scripts/install-claude-code.js` (wrapper) | as `install.mjs --agent claude-code` | `~/.claude/skills/frontend-craft` or `<project>/.claude/skills/frontend-craft` and `<project>/.frontend-craft/` only | no | no |
+| npm package (`dist/frontend-craft/package.json`) | n/a | n/a | no `scripts` field, so no install or lifecycle scripts; parsers are bundled (`bundleDependencies`), so installing the tarball needs no network | no |
+| `scripts/generate-agent-docs.js` | `adapters/`, `docs/compatibility.md` | `adapters/README.md`, the generated section of `docs/compatibility.md`; `--check` writes nothing | no | no |
+| `scripts/test/installer.test.js` | installer, adapters | temp dirs | `verify` runs a stand-in `craft.js` with Node | no |
+| `scripts/test/installer-e2e.test.js` | the package built into a temp dir | temp dirs | `node scripts/package.js`, the packaged installer and CLI, `npm pack`, `npm install --offline --ignore-scripts` of the tarball | no (`--offline`) |
 | `cli/bin/craft.js` (`doctor`, `lint`, `contrast`) | project files, `.craft/` | nothing | no | no |
 | `cli/bin/craft.js init` (`--from-repo`) | templates; with `--from-repo`, project CSS and Tailwind config (parsed as AST, never executed) | `.craft/` only, never overwrites | no | no |
 | `cli/bin/craft.js audit` | `package.json`, `.craft/craft.config.json` | `.craft/reports/audit.json` | the project's own scripts via its package manager, or `tier1.commands` through a shell; `--dry-run` spawns nothing | only what the project's scripts do |
@@ -71,7 +76,7 @@ Done by Claude, not by an independent reviewer. Checked:
 | `evals/harness/metrics.js` | `evals/harness/runs/<runId>/` | `<arm>/metrics.json` and `<arm>/eval/` (incl. `.craft/reports/` from `craft shoot`/`audit`) under the run | `node cli/bin/craft.js` (`lint`, `report --check`, `shoot`, `audit`); `audit` runs the generated project's own scripts | no; `shoot` is loopback-only |
 | `evals/harness/bundle.js` | `evals/harness/runs/<runId>/`, briefs | `runs/<runId>/bundles/`, `runs/<runId>/key.json` | no | no |
 | `evals/harness/aggregate.js` | `runs/<runId>/` metrics and key, ranking JSON files | `evals/harness/results/<runId>/summary.{md,json}` | no | no |
-| `evals/test/harness.test.js` | harness, stub agent fixture | temp dirs | the harness scripts and the stub agent (`evals/test/fixtures/stub-agent.js`), never a real agent | no |
+| `evals/test/harness.test.js` | harness, stub agent fixture | temp dirs | the harness scripts and the stub agent (`evals/fixtures/stub-agent.js`), never a real agent | no |
 
 CI installs Playwright's Chromium (`npx playwright install --with-deps chromium`, version pinned
 by `package-lock.json`) so the Tier 2 tests run; users install it only when they choose to run

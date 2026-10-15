@@ -32,15 +32,23 @@ See [PLAN.md](PLAN.md) for gates and [docs/decisions/](docs/decisions/README.md)
 
 ```sh
 npm ci && npm run package
-node scripts/install-claude-code.js --user     # or --project <dir>; add --dry-run to preview
+node dist/frontend-craft/install.mjs install --agent auto --target ./my-app   # add --dry-run to preview
+node dist/frontend-craft/install.mjs list                                     # all supported agents
 ```
 
-See [docs/installation.md](docs/installation.md) and [docs/usage.md](docs/usage.md).
+One installer covers Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI, Windsurf, Cline,
+Roo Code, Kilo Code, opencode, Zed, Amp, Junie, Goose, Augment, Qwen Code, Continue, Aider, and
+any agent that reads `AGENTS.md`. Every agent's status, the official doc its install path comes
+from, and what has been verified are in [docs/compatibility.md](docs/compatibility.md). Only
+installation is checked automatically; no agent is marked Supported until a person runs the
+behavior check. See [docs/installation.md](docs/installation.md) for the release zip, the npm
+tarball, user-level installs, `verify`, `update`, and `uninstall`, and [docs/usage.md](docs/usage.md)
+for the CLI.
+
 The CLI ships `doctor`, `init` (with `--from-repo`), `lint` (20 Slop Lint rules, see
 [docs/rules.md](docs/rules.md)), `contrast`, `audit` (Tier 1), `shoot` (Tier 2, needs
 Playwright and axe-core), `report`, `catalog validate`, `index build`, `search`, and
-`tokens build`. Other agents: `node scripts/install-agent.js --agent codex|cursor|generic`
-(untested, see [docs/compatibility.md](docs/compatibility.md)).
+`tokens build`.
 
 Steps that need a person are listed in [docs/human-gates/](docs/human-gates/README.md).
 

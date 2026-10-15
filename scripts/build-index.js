@@ -2,7 +2,7 @@
 // Builds the shipped catalog index catalog/index/index.json from catalog/entries (ADR-0014).
 // --check: exit 1 if the committed index differs from a fresh build (CI). --out <file>: write
 // elsewhere (scripts/package.js writes into dist/). Refuses to build while any entry is invalid.
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, realpathSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCatalog, validateCatalog, buildIndex, serializeIndex } from '../cli/src/catalog.js';
@@ -18,7 +18,7 @@ export function buildShippedIndex(catalogRoot = join(root, 'catalog')) {
   return { text: serializeIndex(buildIndex(valid)), entryCount: valid.length, errors: errors.map((e) => `${e.file} [${e.rule}] ${e.message}`) };
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const args = process.argv.slice(2);
   const check = args.includes('--check');
   const outIdx = args.indexOf('--out');

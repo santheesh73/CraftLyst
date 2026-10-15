@@ -1,0 +1,20 @@
+{
+  "schemaVersion": "1.0",
+  "id": "continue",
+  "label": "Continue",
+  "aliases": [],
+  "docsUrl": "https://docs.continue.dev/customize/deep-dives/rules",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "file",
+  "project": ".continue/rules/frontend-craft.md",
+  "user": null,
+  "frontmatter": "---\nname: Frontend Craft\ndescription: {{description}}\nalwaysApply: false\n---",
+  "detectMarkers": [
+    ".continue"
+  ],
+  "nativeSkillSupport": false,
+  "notes": "Continue reads rule files from .continue/rules/. The rule has no globs and alwaysApply: false, so the agent decides when to load it.",
+  "caveats": [
+    "Skills support and a file-based user location are not documented on the pages read, so user scope is not offered."
+  ]
+}
