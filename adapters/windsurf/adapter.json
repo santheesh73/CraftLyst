@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "id": "windsurf",
+  "label": "Windsurf (Devin Desktop)",
+  "aliases": [
+    "devin",
+    "devin-desktop"
+  ],
+  "docsUrl": "https://docs.devin.ai/desktop/cascade/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".windsurf",
+    ".devin",
+    ".windsurfrules"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Windsurf is now documented as Devin Desktop; it reads .devin/skills/, .windsurf/skills/ and .agents/skills/; user ~/.codeium/windsurf/skills/ and ~/.agents/skills/.",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting."
+  ]
+}

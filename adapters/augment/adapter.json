@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "id": "augment",
+  "label": "Augment (Auggie)",
+  "aliases": [
+    "auggie"
+  ],
+  "docsUrl": "https://docs.augmentcode.com/cli/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".augment"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Augment reads .augment/skills/, .claude/skills/ and .agents/skills/ (and the matching user directories).",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.",
+    "If Claude Code is installed too, this agent may also read .claude/skills/ and list the skill twice."
+  ]
+}

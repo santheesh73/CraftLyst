@@ -1,0 +1,22 @@
+{
+  "schemaVersion": "1.0",
+  "id": "roo",
+  "label": "Roo Code",
+  "aliases": [
+    "roo-code",
+    "roocode"
+  ],
+  "docsUrl": "https://docs.roocode.com/features/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".roo",
+    ".roomodes"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Roo Code reads .roo/skills/ and .agents/skills/; user ~/.roo/skills/ and ~/.agents/skills/.",
+  "caveats": []
+}

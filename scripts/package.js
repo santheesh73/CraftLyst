@@ -2,7 +2,7 @@
 // Builds the installable skill: dist/frontend-craft/, dist/frontend-craft-<version>.zip,
 // and dist/SHA256SUMS. Writes only inside dist/. Output is reproducible (ADR-0009).
 import { readFileSync, writeFileSync, mkdirSync, rmSync, readdirSync, statSync, copyFileSync, chmodSync } from 'node:fs';
-import { join, dirname, relative, sep } from 'node:path';
+import { join, dirname, relative, sep, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { createZip } from './lib/zip.js';
@@ -10,7 +10,9 @@ import { buildShippedIndex } from './build-index.js';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
-const dist = join(root, 'dist');
+// --out <dir> builds somewhere else (tests use a temp directory so parallel test files never share dist/).
+const outArg = process.argv.indexOf('--out');
+const dist = outArg > 0 && process.argv[outArg + 1] ? resolve(process.argv[outArg + 1]) : join(root, 'dist');
 const out = join(dist, 'frontend-craft');
 
 /** Files and directories copied into the package (repo path -> package path). */
@@ -36,24 +38,22 @@ const INCLUDE = [
   ['cli/schemas/recipes.schema.json', 'cli/schemas/recipes.schema.json'],
   ['catalog/catalog-schema.json', 'cli/schemas/catalog-schema.json'],
   ['catalog/entries', 'catalog/entries'],
-  ['adapters/claude-code', 'adapters/claude-code'],
+  ['adapters', 'adapters'],
+  ['install.mjs', 'install.mjs'],
+  ['installer', 'installer'],
   ['scripts/install-claude-code.js', 'scripts/install-claude-code.js'],
   ['scripts/install-claude-code', 'scripts/install-claude-code'],
-  ['scripts/install-agent.js', 'scripts/install-agent.js'],
-  ['adapters/codex', 'adapters/codex'],
-  ['adapters/cursor', 'adapters/cursor'],
-  ['adapters/other-agents', 'adapters/other-agents'],
   ['scripts/validate-skill.js', 'scripts/validate-skill.js']
 ];
 /**
- * Runtime packages vendored into cli/node_modules so the skill runs without npm install
- * (ADR-0005). @babel/types and its helpers are declared by @babel/parser but never loaded
+ * Runtime packages vendored into the package's node_modules/ so the skill runs without npm
+ * install (ADR-0005), and declared as bundleDependencies so `npm pack` keeps them (ADR-0019). @babel/types and its helpers are declared by @babel/parser but never loaded
  * by its bundle, so they are left out; the package test proves the CLI works without them.
  */
 const VENDOR = ['@babel/parser', 'entities', 'nanoid', 'parse5', 'picocolors', 'postcss', 'source-map-js'];
 /** Files inside vendored packages that are not needed at runtime. */
 const VENDOR_SKIP = /\.(map|d\.ts|d\.mts|d\.cts|md)$|(^|\/)(bin)\//i;
-const EXECUTABLE = new Set(['adapters/claude-code/hooks/stop-proof.js', 'cli/bin/craft.js', 'scripts/install-claude-code', 'scripts/install-claude-code.js', 'scripts/install-agent.js']);
+const EXECUTABLE = new Set(['adapters/claude-code/hooks/stop-proof.js', 'cli/bin/craft.js', 'scripts/install-claude-code', 'scripts/install-claude-code.js', 'install.mjs']);
 
 /**
  * @param {string} src
@@ -106,10 +106,10 @@ for (const name of VENDOR) {
   if (meta.version !== entry.version) throw new Error(`${name}: installed ${meta.version}, locked ${entry.version}; run npm ci`);
   for (const f of list(src)) {
     if (VENDOR_SKIP.test(f) && !/^licen[cs]e/i.test(f.split('/').pop() ?? '')) continue;
-    mkdirSync(dirname(join(out, 'cli', 'node_modules', name, f)), { recursive: true });
-    copyFileSync(join(src, f), join(out, 'cli', 'node_modules', name, f));
+    mkdirSync(dirname(join(out, 'node_modules', name, f)), { recursive: true });
+    copyFileSync(join(src, f), join(out, 'node_modules', name, f));
   }
-  thirdParty.push(`| ${name} | ${meta.version} | ${meta.license} | cli/node_modules/${name}/ |`);
+  thirdParty.push(`| ${name} | ${meta.version} | ${meta.license} | node_modules/${name}/ |`);
 }
 writeFileSync(join(out, 'cli', 'THIRD-PARTY.md'), `# Third-party runtime packages
 
@@ -132,13 +132,31 @@ writeFileSync(join(out, 'cli', 'package.json'), JSON.stringify({
   bin: { craft: 'bin/craft.js' }
 }, null, 2) + '\n');
 
+// The npm package is this directory. No lifecycle scripts: installing it runs nothing (ADR-0019).
+const runtimeDeps = Object.fromEntries(Object.keys(pkg.dependencies).sort().map((n) => [n, pkg.dependencies[n]]));
+writeFileSync(join(out, 'package.json'), JSON.stringify({
+  name: 'frontend-craft',
+  version: pkg.version,
+  description: pkg.description,
+  license: 'Apache-2.0',
+  type: 'module',
+  engines: { node: '>=20.19' },
+  bin: { 'frontend-craft': 'install.mjs', craft: 'cli/bin/craft.js' },
+  files: ['SKILL.md', 'LICENSE', 'LICENSE-docs', 'NOTICE.md', 'README.md', 'install.mjs', 'installer/', 'adapters/', 'cli/', 'references/', 'templates/', 'tokens/', 'catalog/', 'contracts/', 'scripts/', 'node_modules/'],
+  dependencies: runtimeDeps,
+  bundleDependencies: Object.keys(runtimeDeps)
+}, null, 2) + '\n');
+
 writeFileSync(join(out, 'README.md'), `# frontend-craft ${pkg.version}
 
-Installable Agent Skill. Install for Claude Code:
+Installable Agent Skill and \`craft\` CLI. Install for your coding agents (Node 20+):
 
-    node scripts/install-claude-code.js --user              # ~/.claude/skills/frontend-craft
-    node scripts/install-claude-code.js --project <dir>     # <dir>/.claude/skills/frontend-craft
-    node scripts/install-claude-code.js --user --dry-run    # show what would be copied
+    node install.mjs install --agent auto                     # agents detected in this project
+    node install.mjs install --agent all --target <project>   # every supported agent
+    node install.mjs list                                     # supported agents and paths
+    node install.mjs install --agent claude-code --scope user # ~/.claude/skills/frontend-craft
+
+Add --dry-run to preview. uninstall, update, verify, and doctor are also available.
 
 CLI (Node 20+): node cli/bin/craft.js --help
 

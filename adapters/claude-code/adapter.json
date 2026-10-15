@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "id": "claude-code",
+  "label": "Claude Code",
+  "aliases": [
+    "claude"
+  ],
+  "docsUrl": "https://code.claude.com/docs/en/skills",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".claude/skills/frontend-craft",
+  "user": ".claude/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".claude",
+    "CLAUDE.md"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Native Agent Skill in .claude/skills/. Claude Code does not document .agents/skills/, so it gets its own copy.",
+  "caveats": []
+}

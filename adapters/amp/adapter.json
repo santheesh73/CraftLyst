@@ -1,0 +1,19 @@
+{
+  "schemaVersion": "1.0",
+  "id": "amp",
+  "label": "Amp",
+  "aliases": [],
+  "docsUrl": "https://ampcode.com/manual/agent-skills.md",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".agents/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [],
+  "nativeSkillSupport": true,
+  "notes": "Amp reads .agents/skills/ and, for the user, ~/.config/agents/skills/, ~/.agents/skills/ and ~/.config/amp/skills/.",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.",
+    "Amp has no project marker the installer can detect, so --agent auto never selects it."
+  ]
+}

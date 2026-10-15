@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "id": "agents-md",
+  "label": "AGENTS.md (any agent that reads it)",
+  "aliases": [
+    "generic",
+    "agents"
+  ],
+  "docsUrl": null,
+  "docsVerifiedOn": null,
+  "kind": "block",
+  "project": "AGENTS.md",
+  "user": null,
+  "frontmatter": null,
+  "detectMarkers": [
+    "AGENTS.md"
+  ],
+  "nativeSkillSupport": false,
+  "notes": "A managed block in the project AGENTS.md pointing at .frontend-craft/, for agents that read AGENTS.md but not skills.",
+  "caveats": [
+    "Not tied to one agent's docs; agents that also load skills do not need it."
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0",
+  "id": "qwen",
+  "label": "Qwen Code",
+  "aliases": [
+    "qwen-code"
+  ],
+  "docsUrl": "https://qwenlm.github.io/qwen-code-docs/",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "skill",
+  "project": ".qwen/skills/frontend-craft",
+  "user": ".qwen/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".qwen",
+    "QWEN.md"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "Qwen Code documents only .qwen/skills/ and ~/.qwen/skills/ (not .agents/skills/), so it gets its own copy. Docs read from QwenLM/qwen-code docs/users/features/skills.md.",
+  "caveats": []
+}

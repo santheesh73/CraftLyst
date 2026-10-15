@@ -1,9 +1,11 @@
 #!/usr/bin/env node
-// Installs the packaged frontend-craft skill for Claude Code by copying it into
-// ~/.claude/skills/frontend-craft (--user) or <dir>/.claude/skills/frontend-craft (--project).
-// Never overwrites an existing install without --force. No network, no process spawning.
-import { existsSync, cpSync, rmSync, readdirSync, statSync, mkdirSync } from 'node:fs';
-import { join, dirname, resolve } from 'node:path';
+// Installs the packaged frontend-craft skill for Claude Code into ~/.claude/skills/frontend-craft
+// (--user) or <dir>/.claude/skills/frontend-craft (--project). A thin wrapper over the multi-agent
+// installer: `node install.mjs install --agent claude-code`. Re-running is idempotent; a directory
+// the installer did not create is never overwritten without --force. No network, no process spawning.
+import { existsSync } from 'node:fs';
+import { join, resolve } from 'node:path';
+import { main as installMain } from '../installer/main.js';
 import { fileURLToPath } from 'node:url';
 import { homedir } from 'node:os';
 import { parseArgs } from 'node:util';
@@ -70,47 +72,16 @@ export function install(argv, io) {
     return 0;
   }
 
-  const here = dirname(fileURLToPath(import.meta.url));
-  const packageRoot = resolve(here, '..');
-  const defaultSource = existsSync(join(packageRoot, 'cli', 'package.json')) ? packageRoot : join(packageRoot, 'dist', 'frontend-craft');
-  const source = resolve(values.source ?? defaultSource);
-  if (!existsSync(join(source, 'SKILL.md')) || !existsSync(join(source, 'cli', 'package.json'))) {
-    io.error(`No packaged skill at ${source}. In the repository, run "npm run package" first, or pass --source <dir>.`);
-    return 3;
-  }
-
-  const base = values.user ? join(homedir(), '.claude', 'skills') : join(resolve(values.project), '.claude', 'skills');
-  const target = join(base, 'frontend-craft');
   if (values.project && !existsSync(resolve(values.project))) {
     io.error(`Project directory ${resolve(values.project)} does not exist.`);
     return 2;
   }
-  if (existsSync(target) && !values.force) {
-    io.error(`${target} already exists. Re-run with --force to replace it.`);
-    return 3;
-  }
-
-  const files = countFiles(source);
-  if (values['dry-run']) {
-    io.log(`Dry run: would copy ${files} files\n  from ${source}\n  to   ${target}${existsSync(target) ? '\n  (replacing the existing install)' : ''}`);
-    return 0;
-  }
-  if (existsSync(target)) rmSync(target, { recursive: true, force: true });
-  mkdirSync(base, { recursive: true });
-  cpSync(source, target, { recursive: true });
-  io.log(`Installed frontend-craft (${files} files) to ${target}\nVerify: node ${join(target, 'cli', 'bin', 'craft.js')} --version\nOptional proof gate (Stop hook): re-run with --print-stop-hook for the settings entry.`);
-  return 0;
-}
-
-/**
- * @param {string} dir
- * @returns {number}
- */
-function countFiles(dir) {
-  return readdirSync(dir).reduce((n, name) => {
-    const p = join(dir, name);
-    return n + (statSync(p).isDirectory() ? countFiles(p) : 1);
-  }, 0);
+  // Thin wrapper over the multi-agent installer (installer/main.js).
+  const args = ['install', '--agent', 'claude-code', ...(values.user ? ['--scope', 'user'] : ['--target', resolve(values.project)])];
+  if (values.source) args.push('--source', values.source);
+  if (values['dry-run']) args.push('--dry-run');
+  if (values.force) args.push('--force');
+  return installMain(args, { stdout: (s) => io.log(s.replace(/\n$/, '')), stderr: (s) => io.error(s.replace(/\n$/, '')) });
 }
 
 if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

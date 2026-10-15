@@ -41,11 +41,12 @@ results are only ever claimed from CI runs.
 |---|---|---|---|
 | P0 Foundation | n/a | plan, scaffold, licenses, CI skeleton, ADRs, schemas | CI green on skeleton; every schema validates its own examples |
 | P1 Skill core | v0.1 | `SKILL.md`, 16 references, templates, `recipes.json`, packaging, install script, trigger tests | `SKILL.md` < 400 lines + valid frontmatter; package installs in a clean dir; trigger accuracy ≥ 90 % or shortfall reported; **HUMAN GATE**: user applies it to 3 real projects |
+| P1b Multi-agent installer | unreleased | adapters as data, `install.mjs` installer (install, uninstall, update, list, verify, doctor), npm tarball, release zip | installer tests green on Linux, macOS, Windows × Node 20, 22; packaged-install e2e incl. no-self-scan; V1 for every adapter; V2 where an agent CLI runs here; **HUMAN GATE**: V3 smoke runs per agent, `npm publish` |
 | P2 CLI | v0.2 | all commands and rules, report + staleness, T2 path, Stop hook, security tests | tests + CI green; sloppy fixture flagged, clean passes; T0 < 10 s on 500 files; no-network test; FP rate < 15 % |
 | P3 Evals | v0.3 | 12 briefs, rubric, harness, metrics, dry run ≥ 2 briefs | harness end to end; **HUMAN GATE**: blind ranking meets section 8 thresholds |
 | P4 Catalog | v0.4 | schema, validator, index, search, 30 entries, provenance gates, NOTICE generator | all entries valid; precision on 20 queries reported |
 | P5 Contracts + tokens | v0.5 | 12 contracts, conformance kit, token adapters | kit runs against ≥ 2 external libraries, results reported honestly |
-| P6 Adapters + 1.0 | v1.0.0 | other-agent adapters, security review, docs, release | verified installs only; tag `v1.0.0` |
+| P6 V3 verification + 1.0 | v1.0.0 | record V3 behavior results per agent, security review, docs, release | "Supported" only for agents with V1 and V3 recorded; tag `v1.0.0` |
 
 A phase does not start until the previous gate is verified. Human gates stop work
 until the user answers. P2 may proceed while the P1 human gate is open (the spec
@@ -104,8 +105,16 @@ From P3 on, each HUMAN GATE is built up to the human step, marked **pending**, a
 - M5.3 `craft tokens build`: CSS custom properties, Tailwind v3 and v4 adapters
 - M5.4 run the kit against ≥ 2 external libraries; report results including failures
 
-**P6**
-- M6.1 adapters and install docs for Codex, Cursor, and other agents (labeled untested unless verified)
+**P1b** (added 2026-10-15 at the user's request, after P1 and before P2; built after P5 because it arrived then)
+- M1b.1 plan change, ADR-0017 (adapters as data), ADR-0018 (pointer versus native), ADR-0019 (no install scripts or network)
+- M1b.2 agent research from official docs (`docs/research/agent-docs.md`); adapters in `adapters/<id>/adapter.json`
+- M1b.3 installer engine and commands; `scripts/install-claude-code` becomes a wrapper
+- M1b.4 npm tarball (`npm pack` of `dist/frontend-craft/`), release zip, packaged-install e2e, no-self-scan guard
+- M1b.5 V1 tests per adapter, V2 load checks where an agent CLI runs here, V3 smoke kit (`evals/agent-smoke/`)
+- M1b.6 CI matrix Linux, macOS, Windows; docs (installation, compatibility, README, SECURITY)
+
+**P6** (scope moved: adapters and the installer are now P1b)
+- M6.1 record V3 results from the user; update the compatibility matrix from recorded results only
 - M6.2 security review, docs pass, release notes, `SHA256SUMS`
 - M6.3 `v1.0.0` tag: held until the user decides on the pending human gates
 

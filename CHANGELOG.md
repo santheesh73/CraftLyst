@@ -7,6 +7,32 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+P1b: install for every coding agent. The old P6 adapter scope moved into P1b; P6 is now V3
+verification and release (see PLAN.md).
+
+### Added
+
+- Added one installer for 18 coding agents plus any `AGENTS.md` reader: `node install.mjs` (also `frontend-craft` when installed from the npm tarball) with `install`, `uninstall`, `update`, `list`, `verify`, and `doctor`, and `--agent all|auto|<ids or aliases>`, `--scope project|user`, `--target`, `--home`, `--dry-run`, `--force`, `--json`. Exit codes 0 ok, 1 conflicts, 2 usage, 3 environment.
+- Added adapters as data: `adapters/<agent-id>/adapter.json`, validated against `adapters/adapter-schema.json`. Each one records the official doc its paths come from and the date it was read (`docs/research/agent-docs.md`). Trae is listed as researched, not supported, because no official doc could be read.
+- Added `scripts/generate-agent-docs.js`, which generates `adapters/README.md` and the agent table in `docs/compatibility.md` from the adapters and `adapters/verification.json` (`--check` in CI).
+- Added V2 load checks for Claude Code, GitHub Copilot, and Gemini CLI: each agent's own CLI listed the installed skill. The other agents are marked not run, with the reason.
+- Added the V3 agent smoke kit in `evals/agent-smoke/` (a HUMAN GATE per agent).
+- Added the npm package layout in `dist/frontend-craft/package.json`: `bin` for `frontend-craft` and `craft`, `files`, `engines`, bundled parsers, and no `scripts`. The tarball installs offline. Publishing to npm is a HUMAN GATE and has not been done.
+- Added ADR-0017 (adapters as data), ADR-0018 (pointer versus native install), and ADR-0019 (no install scripts or network).
+- Added end-to-end installer tests against the packaged build. They install every agent, check that a second run changes nothing, check that the installed CLI lints exactly one page in a clean project with every agent installed (no self-scanning), and install the npm tarball offline.
+- Added an `installer` CI job on Linux, macOS, and Windows with Node 20 and 22.
+
+### Changed
+
+- `scripts/install-claude-code.js` is now a thin wrapper around `install.mjs --agent claude-code`. Re-running it reports `unchanged` and exits 0, where it used to exit 3.
+- The vendored parsers moved from `cli/node_modules/` to the package root `node_modules/` so `npm pack` keeps them.
+- `craft lint` and the other file walkers now skip `.craft/`, `.frontend-craft/`, and every agent configuration directory the installer can write.
+- Moved the eval stub agent to `evals/fixtures/stub-agent.js` so `node --test` with no directory argument no longer runs it.
+
+### Removed
+
+- Removed `scripts/install-agent.js` and the Codex, Cursor, and other-agents adapter READMEs. `install.mjs` replaces them. Cursor now gets a native skill in `.agents/skills/` instead of an `.mdc` rule.
+
 ## [1.0.0] - 2026-10-14
 
 P3 (evaluation), P4 (catalog), P5 (contracts and tokens), and P6 (adapters, release prep).

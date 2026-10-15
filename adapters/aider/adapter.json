@@ -1,0 +1,23 @@
+{
+  "schemaVersion": "1.0",
+  "id": "aider",
+  "label": "Aider",
+  "aliases": [
+    "aider-chat"
+  ],
+  "docsUrl": "https://aider.chat/docs/usage/conventions.html",
+  "docsVerifiedOn": "2026-10-15",
+  "kind": "block",
+  "project": "CONVENTIONS.md",
+  "user": null,
+  "frontmatter": null,
+  "detectMarkers": [
+    ".aider.conf.yml",
+    "CONVENTIONS.md"
+  ],
+  "nativeSkillSupport": false,
+  "notes": "Aider loads conventions files only when told to. The installer adds a managed block to CONVENTIONS.md.",
+  "caveats": [
+    "Aider does not load CONVENTIONS.md automatically: add \"read: CONVENTIONS.md\" to .aider.conf.yml (merge with any existing read list) or start aider with --read CONVENTIONS.md. The installer does not edit YAML."
+  ]
+}

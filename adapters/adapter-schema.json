@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:frontend-craft:schema:adapter:1.0",
+  "title": "Frontend Craft agent adapter",
+  "description": "Where and how the installer places Frontend Craft for one coding agent (ADR-0017). Paths are relative: project paths to the project root, user paths to the home directory.",
+  "type": "object",
+  "required": ["schemaVersion", "id", "label", "aliases", "docsUrl", "docsVerifiedOn", "kind", "project", "user", "detectMarkers", "nativeSkillSupport", "notes", "caveats"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "schemaVersion": { "const": "1.0" },
+    "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$", "maxLength": 32 },
+    "label": { "type": "string", "minLength": 2, "maxLength": 60 },
+    "aliases": { "type": "array", "items": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" }, "uniqueItems": true },
+    "docsUrl": { "oneOf": [{ "type": "string", "format": "uri", "pattern": "^https://" }, { "type": "null" }] },
+    "docsVerifiedOn": { "oneOf": [{ "type": "string", "format": "date" }, { "type": "null" }] },
+    "kind": { "enum": ["skill", "block", "file"] },
+    "project": { "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }] },
+    "user": { "oneOf": [{ "$ref": "#/$defs/relPath" }, { "type": "null" }] },
+    "frontmatter": { "oneOf": [{ "type": "string" }, { "type": "null" }] },
+    "detectMarkers": { "type": "array", "items": { "$ref": "#/$defs/relPath" }, "uniqueItems": true },
+    "nativeSkillSupport": { "type": "boolean" },
+    "notes": { "type": "string" },
+    "caveats": { "type": "array", "items": { "type": "string", "minLength": 3 } }
+  },
+  "$defs": {
+    "relPath": { "type": "string", "minLength": 1, "pattern": "^(?![/\\\\])(?!.*(^|[/\\\\])\\.\\.([/\\\\]|$))(?![A-Za-z]:)[^\\u0000]+$" }
+  }
+}

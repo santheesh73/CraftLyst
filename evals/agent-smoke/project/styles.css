@@ -1,0 +1,11 @@
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+header,
+main,
+footer {
+  padding: 1rem;
+}

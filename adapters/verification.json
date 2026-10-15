@@ -1,0 +1,48 @@
+{
+  "$comment": "Recorded verification results beyond V1 (V1 placement is checked automatically by `node install.mjs verify` and the installer tests). V2 = the agent's own CLI, run headlessly, lists the installed skill. V3 = a person ran evals/agent-smoke/ in the agent (HUMAN GATE). Only record results that were actually run. Regenerate docs with `node scripts/generate-agent-docs.js`.",
+  "agents": {
+    "claude-code": {
+      "v2": {
+        "result": "pass",
+        "date": "2026-10-15",
+        "tool": "claude 2.1.300",
+        "command": "claude -p \"List the names of the skills available to you\" --output-format json",
+        "evidence": "frontend-craft listed after a project-scope install; absent in an empty control project"
+      }
+    },
+    "copilot": {
+      "v2": {
+        "result": "pass",
+        "date": "2026-10-15",
+        "tool": "@github/copilot 1.0.98",
+        "command": "copilot skill list",
+        "evidence": "frontend-craft listed under \"Project skills\" after a project-scope install (fresh HOME, no sign-in)"
+      }
+    },
+    "gemini": {
+      "v2": {
+        "result": "pass",
+        "date": "2026-10-15",
+        "tool": "@google/gemini-cli 0.64.0",
+        "command": "gemini skills list",
+        "evidence": "frontend-craft [Enabled] from ~/.agents/skills (user scope) and from .agents/skills in a trusted project folder; skipped in an untrusted folder"
+      }
+    },
+    "codex": {
+      "v2": { "result": "not-run", "reason": "@openai/codex 0.162.1 needs its platform binary package, and listing skills needs a signed-in model session" }
+    },
+    "opencode": {
+      "v2": { "result": "not-run", "reason": "opencode-ai 1.19.0 needs its postinstall script to fetch a binary; lifecycle scripts were not run in the build environment" }
+    },
+    "qwen": {
+      "v2": { "result": "not-run", "reason": "@qwen-code/qwen-code 0.25.1 has no skill-listing command; checking needs a signed-in model session" }
+    }
+  },
+  "defaultV2Reason": "agent CLI not available headlessly in the build environment (desktop or IDE app, or needs sign-in)",
+  "researchedNotSupported": [
+    {
+      "label": "Trae",
+      "reason": "No official Trae documentation could be read in this session; the commonly repeated .trae/rules path is unverified. See docs/research/agent-docs.md."
+    }
+  ]
+}
