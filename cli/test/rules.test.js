@@ -1,5 +1,6 @@
 // Every rule has a positive fixture (must fire) and, where meaningful, a negative fixture
-// (must not fire at warn or block). Fixtures live in cli/fixtures/rules/<prefix>/<name>/.
+// (must not fire at warn or block). Fixtures live in cli/fixtures/rules/<prefix>/<name>/
+// (con/ rules in content/).
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, writeFileSync } from 'node:fs';
@@ -10,12 +11,14 @@ import { runLint } from '../src/lint.js';
 import { RULES } from '../rules/index.js';
 
 const FIXTURES = join(dirname(fileURLToPath(import.meta.url)), '..', 'fixtures', 'rules');
+/** Rule ids keep their short prefix; the "con" prefix lives in content/ because CON is a reserved file name on Windows. */
+const fixtureDir = (/** @type {string} */ id) => join(FIXTURES, id.replace(/^con\//, 'content/'));
 /** Rules that need a rendered page (craft shoot) and therefore have no static fixture. */
 const RENDERED_ONLY = new Set(RULES.filter((r) => !r.check && r.tier === 'T2').map((r) => r.id));
 
 for (const rule of RULES) {
   if (RENDERED_ONLY.has(rule.id)) continue;
-  const dir = join(FIXTURES, rule.id);
+  const dir = fixtureDir(rule.id);
 
   test(`${rule.id}: positive fixture fires`, () => {
     assert.ok(existsSync(join(dir, 'positive')), `missing fixture ${rule.id}/positive`);

@@ -3,7 +3,7 @@
 // (--user) or <dir>/.claude/skills/frontend-craft (--project). A thin wrapper over the multi-agent
 // installer: `node install.mjs install --agent claude-code`. Re-running is idempotent; a directory
 // the installer did not create is never overwritten without --force. No network, no process spawning.
-import { existsSync } from 'node:fs';
+import { existsSync, realpathSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { main as installMain } from '../installer/main.js';
 import { fileURLToPath } from 'node:url';
@@ -84,6 +84,6 @@ export function install(argv, io) {
   return installMain(args, { stdout: (s) => io.log(s.replace(/\n$/, '')), stderr: (s) => io.error(s.replace(/\n$/, '')) });
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   process.exitCode = install(process.argv.slice(2), { log: (s) => console.log(s), error: (s) => console.error(s) });
 }

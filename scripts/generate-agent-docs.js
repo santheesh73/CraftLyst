@@ -6,7 +6,7 @@
 // Modes:
 //   (default)  rewrite both files
 //   --check    exit 1 if either file differs from the generated text (CI)
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, realpathSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadAdapters } from '../installer/main.js';
@@ -151,4 +151,4 @@ function run() {
   process.exitCode = stale ? 1 : 0;
 }
 
-if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) run();
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) run();

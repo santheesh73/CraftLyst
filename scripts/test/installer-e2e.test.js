@@ -3,8 +3,9 @@
 // CLI is run there. Runs on Linux, macOS, and Windows in CI (no unzip or shell needed).
 import { test, before } from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync, writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync } from 'node:fs';
+import { mkdtempSync, writeFileSync, readFileSync, existsSync, readdirSync, mkdirSync, symlinkSync } from 'node:fs';
 import { join } from 'node:path';
+import { listFiles } from '../../installer/engine.js';
 import { tmpdir } from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
@@ -81,6 +82,24 @@ test('Claude Code wrapper from the package still installs, idempotently', () => 
   assert.equal(again.status, 0);
   assert.match(again.stdout, /unchanged/);
   assert.match(node([w, '--project', project, '--print-stop-hook']).stdout, /stop-proof\.js/);
+});
+
+test('scripts still run when reached through a symlinked path (macOS tmpdir is /var -> /private/var)', () => {
+  // Regression: the wrapper compared process.argv[1] with the realpath of its own module, so it
+  // silently did nothing (exit 0) when started through a symlink.
+  const link = join(tmp('fc-link-'), 'pkg');
+  symlinkSync(pkg, link, 'junction');
+  const project = tmp();
+  const r = node([join(link, 'scripts', 'install-claude-code.js'), '--project', project]);
+  assert.equal(r.status, 0, r.stderr);
+  assert.ok(existsSync(join(project, '.claude', 'skills', 'frontend-craft', 'SKILL.md')), r.stdout + r.stderr);
+});
+
+test('no packaged path uses a name Windows reserves (CON, PRN, AUX, NUL, COM1-9, LPT1-9)', () => {
+  // Regression: cli/rules/con/ could not be checked out or extracted on Windows.
+  const reserved = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
+  const bad = listFiles(pkg).filter((f) => f.split('/').some((s) => reserved.test(s)));
+  assert.deepEqual(bad, []);
 });
 
 test('the npm tarball installs offline in a clean directory and `frontend-craft install` works from it', () => {

@@ -4,7 +4,7 @@
 //   (default)  rewrite NOTICE.md in place
 //   --stdout   print the generated NOTICE.md, write nothing
 //   --check    exit 1 if NOTICE.md differs from the generated text (CI)
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, realpathSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadCatalog, bundlesThirdPartyCode, SPDX_ALLOWLIST } from '../cli/src/catalog.js';
@@ -55,7 +55,7 @@ export function renderNotice(notice, section) {
   return `${notice.slice(0, b + BEGIN.length)}\n${section}\n${notice.slice(e)}`;
 }
 
-if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+if (process.argv[1] && realpathSync(process.argv[1]) === realpathSync(fileURLToPath(import.meta.url))) {
   const args = process.argv.slice(2);
   const file = join(root, 'NOTICE.md');
   const current = readFileSync(file, 'utf8');

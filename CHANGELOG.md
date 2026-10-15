@@ -27,7 +27,12 @@ verification and release (see PLAN.md).
 - `scripts/install-claude-code.js` is now a thin wrapper around `install.mjs --agent claude-code`. Re-running it reports `unchanged` and exits 0, where it used to exit 3.
 - The vendored parsers moved from `cli/node_modules/` to the package root `node_modules/` so `npm pack` keeps them.
 - `craft lint` and the other file walkers now skip `.craft/`, `.frontend-craft/`, and every agent configuration directory the installer can write.
+- Moved the `con/fabricated` rule and its fixtures to `cli/rules/content/` and `cli/fixtures/rules/content/`. CON is a reserved file name on Windows, so the repository could not be checked out there and the release zip could not be extracted. The rule id is unchanged.
 - Moved the eval stub agent to `evals/fixtures/stub-agent.js` so `node --test` with no directory argument no longer runs it.
+
+### Fixed
+
+- `scripts/install-claude-code.js`, the Stop hook, and the repository scripts now run when started through a symlinked path. Before, they silently did nothing and exited 0, for example on macOS where the temp directory `/var` links to `/private/var`.
 
 ### Removed
 
