@@ -7,7 +7,10 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
-### Changed (gate follow-up, 2026-10-15)
+### Changed (gate follow-up, 2026-10-15 to 2026-10-18)
+
+- Ran the paired evaluation on all 12 briefs with 3 repeats each, 36 pairs (`p3-r1`). Automated gates: Slop Lint, axe, and build met; the honesty audit was not met (258/313). The 36 bundles are ready for the human blind ranking.
+- Ran the conformance kit on MUI 9.5.0 (77 pass, 2 fail) and on shadcn/ui at a pinned registry commit (74 pass, 5 fail), Chromium only. Two of the failures look like kit bugs; they are recorded, not fixed.
 
 - The npm package is now `@santheesh73/frontend-craft`, with `publishConfig.access` set to `public`. The unscoped name `frontend-craft` belongs to an unrelated package (version 2.4.0 on npm). Publishing is still a human gate.
 - V2 load checks now pass for Codex (`codex debug prompt-input`), opencode (`opencode debug skill`), and Kilo Code (`kilo debug skill`), each with an empty control project. That makes 6 agents with a V2 pass. For each remaining agent, `adapters/verification.json` records the CLI version that was tried and the specific blocker.
