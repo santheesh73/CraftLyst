@@ -35,10 +35,11 @@ Three ways to get the installer. None of them runs install scripts or uses the n
 # 1. From a clone after `npm run package`, or from an extracted release zip (check SHA256SUMS first)
 node install.mjs install --agent auto
 
-# 2. From the npm tarball (`npm pack` in dist/frontend-craft/). Not published to npm yet (a HUMAN
-#    GATE). The name `frontend-craft` on npm belongs to a different package, so never run a bare
-#    `npx frontend-craft`; point npx at the local tarball:
-npx --package ./frontend-craft-<version>.tgz frontend-craft install --agent auto
+# 2. From npm, as @santheesh73/frontend-craft. Not published yet (a HUMAN GATE); once it is:
+npx --package @santheesh73/frontend-craft frontend-craft install --agent auto
+#    Until then, use the local tarball (`npm pack` in dist/frontend-craft/):
+npx --package ./santheesh73-frontend-craft-<version>.tgz frontend-craft install --agent auto
+#    Never run a bare `npx frontend-craft`: the unscoped name belongs to an unrelated package.
 
 # 3. The Claude Code wrapper (kept for existing users)
 node scripts/install-claude-code.js --project ./my-app   # same as --agent claude-code

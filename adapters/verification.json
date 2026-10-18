@@ -29,13 +29,109 @@
       }
     },
     "codex": {
-      "v2": { "result": "not-run", "reason": "@openai/codex 0.162.1 needs its platform binary package, and listing skills needs a signed-in model session" }
+      "v2": {
+        "result": "pass",
+        "date": "2026-10-15",
+        "tool": "@openai/codex 0.162.1 (codex-cli 0.162.1)",
+        "command": "codex debug prompt-input",
+        "evidence": "the model-visible prompt lists frontend-craft with .agents/skills/frontend-craft/SKILL.md after a project-scope install (fresh HOME, no sign-in); absent in an empty control project"
+      }
     },
     "opencode": {
-      "v2": { "result": "not-run", "reason": "opencode-ai 1.19.0 needs its postinstall script to fetch a binary; lifecycle scripts were not run in the build environment" }
+      "v2": {
+        "result": "pass",
+        "date": "2026-10-15",
+        "tool": "opencode-ai 1.19.0",
+        "command": "opencode debug skill",
+        "evidence": "frontend-craft listed at .agents/skills/frontend-craft/SKILL.md after a project-scope install (fresh HOME, no sign-in); absent in an empty control project"
+      }
     },
     "qwen": {
-      "v2": { "result": "not-run", "reason": "@qwen-code/qwen-code 0.25.1 has no skill-listing command; checking needs a signed-in model session" }
+      "v2": {
+        "result": "not-run",
+        "reason": "@qwen-code/qwen-code 0.25.1 installed, but it has no skill-listing command and headless mode stops with \"No auth type is selected\"; needs a sign-in"
+      }
+    },
+    "kilo": {
+      "v2": {
+        "result": "pass",
+        "date": "2026-10-15",
+        "tool": "@kilocode/cli 7.8.8",
+        "command": "kilo debug skill",
+        "evidence": "frontend-craft listed at .agents/skills/frontend-craft/SKILL.md after a project-scope install (fresh HOME, no sign-in); absent in an empty control project"
+      }
+    },
+    "augment": {
+      "v2": {
+        "result": "not-run",
+        "reason": "@augmentcode/auggie 0.36.0 installed, but it has no skill-listing command and --print stops with \"No auth provided\"; needs a sign-in"
+      }
+    },
+    "amp": {
+      "v2": {
+        "result": "not-run",
+        "reason": "@sourcegraph/amp 0.0.1792036844 installed; `amp skill list` printed nothing and was stopped after 45 seconds, with and without the skill installed (it appears to wait for a sign-in)"
+      }
+    },
+    "cline": {
+      "v2": {
+        "result": "not-run",
+        "reason": "cline 3.0.71 installed, but `cline skill` only forwards to the separate `npx skills` CLI, which would not show what Cline itself loads; listing Cline's loaded skills needs a signed-in session"
+      }
+    },
+    "continue": {
+      "v2": {
+        "result": "not-run",
+        "reason": "@continuedev/cli 1.5.47 installed, but it has no rule-listing command; checking needs a signed-in -p session"
+      }
+    },
+    "aider": {
+      "v2": {
+        "result": "not-run",
+        "reason": "aider-chat could not be installed: current releases need Python 3.10 to 3.12 and the build environment has Python 3.13; aider also has no command that lists read files without a model"
+      }
+    },
+    "cursor": {
+      "v2": {
+        "result": "not-run",
+        "reason": "the Cursor CLI is installed only by a shell script from cursor.com, not a package; it was not run"
+      }
+    },
+    "goose": {
+      "v2": {
+        "result": "not-run",
+        "reason": "Goose ships as a binary from a shell script or GitHub releases, not an npm package; it was not run"
+      }
+    },
+    "junie": {
+      "v2": {
+        "result": "not-run",
+        "reason": "JetBrains Junie runs inside JetBrains IDEs; no headless CLI was available"
+      }
+    },
+    "roo": {
+      "v2": {
+        "result": "not-run",
+        "reason": "Roo Code is a VS Code extension with no headless CLI"
+      }
+    },
+    "windsurf": {
+      "v2": {
+        "result": "not-run",
+        "reason": "Windsurf (Devin Desktop) is a desktop app with no headless CLI"
+      }
+    },
+    "zed": {
+      "v2": {
+        "result": "not-run",
+        "reason": "Zed is a desktop editor with no headless skill-listing command"
+      }
+    },
+    "agents-md": {
+      "v2": {
+        "result": "not-run",
+        "reason": "AGENTS.md is a convention, not one agent; it is covered by the agents above that read it"
+      }
     }
   },
   "defaultV2Reason": "agent CLI not available headlessly in the build environment (desktop or IDE app, or needs sign-in)",
