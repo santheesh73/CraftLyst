@@ -84,6 +84,6 @@ Test layouts with:
 
 ## 8. Verification
 
-Tier 2 checks (`craft shoot` from v0.2) render at 320, 375, 768, 1280, and 1920 px and
+Tier 2 checks (`craft shoot`) render at 320, 375, 768, 1280, and 1920 px and
 detect overflow. Without Playwright, resize a browser if one is available to you; otherwise
 report responsiveness as not verified and list what should be checked by a human.

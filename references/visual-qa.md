@@ -40,17 +40,19 @@ A report older than the latest source edit is stale and cannot back claims.
 
 Run the bundled CLI with Node: `node <skill-dir>/cli/bin/craft.js <command> --json`.
 
-| Command | Since | Purpose |
-|---|---|---|
-| `craft doctor` | v0.1 | detect Node, package manager, framework, styling, Playwright |
-| `craft init` | v0.1 | scaffold `.craft/` from templates, never overwriting |
-| `craft lint` | v0.1 (`ctr/contract` only); v0.2 all rules | T0 findings |
-| `craft contrast` | v0.1 | WCAG checks for token pairs |
-| `craft audit`, `shoot`, `report` | v0.2 | T1, T2, and the proof report |
+| Command | Purpose |
+|---|---|
+| `craft doctor` | detect Node, package manager, framework, styling, Playwright, axe |
+| `craft init` | scaffold `.craft/` from templates, never overwriting (`--from-repo` drafts tokens from the project) |
+| `craft lint` | T0 findings, all static rules |
+| `craft contrast` | WCAG checks for token pairs |
+| `craft audit` | T1: run the project's own lint, type-check, test, and build scripts |
+| `craft shoot` | T2: render pages in Chromium (needs Playwright and axe-core in the project) |
+| `craft report` | the proof report; folds in fresh `audit` and `shoot` results |
 
 Exit codes: 0 ok, 1 findings at or above `--fail-on`, 2 usage error, 3 tool or environment
-unavailable. Check `craft --version`; a command that exits 3 because it is not in the
-installed version is a not-verified check, not a pass.
+unavailable. Check `craft --version`; a command that exits 3 (not in the installed version, a missing
+dependency, or no Playwright) is a not-verified check, not a pass.
 
 ## 4. When the CLI or a tier is unavailable
 
@@ -97,8 +99,14 @@ Lead with the highest tier reached, then verified checks, then what was not veri
 Highest tier reached: T1 (static). Report: .craft/reports/latest.md (fresh)
 Verified: craft lint (0 block, 2 warn), craft contrast (26/26 pairs AA), npm run typecheck, npm run build
 Not verified: rendered checks (Playwright not installed; user declined install)
+Checked outside the receipt: none
 Human checks: <Tier 3 list>
 ```
+
+Anything you checked with your own script or browser, not through `craft`, goes only on the
+"Checked outside the receipt" line, with what it covered. It is never "Verified", and it is
+not repeated as a plain sentence elsewhere. Prefer `craft shoot --file <page>` so it becomes a
+receipt. Tasks for the user go only under "Human checks".
 
 Forbidden: "fully accessible", "pixel perfect", "responsive on all devices", "production
 ready", or "tested" without a verified check that supports the exact claim.

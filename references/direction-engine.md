@@ -16,8 +16,9 @@ Data lives in `tokens/recipes.json` (axis positions mapped to token ranges).
 
 ## 1. When to run it
 
-- Size L work (new app, redesign): always, steps 1–5.
-- Size M work with no `.craft/` yet: steps 1–5, lighter (one paragraph per step).
+- Size L work (new app, redesign), or the user asks for a design direction: steps 1–5.
+- Size M work with no `.craft/` yet: steps 1, 2, and 5 only (a light contract). Skip the
+  second direction and the swap test, and note "direction not explored" under open questions.
 - An existing, working design system: skip to step 6.
 - `.craft/DESIGN.md` already exists: do not rerun; read it and follow it. Rerun only when
   the user asks for a new direction, and log the change in `decisions.md`.
@@ -70,6 +71,10 @@ Ask: would this design fit an unrelated product (a bank, a bakery, a dev tool) u
 If yes, it is generic. Regenerate the signature move or shift axes until the answer is no.
 Record the result in `decisions.md`.
 
+You made the design, so your own swap test is weak evidence. Name the one product it was
+tested against and why it fails there, and put "does the signature move fit only this
+product?" in the Human checks of the final answer so the user makes the call.
+
 ## Step 5: axes to token recipes
 
 For each token key, collect the ranges from every chosen axis position in `recipes.json`:
@@ -95,8 +100,8 @@ component library, design tokens):
 
 - Never overwrite or migrate it.
 - Extract the contract from it: read the theme/config and components, then write
-  `DESIGN.md` and `tokens.json` that describe what exists (`craft init --from-repo` in v0.2;
-  by hand until then). Mark `meta.source` as `extracted`.
+  `DESIGN.md` and `tokens.json` that describe what exists (`craft init --from-repo`
+  drafts `tokens.json` from custom properties and the Tailwind config; review and complete it). Mark `meta.source` as `extracted`.
 - Infer axis values from what exists and say so; ask the user to confirm.
 - New work follows the extracted contract. Gaps are proposed as additions, not replacements.
 

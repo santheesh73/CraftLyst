@@ -1,6 +1,6 @@
 ---
 name: frontend-craft
-description: Guides frontend design and implementation with a persistent design contract (.craft/), executable checks (the craft CLI), and proof reports, so interfaces are product-specific, accessible, responsive, and verified instead of generic. Use when creating, modifying, redesigning, reviewing, or auditing user interfaces in code, including websites, landing pages, web apps, dashboards, portfolios, UI components, forms, design systems and design tokens, CSS or Tailwind styling, layout, typography, color, responsive behavior, UI accessibility, animation and motion, and 3D, WebGL, or immersive web experiences. Also use when turning a reference screenshot or site into a design system. Not for backend, API, database, or infrastructure work, for copywriting without UI changes, or for questions about operating design tools such as Figma.
+description: Frontend design and implementation with a persistent design contract (.craft/), executable checks (the craft CLI), and proof reports. Use when building, changing, redesigning, reviewing, or auditing UI in code: websites, web apps, dashboards, components, forms, design tokens, CSS or Tailwind, layout, typography, color, responsive behavior, accessibility, motion, and 3D or WebGL. Also for turning a reference site or screenshot into a design system. Small edits get a light path. Not for backend, API, or infrastructure work, copy without UI changes, or operating design tools such as Figma.
 ---
 
 # Frontend Craft
@@ -17,7 +17,8 @@ layouts are fine when they serve a purpose. Every significant design decision ne
 ## The three rules
 
 1. **Contract rule.** Before any frontend change, read `.craft/DESIGN.md` and `.craft/tokens.json`
-   if they exist, and follow them. Use only token values in code. When a decision changes,
+   if they exist, and follow them. Use the project's tokens in code: the contract's when it
+   exists, otherwise the variables or theme scale the code already uses. When a decision changes,
    update the contract and log it in `.craft/decisions.md`. Never overwrite a working design
    system: describe it in the contract instead.
 2. **Proof rule.** The final answer states the highest proof tier reached first, then lists only
@@ -44,17 +45,17 @@ Copy this checklist into your working notes and tick it off:
 
 | Size | Examples | Do |
 |---|---|---|
-| **S** | spacing fix, button tweak, copy-sized change | read contract → edit → T0/T1 on touched files |
-| **M** | new page, new component, new section | contract (create if missing) + discovery + T0–T2 on affected views |
-| **L** | new app, redesign, new design system | full Direction Engine → contract → all tiers |
+| **S** | spacing fix, button tweak, a component built from existing components and tokens | read contract → edit → T0/T1 on touched files |
+| **M** | new page or section, a component that needs new tokens or patterns | contract (light, if missing) + discovery + T0–T2 on affected views |
+| **L** | new app, redesign, new design system, or the user asks for a design direction | full Direction Engine → contract → all tiers |
 
-When unsure between two sizes, pick the larger.
+When unsure, pick the smaller size, and move up only if the change needs new tokens or a new page.
 
 | Mode | When | Behavior |
 |---|---|---|
 | **Build** | new UI | full workflow |
 | **Modify** | change existing UI | contract and existing components win; smallest change |
-| **Review** | critique or audit requested | read-only; findings with rule ids; see [references/design-critique.md](references/design-critique.md) |
+| **Review** | critique or audit requested | read-only: no edits, no `.craft/` writes, no `craft report`; findings with rule ids; see [references/design-critique.md](references/design-critique.md) |
 | **Reference→System** | "make it like this site/screenshot" | decompose into principles and tokens; never copy; see [references/reference-analysis.md](references/reference-analysis.md) |
 
 ### 2. Understand
@@ -69,11 +70,14 @@ When unsure between two sizes, pick the larger.
 - **Contract exists**: follow it. Deviations need a reason logged in `decisions.md`.
 - **No contract, existing design system in the repo**: extract a contract that describes it
   (Direction Engine step 6). Do not restyle.
-- **No contract, no system (size M/L)**: run the Direction Engine:
+- **No contract, no system, size L**: run the Direction Engine:
   ask at most 5 questions (skip what the request or repo answers), set the 8 axes with
   reasons, write two divergent directions, choose one, log the rejected one, apply the
   swap test, then map axes to tokens with `tokens/recipes.json`.
   Procedure: [references/direction-engine.md](references/direction-engine.md).
+- **No contract, no system, size M**: write a light contract: product and tasks, the 8
+  axes with one-line reasons, and tokens from `tokens/recipes.json`. Skip the second
+  direction and the swap test; list "direction not explored" under open questions.
 - **Size S without a contract**: follow the existing code's conventions; suggest `craft init`
   in the answer instead of creating a contract unasked.
 
@@ -98,8 +102,11 @@ signature move, token summary, product-specific "never do", open questions.
 
 ### 5. Implement
 
-- Tokens only; no literal colors, spacing, or font sizes ([references/color-and-tokens.md](references/color-and-tokens.md),
-  [references/typography-and-spacing.md](references/typography-and-spacing.md)).
+- Use tokens for colors, spacing, and font sizes ([references/color-and-tokens.md](references/color-and-tokens.md),
+  [references/typography-and-spacing.md](references/typography-and-spacing.md)). With no contract,
+  reuse the values the code already uses rather than adding new one-offs; do not build a
+  token system for size S work. `tok/hardcoded` findings in code you did not touch are
+  reported, not fixed unasked.
 - Semantic HTML, keyboard support, visible focus, labels, alt text ([references/accessibility.md](references/accessibility.md)).
 - Every state: loading, empty, error, disabled, success; real content lengths
   ([references/component-guidelines.md](references/component-guidelines.md)).
@@ -113,7 +120,10 @@ signature move, token summary, product-specific "never do", open questions.
 
 ### 6. Evaluate
 
-Run the bundled CLI from the skill directory (this file's directory):
+Run the bundled CLI from the skill directory, the folder that contains this SKILL.md. If the
+agent loaded this skill through a pointer file (AGENTS.md, CONVENTIONS.md), the folder is the
+one that pointer names, usually `.frontend-craft/`. In Review mode, run only `lint` and
+`contrast`; they do not write files.
 
 ```bash
 node <skill-dir>/cli/bin/craft.js --version
@@ -136,7 +146,9 @@ the checks after fixing. Details and the Tier 2 checklist: [references/visual-qa
 
 ### 7. Report
 
-Run `craft report` after your last edit (it re-runs Tier 0 and folds in fresh `audit` and
+Review mode skips this step: lead with the findings and say which checks ran.
+
+For Build and Modify, run `craft report` after your last edit (it re-runs Tier 0 and folds in fresh `audit` and
 `shoot` results), then build the proof summary from `.craft/reports/latest.json`: the
 "Verified" line lists only checks that file marks `verified`. Output you saw from a command
 but did not fold into the report is not a receipt. Start the final answer with:
@@ -145,8 +157,15 @@ but did not fold into the report is not a receipt. Start the final answer with:
 Highest tier reached: T1 (static)
 Verified: craft lint (0 block, 2 warn), craft contrast (26/26 AA), npm run build
 Not verified: rendered checks (Playwright not installed)
-Human checks: <2-5 specific items for the user>
+Checked outside the receipt: <anything you ran yourself, such as your own Playwright script; or "none">
+Human checks: <2-5 specific items for the user, including whether the signature move fits>
 ```
+
+Keep each line to its own kind of statement. A check you ran with your own script, not
+through `craft`, goes only under "Checked outside the receipt", never under "Verified" and
+never as a plain sentence elsewhere in the answer. Things for the user to do go only under
+"Human checks". Prefer `craft shoot --file <page>` over your own script, so the result
+becomes a receipt.
 
 Then summarize what changed and any contract updates. Never write "fully accessible",
 "responsive on all devices", "pixel perfect", or "production ready" unless a verified check

@@ -7,6 +7,17 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed (roast follow-up, 2026-10-19)
+
+- References no longer describe shipped commands as "v0.1" or "v0.2" (`lint`, `audit`, `shoot`, `report`, `init --from-repo`), so agents stop skipping tools that exist.
+- Lighter process for small work: a component built from existing parts is size S; unsure now means the smaller size; size M without a contract gets a light contract, and the full Direction Engine is for size L or when the user asks for a direction.
+- Review mode is read-only for real: no `.craft/` writes and no `craft report`, only `lint` and `contrast`.
+- "Tokens only" now means the project's tokens, or the values the code already uses when there is no contract, instead of contradicting "match what exists".
+- The final answer gets a "Checked outside the receipt" line for the agent's own scripts, which were the main source of unbacked claims in `p3-r1`; the swap test result goes to the user's Human checks.
+- `a11y/target` is documented as `info` under 44x44px and `block` under 24x24px (axe `target-size`), matching what `craft shoot` emits.
+- `craft` exits 3 with an "npm install" hint, instead of a stack trace, when a runtime dependency is missing (a git clone without `npm install`).
+- Shorter skill description (593 characters, was about 900). Trigger tests were not re-run.
+
 ### Changed (gate follow-up, 2026-10-15 to 2026-10-19)
 
 - 2026-10-19: Google Antigravity support. Two adapters, because the global skill folders differ: `antigravity` (IDE and the Antigravity 2.0 desktop app, `~/.gemini/config/skills/`) and `antigravity-cli` (alias `agy`, `~/.gemini/antigravity-cli/skills/`); both share the workspace folder `.agents/skills/`. Paths from antigravity.google/docs/skills. V2 not run: neither surface can list skills from a terminal, and the CLI installer host was blocked here. Uninstall now also prunes a parent folder that two skill directories share (such as `~/.gemini/`).

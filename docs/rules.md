@@ -47,7 +47,7 @@ measured false-positive rate is in [evals/false-positives.md](evals/false-positi
 | Rule | Severity | Confidence | Tier | What it flags |
 |---|---|---|---|---|
 | `a11y/focus` | block | 0.8 | T0 | outline: none/0 (or outline-none) without a :focus-visible replacement. |
-| `a11y/target` | warn | 0.9 | T2 | Rendered interactive targets smaller than 44x44px on touch layouts (below 24x24px is blocking). |
+| `a11y/target` | info | 0.9 | T2 | Rendered interactive targets under the 44x44px touch recommendation (info); under the WCAG 2.5.8 24x24px minimum, axe target-size reports it as blocking. |
 | `a11y/alt` | block | 0.85 | T0 | Images without alt; icon-only buttons and links without an accessible name. |
 | `a11y/contrast` | block | 0.95 | T0 | Token foreground/background pairs (and literal same-rule color pairs) below WCAG AA. |
 | `a11y/semantics` | warn | 0.7 | T0 | Clickable div/span without role and keyboard support, heading-level skips, missing lang, missing main landmark. |

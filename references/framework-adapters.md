@@ -22,7 +22,7 @@ existing patterns first; these are defaults for when no pattern exists.
 | Plain HTML and CSS | full | yes |
 | Vue, Svelte, Astro | CSS level (style blocks and CSS files) | yes |
 
-v0.1 ships only the contract and contrast checks; full static analysis arrives in v0.2.
+Every static rule runs in every stack listed above; `craft lint --json` reports which files it read.
 
 ## 2. React and Next.js
 
