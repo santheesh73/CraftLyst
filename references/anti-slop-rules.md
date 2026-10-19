@@ -116,8 +116,10 @@ keep essential state feedback but remove travel, parallax, and autoplay.
 replacement. Fix: provide a visible focus style using the `focus` color token (3:1 against
 adjacent colors).
 
-**a11y/target** (warn; block below 24×24). Rendered interactive targets smaller than 44×44
-px on touch layouts. Fix: increase padding or hit area; inline links in text are exempt.
+**a11y/target** (info below 44×44 on touch layouts; block below 24×24). Rendered by `craft shoot`
+at 375 px: targets under the 44×44 px touch recommendation are `info`; targets under the
+WCAG 2.5.8 minimum of 24×24 px come from axe `target-size` and are `block`. Fix: increase
+padding or hit area; inline links in text are exempt.
 
 **a11y/alt** (block). `img` without `alt`; icon-only buttons or links without an accessible
 name. Fix: meaningful `alt`, or `alt=""` for decorative images; `aria-label` or visually

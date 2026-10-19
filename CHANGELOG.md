@@ -7,6 +7,17 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed (roast follow-up, 2026-10-19)
+
+- References no longer describe shipped commands as "v0.1" or "v0.2" (`lint`, `audit`, `shoot`, `report`, `init --from-repo`), so agents stop skipping tools that exist.
+- Lighter process for small work: a component built from existing parts is size S; unsure now means the smaller size; size M without a contract gets a light contract, and the full Direction Engine is for size L or when the user asks for a direction.
+- Review mode is read-only for real: no `.craft/` writes and no `craft report`, only `lint` and `contrast`.
+- "Tokens only" now means the project's tokens, or the values the code already uses when there is no contract, instead of contradicting "match what exists".
+- The final answer gets a "Checked outside the receipt" line for the agent's own scripts, which were the main source of unbacked claims in `p3-r1`; the swap test result goes to the user's Human checks.
+- `a11y/target` is documented as `info` under 44x44px and `block` under 24x24px (axe `target-size`), matching what `craft shoot` emits.
+- `craft` exits 3 with an "npm install" hint, instead of a stack trace, when a runtime dependency is missing (a git clone without `npm install`).
+- Shorter skill description (593 characters, was about 900). Trigger tests were not re-run.
+
 ### Changed (gate follow-up, 2026-10-15 to 2026-10-19)
 
 - 2026-10-19: the MUI conformance target now covers all 12 contracts with no not-applicable checks (an AppBar + Toolbar + Menu navigation and a static `Alert` were added): 82 pass, 3 fail. The new failure is genuine: MUI's default primary text (`#1976d2`) on the default AppBar grey (`#f5f5f5`) is 4.22:1, below AA.

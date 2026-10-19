@@ -2,8 +2,8 @@
 /** @type {import('../types.js').Rule} */
 export default {
   id: 'a11y/target',
-  description: 'Rendered interactive targets smaller than 44x44px on touch layouts (below 24x24px is blocking).',
-  severity: 'warn',
+  description: 'Rendered interactive targets under the 44x44px touch recommendation (info); under the WCAG 2.5.8 24x24px minimum, axe target-size reports it as blocking.',
+  severity: 'info',
   confidence: 0.9,
   tier: 'T2'
 };

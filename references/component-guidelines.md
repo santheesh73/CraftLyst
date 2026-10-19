@@ -1,7 +1,7 @@
 # Component guidelines
 
 How to build or adapt components so they are functional, accessible, and consistent.
-Frontend Craft ships component *contracts* (specs plus a conformance kit, v0.5), not a
+Frontend Craft ships component *contracts* (specs plus a conformance kit), not a
 competing UI kit: [contracts/](../contracts/README.md). Prefer the project's existing components and established libraries.
 
 ## Contents

@@ -92,7 +92,7 @@ not a later pass. Automated checks find only part of the problems; say so when r
 
 - Tier 0: Slop Lint a11y rules and token contrast (static, heuristic where noted).
 - Tier 2: axe-core scan, keyboard tab-order walk, focus visibility, forced-colors and
-  reduced-motion emulation (`craft shoot`, v0.2).
+  reduced-motion emulation (`craft shoot`).
 - Automated tools catch a subset of WCAG issues. Never write "fully accessible" or
   "WCAG compliant" from automated results. Write what ran and what passed, and list
   manual checks for a human (screen reader pass, cognitive review) in the Tier 3 checklist.

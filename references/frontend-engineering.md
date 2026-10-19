@@ -70,7 +70,7 @@ commands. Typical names: `lint`, `typecheck` or `type-check`, `test`, `build`. R
 that exist, record the exact command and the result. If a command does not exist, report
 "not available" rather than substituting your own.
 
-`craft audit` (v0.2) automates detection and records the results in the report.
+`craft audit` automates detection and records the results in the report.
 
 ## 7. Change hygiene
 
