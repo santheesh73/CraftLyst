@@ -102,7 +102,7 @@ function missingDirs(base, dir) {
  * Remove recorded directories that are now empty (innermost first).
  * @param {string} base @param {string[]} dirs
  */
-function pruneDirs(base, dirs) {
+export function pruneDirs(base, dirs) {
   for (const rel of [...dirs].sort((a, b) => b.length - a.length)) {
     const abs = join(base, rel);
     if (isDir(abs) && readdirSync(abs).length === 0) rmdirSync(abs);

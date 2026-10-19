@@ -28,6 +28,18 @@
         "evidence": "frontend-craft [Enabled] from ~/.agents/skills (user scope) and from .agents/skills in a trusted project folder; skipped in an untrusted folder"
       }
     },
+    "antigravity": {
+      "v2": {
+        "result": "not-run",
+        "reason": "tried 2026-10-19: the Antigravity IDE and 2.0 desktop app are GUI apps with a Google sign-in and no terminal command that lists skills (they show in the agent panel's Customizations menu); not checkable headlessly. Paths are from antigravity.google/docs/skills"
+      }
+    },
+    "antigravity-cli": {
+      "v2": {
+        "result": "not-run",
+        "reason": "tried 2026-10-19: the agy installer (antigravity.google/cli/install.sh) was blocked by this environment's network (HTTP 403 at the proxy), and agy has no npm package; even installed, it lists skills only inside a signed-in session (/skills), with no terminal command for it"
+      }
+    },
     "codex": {
       "v2": {
         "result": "pass",

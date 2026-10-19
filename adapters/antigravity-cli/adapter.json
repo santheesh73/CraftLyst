@@ -1,0 +1,25 @@
+{
+  "schemaVersion": "1.0",
+  "id": "antigravity-cli",
+  "label": "Antigravity CLI (agy, Antigravity 2.0)",
+  "aliases": [
+    "agy",
+    "antigravity2-cli"
+  ],
+  "docsUrl": "https://antigravity.google/docs/skills",
+  "docsVerifiedOn": "2026-10-19",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".gemini/antigravity-cli/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".agent"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "The Antigravity CLI (binary agy, part of Antigravity 2.0) reads workspace skills from <workspace-root>/.agents/skills/ (shared with the IDE and app) and global skills from ~/.gemini/antigravity-cli/skills/, not the IDE's ~/.gemini/config/skills/. For both surfaces at user scope, install --agent antigravity,antigravity-cli.",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.",
+    "The CLI does not read ~/.agents/skills/ (per Google's skills codelab), so a user-scope install for another agent does not reach it.",
+    "Skills are listed inside a session with /skills; agy has no terminal command that lists them, and it needs a Google sign-in."
+  ]
+}

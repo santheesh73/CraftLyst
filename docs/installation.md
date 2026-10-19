@@ -73,6 +73,23 @@ node install.mjs doctor --target ./my-app                 # Node, source package
   Aider also needs `read: CONVENTIONS.md` in `.aider.conf.yml`; the installer does not edit YAML.
 - `--scope user` installs only for agents that document a user-level location.
 
+### Google Antigravity (IDE, 2.0 app, and CLI)
+
+Every Antigravity surface reads workspace skills from `.agents/skills/`, so one project install
+covers the IDE, the Antigravity 2.0 desktop app, and the `agy` CLI. Global folders differ:
+the IDE and app read `~/.gemini/config/skills/`, the CLI reads `~/.gemini/antigravity-cli/skills/`
+(source: https://antigravity.google/docs/skills, read 2026-10-19). Neither reads
+`~/.agents/skills/` reliably, so a user-scope install for another agent does not reach them.
+
+```sh
+node install.mjs install --agent antigravity --target ./my-app                    # project: IDE, app and CLI
+node install.mjs install --agent antigravity,antigravity-cli --scope user         # global: both folders
+```
+
+To check it, open the project and look for `frontend-craft` in the agent panel's
+Customizations menu (IDE/app), or run `/skills` inside an `agy` session. No Antigravity
+surface has been checked yet (see [compatibility.md](compatibility.md)).
+
 What the installer guarantees (each is a test in `scripts/test/installer*.test.js`):
 
 - `--dry-run` writes nothing. A second install changes no bytes and reports `unchanged`.

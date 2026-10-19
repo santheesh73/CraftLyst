@@ -27,6 +27,8 @@ kind: **skill** = we install a whole `SKILL.md` folder (Agent Skills format). **
 | Kilo Code | `kilo` | skill | `.kilo/skills/`, `.agents/skills/` (+ `.claude/skills/` when compat is on) | `~/.kilo/skills/`, `~/.agents/skills/` (+ `~/.claude/skills/`) | https://kilo.ai/docs/agent-behavior/skills | yes (WF) | yes |
 | Continue | `continue` | file `.continue/rules/*.md` | `.continue/rules/` | none documented (**UNVERIFIED** `~/.continue/rules/`) | https://docs.continue.dev/customize/deep-dives/rules (src: continuedev/continue) | partial (raw) | unknown |
 | Zed | `zed` | skill | `<worktree>/.agents/skills/` | `~/.agents/skills/` | https://zed.dev/docs/ai/skills (src: zed-industries/zed `docs/src/ai/skills.md`) | yes (raw) | yes |
+| Google Antigravity (IDE, 2.0 app) | `antigravity` | skill | `.agents/skills/<name>/` (legacy `.agent/skills/`) | `~/.gemini/config/skills/` (legacy `~/.gemini/antigravity/skills/`) | https://antigravity.google/docs/skills | yes (WF, 2026-10-19) | yes |
+| Antigravity CLI (`agy`, 2.0) | `antigravity-cli` | skill | `.agents/skills/<name>/` | `~/.gemini/antigravity-cli/skills/` | https://antigravity.google/docs/skills | yes (WF, 2026-10-19) | yes |
 | Amp | `amp` | skill | `.agents/skills/` | `~/.config/agents/skills/`, `~/.agents/skills/`, `~/.config/amp/skills/` (+ `~/.claude/skills/`) | https://ampcode.com/manual/agent-skills.md | yes (WF) | yes |
 | JetBrains Junie | `junie` | skill | `.junie/skills/`, `.agents/skills/` (trusted project) | `~/.junie/skills/`, `~/.agents/skills/` | https://junie.jetbrains.com/docs/agent-skills.html | yes (WF) | yes |
 | Goose | `goose` | skill | `.agents/skills/` (+ compat `.goose/skills/`, `.claude/skills/`) | `~/.agents/skills/` (+ compat `~/.claude/skills/`) | https://block.github.io/goose/docs/guides/context-engineering/using-skills (src: block/goose) | yes (raw) | yes |
@@ -388,6 +390,18 @@ Spec (raw, agentskills/agentskills `docs/specification.mdx`):
 - **Headless:** npm `@augmentcode/auggie` (0.36.0), bin `auggie`. Flag and auth not on the pages read.
 
 ---
+
+### Google Antigravity (`antigravity`, `antigravity-cli`), added 2026-10-19
+- **Docs (WF):** https://antigravity.google/docs/skills; codelab https://codelabs.developers.google.com/getting-started-with-antigravity-skills.
+- **Surfaces:** the Antigravity IDE (1.x, a VS Code fork), and Antigravity 2.0 (I/O 2026): a standalone desktop app plus a new Go CLI whose binary is `agy`.
+- **Skills:**
+  - Workspace, all surfaces: `<workspace-root>/.agents/skills/<skill-folder>/`. "Antigravity defaults to `.agents/skills`, but still maintains backward compatibility for `.agent/skills`."
+  - Global, IDE and app: `~/.gemini/config/skills/<skill-folder>/`; legacy `~/.gemini/antigravity/skills/` "is also supported."
+  - Global, CLI: `~/.gemini/antigravity-cli/skills/<skill-folder>/`; plugins add `~/.gemini/antigravity-cli/plugins/<name>/skills/`.
+  - The codelab says `~/.agents/skills` is picked up by Antigravity "but Antigravity CLI does not"; the docs page does not list it.
+  - `description` is required; `name` is optional (lowercase, hyphens; defaults to the folder name).
+- **Listing:** IDE/app: Customizations menu in the agent side panel. CLI: `/skills` inside a session; no terminal command. Both need a Google sign-in.
+- **Install (CLI):** `curl -fsSL https://antigravity.google/cli/install.sh | bash` (no npm package); the host was blocked from this container.
 
 ## CLI availability (npm/PyPI, checked 2026-10-15; nothing installed)
 

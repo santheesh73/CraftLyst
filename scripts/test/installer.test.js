@@ -321,6 +321,24 @@ test('user scope installs only agents with a user location, never touches the pr
   assert.deepEqual(readdirSync(home), []);
 });
 
+test('Antigravity: one workspace copy for every surface, separate global folders for IDE/app and CLI', () => {
+  const t = tmp();
+  const r = run(['install', '--agent', 'antigravity,agy', '--target', t, '--source', src, '--json']);
+  assert.equal(r.code, 0, r.stdout);
+  const rows = r.json().results.filter((/** @type {any} */ x) => x.agent.startsWith('antigravity'));
+  assert.deepEqual(rows.map((/** @type {any} */ x) => x.agent).sort(), ['antigravity', 'antigravity-cli']);
+  const skill = readFileSync(join(t, '.agents', 'skills', 'frontend-craft', 'SKILL.md'), 'utf8');
+  assert.match(skill, /^---\n(?:.*\n)*?name: frontend-craft\n/, 'name matches the folder (Antigravity: lowercase, hyphens)');
+  assert.match(skill, /\ndescription: \S/, 'description is present (required by Antigravity)');
+  const home = tmp('fc-home-');
+  assert.equal(run(['install', '--agent', 'antigravity,antigravity-cli', '--scope', 'user', '--home', home, '--source', src]).code, 0);
+  assert.ok(existsSync(join(home, '.gemini', 'config', 'skills', 'frontend-craft', 'SKILL.md')), 'IDE and app global folder');
+  assert.ok(existsSync(join(home, '.gemini', 'antigravity-cli', 'skills', 'frontend-craft', 'SKILL.md')), 'CLI global folder');
+  assert.ok(!existsSync(join(home, '.agents')), 'nothing in ~/.agents, which the CLI does not read');
+  assert.equal(run(['uninstall', '--scope', 'user', '--home', home, '--source', src]).code, 0);
+  assert.deepEqual(readdirSync(home), []);
+});
+
 test('project scope never touches the home directory', () => {
   const home = tmp('fc-home-');
   const saved = { HOME: process.env.HOME, USERPROFILE: process.env.USERPROFILE };
