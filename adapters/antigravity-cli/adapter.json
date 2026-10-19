@@ -13,6 +13,8 @@
   "user": ".gemini/antigravity-cli/skills/frontend-craft",
   "frontmatter": null,
   "detectMarkers": [
+    ".agents/rules",
+    ".agents/rules.json",
     ".agent"
   ],
   "nativeSkillSupport": true,
@@ -20,6 +22,7 @@
   "caveats": [
     "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.",
     "The CLI does not read ~/.agents/skills/ (per Google's skills codelab), so a user-scope install for another agent does not reach it.",
-    "Skills are listed inside a session with /skills; agy has no terminal command that lists them, and it needs a Google sign-in."
+    "Skills are listed inside a session with /skills; agy has no terminal command that lists them, and it needs a Google sign-in.",
+    "--agent auto detects Antigravity from .agents/rules/ or .agents/rules.json (its workspace rules, per antigravity.google/docs/rules) or the legacy .agent/ folder. .agents/skills/ alone is not a marker: many agents share it."
   ]
 }

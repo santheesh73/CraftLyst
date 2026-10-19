@@ -75,9 +75,11 @@ See [docs/installation.md](../docs/installation.md).
 - Google Antigravity (IDE and 2.0 app): The docs also accept the legacy global folder ~/.gemini/antigravity/skills/ and the legacy workspace folder .agent/skills/; the installer writes only the current paths.
 - Google Antigravity (IDE and 2.0 app): Google's skills codelab says the IDE also picks up ~/.agents/skills/, but the skills docs do not list it, so the installer does not rely on it.
 - Google Antigravity (IDE and 2.0 app): In the IDE, installed skills show in the Customizations menu of the agent side panel; there is no terminal command that lists them.
+- Google Antigravity (IDE and 2.0 app): --agent auto detects Antigravity from .agents/rules/ or .agents/rules.json (its workspace rules, per antigravity.google/docs/rules) or the legacy .agent/ folder. .agents/skills/ alone is not a marker: many agents share it.
 - Antigravity CLI (agy, Antigravity 2.0): Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.
 - Antigravity CLI (agy, Antigravity 2.0): The CLI does not read ~/.agents/skills/ (per Google's skills codelab), so a user-scope install for another agent does not reach it.
 - Antigravity CLI (agy, Antigravity 2.0): Skills are listed inside a session with /skills; agy has no terminal command that lists them, and it needs a Google sign-in.
+- Antigravity CLI (agy, Antigravity 2.0): --agent auto detects Antigravity from .agents/rules/ or .agents/rules.json (its workspace rules, per antigravity.google/docs/rules) or the legacy .agent/ folder. .agents/skills/ alone is not a marker: many agents share it.
 - Augment (Auggie): Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.
 - Augment (Auggie): If Claude Code is installed too, this agent may also read .claude/skills/ and list the skill twice.
 - Cline: If Claude Code is installed too, this agent may also read .claude/skills/ and list the skill twice.

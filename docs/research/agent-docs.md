@@ -400,6 +400,7 @@ Spec (raw, agentskills/agentskills `docs/specification.mdx`):
   - Global, CLI: `~/.gemini/antigravity-cli/skills/<skill-folder>/`; plugins add `~/.gemini/antigravity-cli/plugins/<name>/skills/`.
   - The codelab says `~/.agents/skills` is picked up by Antigravity "but Antigravity CLI does not"; the docs page does not list it.
   - `description` is required; `name` is optional (lowercase, hyphens; defaults to the folder name).
+- **Rules (https://antigravity.google/docs/rules/):** workspace `AGENTS.md`/`GEMINI.md` (root or `.agents/`), `.agents/rules/*.md` (legacy `.agent/rules/`), nested files registered in `.agents/rules.json`; global `~/.gemini/config/rules/*.md`, CLI also `~/.gemini/antigravity-cli/rules/`. The installer detects Antigravity from `.agents/rules/`, `.agents/rules.json` or legacy `.agent/`.
 - **Listing:** IDE/app: Customizations menu in the agent side panel. CLI: `/skills` inside a session; no terminal command. Both need a Google sign-in.
 - **Install (CLI):** `curl -fsSL https://antigravity.google/cli/install.sh | bash` (no npm package); the host was blocked from this container.
 
