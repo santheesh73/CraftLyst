@@ -13,6 +13,8 @@
   "user": ".gemini/config/skills/frontend-craft",
   "frontmatter": null,
   "detectMarkers": [
+    ".agents/rules",
+    ".agents/rules.json",
     ".agent"
   ],
   "nativeSkillSupport": true,
@@ -21,6 +23,7 @@
     "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.",
     "The docs also accept the legacy global folder ~/.gemini/antigravity/skills/ and the legacy workspace folder .agent/skills/; the installer writes only the current paths.",
     "Google's skills codelab says the IDE also picks up ~/.agents/skills/, but the skills docs do not list it, so the installer does not rely on it.",
-    "In the IDE, installed skills show in the Customizations menu of the agent side panel; there is no terminal command that lists them."
+    "In the IDE, installed skills show in the Customizations menu of the agent side panel; there is no terminal command that lists them.",
+    "--agent auto detects Antigravity from .agents/rules/ or .agents/rules.json (its workspace rules, per antigravity.google/docs/rules) or the legacy .agent/ folder. .agents/skills/ alone is not a marker: many agents share it."
   ]
 }
