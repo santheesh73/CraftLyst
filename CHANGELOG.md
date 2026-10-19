@@ -9,6 +9,7 @@ All notable changes are documented here. The format follows
 
 ### Changed (gate follow-up, 2026-10-15 to 2026-10-19)
 
+- 2026-10-19: Google Antigravity support. Two adapters, because the global skill folders differ: `antigravity` (IDE and the Antigravity 2.0 desktop app, `~/.gemini/config/skills/`) and `antigravity-cli` (alias `agy`, `~/.gemini/antigravity-cli/skills/`); both share the workspace folder `.agents/skills/`. Paths from antigravity.google/docs/skills. V2 not run: neither surface can list skills from a terminal, and the CLI installer host was blocked here. Uninstall now also prunes a parent folder that two skill directories share (such as `~/.gemini/`).
 - 2026-10-19: the MUI conformance target now covers all 12 contracts with no not-applicable checks (an AppBar + Toolbar + Menu navigation and a static `Alert` were added): 82 pass, 3 fail. The new failure is genuine: MUI's default primary text (`#1976d2`) on the default AppBar grey (`#f5f5f5`) is 4.22:1, below AA.
 - 2026-10-19: V2 re-run for Codex 0.163.0 and opencode 1.19.3 (still pass, with control projects); Amp and Qwen Code re-tried on current versions, with the exact blockers recorded (Amp's `skill list` starts a login flow; Qwen has no skill-listing command and needs an auth type).
 - 2026-10-19: installation docs give the two-step tarball install (`npm install --no-save` then `node node_modules/@santheesh73/frontend-craft/install.mjs`), both forms checked offline.

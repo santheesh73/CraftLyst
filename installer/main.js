@@ -12,7 +12,7 @@ import { execFileSync } from 'node:child_process';
 import { validate } from '../cli/src/schema.js';
 import {
   PKG_DIR, MARKER_FILE, display, inside, syncPackage, removePackage, releaseSkill, placePointer, removePointer,
-  isInstalled, readMarker, listFiles
+  isInstalled, readMarker, listFiles, pruneDirs
 } from './engine.js';
 
 /** @typedef {import('./engine.js').Adapter} Adapter */
@@ -180,6 +180,10 @@ export function uninstall(ctx, chosen, all) {
   const old = readMarker(join(pkgAbs, MARKER_FILE));
   /** @type {Record<string, import('./engine.js').PointerState>} */
   const pointers = { ...(old?.pointers ?? {}) };
+  // Two skill directories can share a parent only the first install created (for example
+  // ~/.gemini/ for both Antigravity adapters); prune those once everything chosen is gone.
+  /** @type {string[]} */
+  const createdDirs = [];
   for (const a of chosen) {
     const rel = a[ctx.scope];
     if (!rel) {
@@ -189,7 +193,8 @@ export function uninstall(ctx, chosen, all) {
     if (a.kind === 'skill') {
       const rest = isInstalled(ctx, a) ? releaseSkill(ctx, rel, a.id) : [];
       if (rest.length) results.push({ agent: a.id, path: display(ctx, rel) + '/', action: 'remove', detail: `kept for ${rest.join(', ')}` });
-      else results.push({ agent: a.id, path: display(ctx, rel) + '/', ...(isInstalled(ctx, a) || !existsSync(inside(ctx.base, rel)) ? removePackage(ctx, rel) : { action: /** @type {const} */ ('absent') }) });
+      else createdDirs.push(...(readMarker(join(inside(ctx.base, rel), MARKER_FILE))?.createdDirs ?? []));
+      if (!rest.length) results.push({ agent: a.id, path: display(ctx, rel) + '/', ...(isInstalled(ctx, a) || !existsSync(inside(ctx.base, rel)) ? removePackage(ctx, rel) : { action: /** @type {const} */ ('absent') }) });
       continue;
     }
     const st = pointers[rel];
@@ -206,6 +211,7 @@ export function uninstall(ctx, chosen, all) {
     if (!stillUsed) results.push({ agent: '(package)', path: display(ctx, PKG_DIR) + '/', ...removePackage(ctx, PKG_DIR) });
     else if (!ctx.dryRun) syncPackage({ ...ctx, version: old.version, source: pkgAbs }, PKG_DIR, sortKeys(pointers));
   }
+  if (!ctx.dryRun) pruneDirs(ctx.base, createdDirs);
   return results;
 }
 

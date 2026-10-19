@@ -1,0 +1,26 @@
+{
+  "schemaVersion": "1.0",
+  "id": "antigravity",
+  "label": "Google Antigravity (IDE and 2.0 app)",
+  "aliases": [
+    "antigravity-ide",
+    "antigravity-app"
+  ],
+  "docsUrl": "https://antigravity.google/docs/skills",
+  "docsVerifiedOn": "2026-10-19",
+  "kind": "skill",
+  "project": ".agents/skills/frontend-craft",
+  "user": ".gemini/config/skills/frontend-craft",
+  "frontmatter": null,
+  "detectMarkers": [
+    ".agent"
+  ],
+  "nativeSkillSupport": true,
+  "notes": "The Antigravity IDE and the Antigravity 2.0 desktop app read workspace skills from <workspace-root>/.agents/skills/ and global skills from ~/.gemini/config/skills/. SKILL.md needs a description; name is optional and must be lowercase with hyphens (ours is frontend-craft, matching the folder). The Antigravity CLI uses a different global folder: use the antigravity-cli adapter for it.",
+  "caveats": [
+    "Docs were read through a summarizing web fetch, not verbatim; re-check before quoting.",
+    "The docs also accept the legacy global folder ~/.gemini/antigravity/skills/ and the legacy workspace folder .agent/skills/; the installer writes only the current paths.",
+    "Google's skills codelab says the IDE also picks up ~/.agents/skills/, but the skills docs do not list it, so the installer does not rely on it.",
+    "In the IDE, installed skills show in the Customizations menu of the agent side panel; there is no terminal command that lists them."
+  ]
+}
