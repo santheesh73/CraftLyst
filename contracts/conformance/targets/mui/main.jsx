@@ -1,7 +1,8 @@
 // Conformance demo page for MUI (Material UI). Each section renders one contract with MUI's
 // own components. Where MUI's documentation tells the app to supply ARIA wiring (menu and
 // popover trigger attributes, the tab panel, sort state), the demo copies the documented
-// pattern and nothing more. MUI has no site-navigation component; see adapter.json.
+// pattern and nothing more. MUI has no site-navigation component, so the navigation section
+// composes AppBar, Toolbar, link Buttons and a Menu the way MUI's App Bar demos do.
 import { useMemo, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import Button from '@mui/material/Button';
@@ -33,6 +34,9 @@ import TableRow from '@mui/material/TableRow';
 import TableCell from '@mui/material/TableCell';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Pagination from '@mui/material/Pagination';
+import Alert from '@mui/material/Alert';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 
 function ButtonDemo() {
   const [bold, setBold] = useState(false);
@@ -165,6 +169,25 @@ function TableDemo() {
   );
 }
 
+function NavigationDemo() {
+  const [anchor, setAnchor] = useState(null);
+  const open = Boolean(anchor);
+  const close = () => setAnchor(null);
+  return (
+    <AppBar position="static" color="default">
+      <Toolbar component="nav" id="mui-nav" aria-label="Main">
+        <Button href="#home" aria-current="page">Home</Button>
+        <Button href="#pricing">Pricing</Button>
+        <Button id="mui-nav-more" aria-controls={open ? 'mui-nav-menu' : undefined} aria-haspopup="true" aria-expanded={open ? 'true' : 'false'} onClick={(e) => setAnchor(e.currentTarget)}>More</Button>
+        <Menu id="mui-nav-menu" anchorEl={anchor} open={open} onClose={close} slotProps={{ list: { 'aria-labelledby': 'mui-nav-more' } }}>
+          <MenuItem component="a" href="#docs" onClick={close}>Docs</MenuItem>
+          <MenuItem component="a" href="#blog" onClick={close}>Blog</MenuItem>
+        </Menu>
+      </Toolbar>
+    </AppBar>
+  );
+}
+
 function App() {
   const [fruit, setFruit] = useState('apple');
   return (
@@ -235,6 +258,7 @@ function App() {
       <section id="c-toast" aria-labelledby="h-toast">
         <h2 id="h-toast">Snackbar</h2>
         <ToastDemo />
+        <Alert id="mui-alert" severity="info">Your trial ends in three days.</Alert>
       </section>
 
       <section id="c-table" aria-labelledby="h-table">
@@ -245,6 +269,11 @@ function App() {
       <section id="c-pagination" aria-labelledby="h-pagination">
         <h2 id="h-pagination">Pagination</h2>
         <Pagination id="mui-pagination" count={5} defaultPage={2} />
+      </section>
+
+      <section id="c-navigation" aria-labelledby="h-navigation">
+        <h2 id="h-navigation">Navigation (AppBar)</h2>
+        <NavigationDemo />
       </section>
     </main>
   );

@@ -8,7 +8,9 @@ its bundled Chromium, axe-core 4.13.0). The kit, adapters, and demo source are i
 shadcn/ui and MUI were added on 2026-10-15 in the same container (Linux, Node 22.22.0,
 Playwright 1.56.1, axe-core 4.13.0) with the kit as it stood that day (it reports itself as
 frontend-craft conformance 1.0.0; the Radix and React Aria rows below came from 0.2.0 and
-were not re-run). Browser engines present in `/opt/pw-browsers`: Chromium only
+were not re-run). The MUI target was extended on 2026-10-19 (navigation section and a static
+alert added, same container and versions) and re-run; its row and full results below are from
+that day. Browser engines present in `/opt/pw-browsers`: Chromium only
 (`chromium-1194`, `chromium_headless_shell-1194`). **Firefox and WebKit are not installed,
 so no result here covers them.**
 
@@ -20,7 +22,7 @@ so no result here covers them.**
 | Broken fixture (negative control) | hand-rolled | 11 | 68 | 6 | 1 |
 | Radix Primitives | react 19.3.0, @radix-ui/react-* (versions below) | 71 | 2 | 12 | 1 |
 | React Aria Components | react-aria-components 1.22.1, react 19.3.0 | 75 | 0 | 10 | 0 |
-| MUI (Material UI), 2026-10-15 | @mui/material 9.5.0, @emotion/react 11.14.0, @emotion/styled 11.14.1, react 19.3.0 | 77 | 2 | 6 | 1 |
+| MUI (Material UI), 2026-10-19 | @mui/material 9.5.0, @emotion/react 11.14.0, @emotion/styled 11.14.1, react 19.3.0 | 82 | 3 | 0 | 1 |
 | shadcn/ui, 2026-10-15 | new-york-v4 registry at shadcn-ui/ui@4233ed1, shadcn CLI 4.21.5, radix-ui 1.8.1, sonner 2.0.8, react 19.3.0 (all below) | 74 | 5 | 6 | 1 |
 
 Radix packages: react-accordion 1.3.1, react-dialog 1.3.1, react-dropdown-menu 2.2.1,
@@ -43,7 +45,8 @@ Each run was repeated (React Aria three times in a row) with identical summaries
 
 MUI and shadcn/ui (2026-10-15): each final configuration was run three times in a row
 (MUI after two demo-page fixes, see below) with identical summaries and exit code 1 each
-time. shadcn/ui package versions: shadcn CLI 4.21.5, radix-ui 1.8.1, sonner 2.0.8,
+time. The extended MUI target (2026-10-19) was likewise run three times in a row: 82 pass,
+3 fail, 0 not applicable, identical failing checks, exit code 1 each time. shadcn/ui package versions: shadcn CLI 4.21.5, radix-ui 1.8.1, sonner 2.0.8,
 next-themes 0.4.6, class-variance-authority 0.7.1, cn 0.4.0, lucide-react 1.57.0,
 tailwindcss 4.3.3, @tailwindcss/cli 4.3.3, tw-animate-css 1.4.0, react/react-dom 19.3.0,
 esbuild 0.28.2.
@@ -67,9 +70,9 @@ registry commit, not a numbered shadcn release (shadcn/ui components have no pac
 |---|---|---|---|
 | Radix | `text-field/invalid` | **Library behavior** | `@radix-ui/react-form` 0.3.0 sets `data-invalid` for client-side validation but sets `aria-invalid` only for `serverInvalid` (seen in its `dist/index.mjs`). The error message is linked with `aria-describedby` (`text-field/error-described` passes). The browser's native constraint-validation state may be exposed to assistive technology, but the kit does not verify that; under this contract it is a failure. |
 | Radix | `navigation/axe` | **Library behavior (axe finding)** | With the submenu open, NavigationMenu renders a focus-proxy `<span aria-hidden="true" tabindex="0">`; axe-core reports `aria-hidden-focus` (serious). Real axe finding; its practical impact on screen-reader users was not tested. |
-
 | MUI | `text-field/invalid` | **Library behavior** | MUI `TextField` sets `aria-invalid` from its `error` prop (it rendered `aria-invalid="false"`); it does not reflect native constraint validation. MUI leaves validation to the app. The demo adds no validation glue. |
-| MUI | `tooltip-popover/axe` | **Kit timing (suspected kit bug, reported, not fixed)** | axe reports `color-contrast` on the popover's "Done" button (3.88:1, `#3084d7` on white) only because the popover is still fading in: a probe scanning immediately after Enter reproduces it; the same scan 1 s later has no violation. MUI's primary text color at full opacity passes. The kit scans the popover as soon as it is visible, mid-transition. |
+| MUI | `tooltip-popover/axe` | **Kit timing (suspected kit bug, reported, not fixed)** | axe reports `color-contrast` on the popover's "Done" button (3.88:1, `#3084d7` on white) only because the popover is still fading in: a probe scanning immediately after Enter reproduces it; the same scan 1 s later has no violation. MUI's primary text color at full opacity passes. The kit scans the popover as soon as it is visible, mid-transition. Re-checked 2026-10-19: once settled, the button's computed color is `rgb(25, 118, 210)` (`#1976d2`) on the paper's `rgb(255, 255, 255)`, 4.60:1, which passes AA. |
+| MUI | `navigation/axe` | **Library behavior (MUI default theme, axe finding)** | The site nav is `AppBar color="default"` with default `color="primary"` text Buttons, the composition in MUI's App Bar demos. Computed: text `rgb(25, 118, 210)` (`#1976d2`), 14px, weight 500, on the AppBar's `rgb(245, 245, 245)` (`#f5f5f5`, `grey[100]`): 4.22:1, below AA's 4.5:1 for normal text. A standalone axe scan of the fresh page flags all three controls (Home, Pricing, More) at 4.22:1; in the kit's run only the two links are listed, because after the disclosure check the closing menu still overlaps More and axe marks its background "could not be determined" (incomplete, not a violation). Kept as found; the demo does not change MUI's colors. |
 | shadcn/ui | `text-field/invalid`, `text-field/error-described` | **Library behavior** | shadcn `Input` is a styled `<input>`; invalid state and error-message wiring are left to the app (its docs show react-hook-form with `aria-invalid` passed by hand). The demo adds no validation glue. |
 | shadcn/ui | `dialog/modal` | **Kit bug (reported, not fixed)** | The kit counts only `<body>`'s direct children: 3/4 hidden, `#root` not. Radix's hide-others leaves the Sonner live region (`aria-live="polite"`, inside `#root`) exposed and hides every other subtree inside `#root` individually (probed: header, every section, and the toast section's heading and button carry `aria-hidden`). The background is hidden; the check's heuristic misses nested hiding. |
 | shadcn/ui | `select/axe` | **Library behavior (axe finding)** | While the Select is open, `#c-select` gets `aria-hidden="true"` and contains the focusable trigger: axe `aria-hidden-focus` (serious). Same Radix technique as the Radix row, but there `#root` (outside the scanned region) carried `aria-hidden`; here the live region forces hiding at section level, inside the scan. Impact on screen-reader users not tested. |
@@ -82,9 +85,24 @@ when the child already has a label (`tooltip/described-by` failed); (3) the adap
 names the popover (`#mui-popover .MuiPaper-root`), because MUI's `Popover` has no
 `role="dialog"`, the kit's default selector.
 
+MUI demo additions on 2026-10-19 (before the recorded runs, no failures fixed away):
+
+1. **Navigation section.** MUI has no site-navigation component, so the demo composes
+   `AppBar` + `Toolbar component="nav"` + link `Button`s (`href`, `aria-current="page"` on
+   Home) + a `Menu` submenu, as in MUI's App Bar demos. The page now has two navigation
+   landmarks (this one and `Pagination`'s), so the site nav carries `aria-label="Main"`;
+   `navigation/landmark` passes. The submenu trigger's `aria-expanded`, `aria-haspopup` and
+   `aria-controls` are set by the demo from `anchorEl` state, as for the Menu section; MUI
+   does not wire them.
+2. **Static alert.** MUI `Alert` (`severity="info"`) renders `role="alert"` by default;
+   `alert/role` passes.
+
 Kit leniency noted (not counted as a failure): MUI `text-field/error-described` passes
 because the input is described by its helper text ("We only use this for receipts."), not
-by an error message; the check accepts any `aria-describedby`.
+by an error message; the check accepts any `aria-describedby`. Likewise MUI
+`navigation/no-menu-roles` passes because MUI portals the submenu's `role="menu"` list to
+`<body>`, outside the `<nav>` the check inspects; a site-navigation submenu built on MUI
+`Menu` still uses menu roles.
 
 Kit bugs found and fixed during these runs (not counted above):
 
@@ -107,8 +125,6 @@ Demo-page bug fixed: the Radix text field first passed its own `id` to `Form.Con
 | React Aria | pagination, navigation | No such components (it has Link and Breadcrumbs). |
 | React Aria | `alert/role` | No static alert component; the demo declares none. |
 | React Aria | toast | Tested, but it is exported as `UNSTABLE_*` in 1.22.1. |
-| MUI | navigation | No site-navigation component (it has Breadcrumbs, Tabs, Drawer, Link). |
-| MUI | `alert/role` | Not declared in the demo (MUI has an `Alert` component; not exercised). |
 | shadcn/ui | `table/sort-*`, `table/filter-*` | shadcn `Table` is presentational; sorting and filtering are app code (its data-table recipe uses TanStack Table). |
 | shadcn/ui | `alert/role` | Not declared in the demo (shadcn has an `Alert` component; not exercised). |
 
@@ -119,8 +135,13 @@ Demo-page bug fixed: the Radix text field first passed its own `id` to `Form.Con
 - The demo pages were written for this kit; another composition of the same primitives
   can behave differently.
 - Chromium only: Firefox and WebKit are not installed in this container.
-- MUI's menu, popover, tab-panel and sort wiring follow MUI's documented demo patterns,
-  which the app writes; the results cover those patterns, not MUI alone.
+- MUI's menu, popover, tab-panel, sort and navigation wiring follow MUI's documented demo
+  patterns, which the app writes; the results cover those patterns, not MUI alone. MUI has
+  no navigation component, so its navigation row tests an AppBar composition.
+- shadcn/ui is CLI-scaffolded source, not an importable npm package, so it cannot go
+  through `build.js` like the other three: it needs a scratch project generated by the
+  shadcn CLI and `build.js --src` (see the targets README). Its row reflects one registry
+  commit, set up from GitHub because `ui.shadcn.com` was blocked here.
 
 ## Full results
 
@@ -449,7 +470,7 @@ React Aria Components has no site-navigation component (it has Link and Breadcru
 - Kit: frontend-craft conformance 1.0.0
 - Library: MUI (Material UI) 9.5.0 (react@19.3.0, react-dom@19.3.0, @mui/material@9.5.0, @emotion/react@11.14.0, @emotion/styled@11.14.1)
 - Trust: external library under test (demo page written for this kit)
-- Summary: 77 pass, 2 fail, 6 not applicable
+- Summary: 82 pass, 3 fail, 0 not applicable
 
 #### button
 
@@ -504,7 +525,7 @@ React Aria Components has no site-navigation component (it has Link and Breadcru
 | `dialog/role` | PASS | <div> role=dialog |
 | `dialog/modal` | PASS | aria-modal=true, :modal=false, background hidden: 1/1 body children aria-hidden or inert |
 | `dialog/name` | PASS | accessible name "Rename project" |
-| `dialog/initial-focus` | PASS | focus on input#_r_e_ |
+| `dialog/initial-focus` | PASS | focus on input#_r_h_ |
 | `dialog/focus-trap` | PASS | 5 Tab and 5 Shift+Tab presses stayed inside (3 focusable) |
 | `dialog/escape` | PASS | dialog hidden after Escape |
 | `dialog/return-focus` | PASS | focus on button#mui-dialog-open "Rename project" |
@@ -572,7 +593,7 @@ React Aria Components has no site-navigation component (it has Link and Breadcru
 
 #### toast-alert
 
-5 pass, 0 fail, 1 n/a
+6 pass, 0 fail, 0 n/a
 
 | Check | Result | Evidence |
 |---|---|---|
@@ -580,7 +601,7 @@ React Aria Components has no site-navigation component (it has Link and Breadcru
 | `toast/announced` | PASS | live region text: "Settings saved.×" |
 | `toast/focus-kept` | PASS | focus on button#mui-toast-btn "Save settings" |
 | `toast/dismiss-name` | PASS | button name(s): "Dismiss notification" |
-| `alert/role` | N/A | adapter declares no static alert |
+| `alert/role` | PASS | role=alert |
 | `toast-alert/axe` | PASS | axe-core WCAG 2.x A/AA: no violations in #c-toast, .mui-toast |
 
 #### table
@@ -608,9 +629,17 @@ React Aria Components has no site-navigation component (it has Link and Breadcru
 | `pagination/names` | PASS | 7 control(s), all named |
 | `pagination/axe` | PASS | axe-core WCAG 2.x A/AA: no violations in #c-pagination |
 
-#### navigation (not applicable)
+#### navigation
 
-MUI has no site-navigation component (it has Breadcrumbs, Tabs, Drawer and Link).
+4 pass, 1 fail, 0 n/a
+
+| Check | Result | Evidence |
+|---|---|---|
+| `navigation/landmark` | PASS | role=navigation, name "Main", 2 navigation landmark(s) on the page |
+| `navigation/current` | PASS | 1 link(s) with aria-current="page" |
+| `navigation/no-menu-roles` | PASS | 0 element(s) with role menu/menubar |
+| `navigation/disclosure` | PASS | aria-expanded false -> true (Enter) -> false (Escape); focus on button#mui-nav-more "More" |
+| `navigation/axe` | FAIL | axe-core: color-contrast (serious) at a[href$="#home"], a[href$="#pricing"] |
 
 ### shadcn-ui
 

@@ -28,20 +28,21 @@ npm install --save-exact --ignore-scripts --no-audit --no-fund \
   @radix-ui/react-navigation-menu@1.4.1 @radix-ui/react-popover@1.3.1 \
   @radix-ui/react-select@2.4.1 @radix-ui/react-tabs@1.2.1 \
   @radix-ui/react-toast@1.3.1 @radix-ui/react-toggle@1.2.1 \
-  @radix-ui/react-tooltip@1.4.1 react-aria-components@1.22.1
+  @radix-ui/react-tooltip@1.4.1 react-aria-components@1.22.1 \
+  @mui/material@9.5.0 @emotion/react@11.14.0 @emotion/styled@11.14.1
 cd -   # back to the repository root
 
-node contracts/conformance/targets/build.js --modules "$DEPS/node_modules"
+node contracts/conformance/targets/build.js --modules "$DEPS/node_modules"   # radix, react-aria, mui
 node contracts/conformance/run.js --adapter contracts/conformance/targets/radix/adapter.json
 node contracts/conformance/run.js --adapter contracts/conformance/targets/react-aria/adapter.json
+node contracts/conformance/run.js --adapter contracts/conformance/targets/mui/adapter.json
 ```
 
-### MUI
+### MUI only
+
+The install above already includes MUI; to build and run it alone:
 
 ```sh
-cd "$DEPS" && npm install --save-exact --ignore-scripts --no-audit --no-fund \
-  @mui/material@9.5.0 @emotion/react@11.14.0 @emotion/styled@11.14.1
-cd -
 node contracts/conformance/targets/build.js --modules "$DEPS/node_modules" mui
 node contracts/conformance/run.js --adapter contracts/conformance/targets/mui/adapter.json
 ```

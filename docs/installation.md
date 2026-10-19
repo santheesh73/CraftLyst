@@ -35,11 +35,16 @@ Three ways to get the installer. None of them runs install scripts or uses the n
 # 1. From a clone after `npm run package`, or from an extracted release zip (check SHA256SUMS first)
 node install.mjs install --agent auto
 
-# 2. From npm, as @santheesh73/frontend-craft. Not published yet (a HUMAN GATE); once it is:
+# 2. From npm, as @santheesh73/frontend-craft. The unscoped name `frontend-craft` belongs to an
+#    unrelated package; the scoped name was confirmed free on 2026-10-19 (`npm view` returned 404).
+#    Not published yet (a HUMAN GATE); once it is:
 npx --package @santheesh73/frontend-craft frontend-craft install --agent auto
-#    Until then, use the local tarball (`npm pack` in dist/frontend-craft/):
-npx --package ./santheesh73-frontend-craft-<version>.tgz frontend-craft install --agent auto
-#    Never run a bare `npx frontend-craft`: the unscoped name belongs to an unrelated package.
+#    Until then, use the local tarball (`npm pack` in dist/frontend-craft/ writes
+#    santheesh73-frontend-craft-<version>.tgz):
+npm install --no-save ./santheesh73-frontend-craft-<version>.tgz
+node node_modules/@santheesh73/frontend-craft/install.mjs install --agent auto
+#    (or in one step: npx --package ./santheesh73-frontend-craft-<version>.tgz frontend-craft install --agent auto)
+#    Never run a bare `npx frontend-craft`: it fetches the unrelated package.
 
 # 3. The Claude Code wrapper (kept for existing users)
 node scripts/install-claude-code.js --project ./my-app   # same as --agent claude-code

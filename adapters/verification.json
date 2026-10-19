@@ -31,25 +31,25 @@
     "codex": {
       "v2": {
         "result": "pass",
-        "date": "2026-10-15",
-        "tool": "@openai/codex 0.162.1 (codex-cli 0.162.1)",
+        "date": "2026-10-19",
+        "tool": "@openai/codex 0.163.0 (codex-cli 0.163.0)",
         "command": "codex debug prompt-input",
-        "evidence": "the model-visible prompt lists frontend-craft with .agents/skills/frontend-craft/SKILL.md after a project-scope install (fresh HOME, no sign-in); absent in an empty control project"
+        "evidence": "re-run 2026-10-19 (first pass 2026-10-15 on 0.162.1): the model-visible prompt lists frontend-craft with .agents/skills/frontend-craft/SKILL.md after a project-scope install (fresh HOME, no sign-in); absent in an empty control project"
       }
     },
     "opencode": {
       "v2": {
         "result": "pass",
-        "date": "2026-10-15",
-        "tool": "opencode-ai 1.19.0",
+        "date": "2026-10-19",
+        "tool": "opencode-ai 1.19.3",
         "command": "opencode debug skill",
-        "evidence": "frontend-craft listed at .agents/skills/frontend-craft/SKILL.md after a project-scope install (fresh HOME, no sign-in); absent in an empty control project"
+        "evidence": "re-run 2026-10-19 (first pass 2026-10-15 on 1.19.0): frontend-craft listed at .agents/skills/frontend-craft/SKILL.md after a project-scope install (fresh HOME, no sign-in); absent in an empty control project"
       }
     },
     "qwen": {
       "v2": {
         "result": "not-run",
-        "reason": "@qwen-code/qwen-code 0.25.1 installed, but it has no skill-listing command and headless mode stops with \"No auth type is selected\"; needs a sign-in"
+        "reason": "re-tried 2026-10-19 with @qwen-code/qwen-code 0.25.2: it has no skill-listing command (`qwen --help` lists none; `qwen extensions list` and `--list-extensions` cover extensions, not .qwen/skills, and printed \"No extensions installed.\"), and a headless prompt returns \"No auth type is selected\"; needs a configured model provider"
       }
     },
     "kilo": {
@@ -70,7 +70,7 @@
     "amp": {
       "v2": {
         "result": "not-run",
-        "reason": "@sourcegraph/amp 0.0.1792036844 installed; `amp skill list` printed nothing and was stopped after 45 seconds, with and without the skill installed (it appears to wait for a sign-in)"
+        "reason": "re-tried 2026-10-19 with @sourcegraph/amp 0.0.1792368068-g91990d: `amp skill list` and `amp skill info frontend-craft` exist, but each prints \"No API key found. Starting login flow...\", a login URL and \"paste your code here\", then waits (stopped after 45 seconds); listing needs a signed-in Amp account"
       }
     },
     "cline": {

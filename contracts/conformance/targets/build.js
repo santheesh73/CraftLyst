@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Bundles each demo page (radix/main.jsx, react-aria/main.jsx) into <lib>/build/app.js with
+// Bundles each demo page (radix/, react-aria/, mui/ by default; shadcn/ on request) into <lib>/build/app.js with
 // esbuild. Dependencies are NOT part of this repository: install them in a separate
 // directory (see README.md) and pass it with --modules. --src maps the `@/` import alias to
 // a directory outside the repository (used for shadcn/ui, whose CLI generates source files).
@@ -17,7 +17,7 @@ if (!values.modules) {
 }
 const modules = resolve(values.modules);
 const esbuild = createRequire(join(modules, 'noop.js'))('esbuild');
-for (const lib of positionals.length ? positionals : ['radix', 'react-aria']) {
+for (const lib of positionals.length ? positionals : ['radix', 'react-aria', 'mui']) {
   await esbuild.build({
     entryPoints: [join(here, lib, 'main.jsx')],
     bundle: true,

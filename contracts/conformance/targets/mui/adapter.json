@@ -6,7 +6,7 @@
     "packages": { "react": "19.3.0", "react-dom": "19.3.0", "@mui/material": "9.5.0", "@emotion/react": "11.14.0", "@emotion/styled": "11.14.1" }
   },
   "trust": "external library under test (demo page written for this kit)",
-  "notes": "Build first: see ../README.md. Menu/popover trigger ARIA, the tab panel and the sort state follow MUI's documented demo patterns (MUI leaves them to the app).",
+  "notes": "Build first: see ../README.md. Menu/popover trigger ARIA, the tab panel and the sort state follow MUI's documented demo patterns (MUI leaves them to the app). MUI has no site-navigation component; the navigation section composes AppBar, Toolbar, link Buttons and a Menu.",
   "page": { "file": "index.html", "ready": "#demo" },
   "components": {
     "button": { "button": "#mui-save", "toggle": "#mui-bold", "disabled": "#mui-off", "region": "#c-button" },
@@ -17,9 +17,9 @@
     "tabs": { "tablist": "#c-tabs [role=\"tablist\"]", "region": "#c-tabs" },
     "tooltip-popover": { "tooltipTrigger": "#mui-tip-btn", "popoverTrigger": "#mui-pop-btn", "popover": "#mui-popover .MuiPaper-root", "region": "#c-tooltip" },
     "accordion-disclosure": { "triggers": "#c-accordion .acc", "region": "#c-accordion" },
-    "toast-alert": { "trigger": "#mui-toast-btn", "toast": ".mui-toast", "region": "#c-toast" },
+    "toast-alert": { "trigger": "#mui-toast-btn", "toast": ".mui-toast", "alert": "#mui-alert", "region": "#c-toast" },
     "table": { "table": "#mui-table", "sortButton": "#mui-sort", "filterInput": "#mui-filter", "filterValue": "ar", "region": "#c-table" },
     "pagination": { "nav": "#mui-pagination", "region": "#c-pagination" },
-    "navigation": { "notApplicable": "MUI has no site-navigation component (it has Breadcrumbs, Tabs, Drawer and Link)." }
+    "navigation": { "nav": "#mui-nav", "submenuTrigger": "#mui-nav-more", "region": "#c-navigation" }
   }
 }

@@ -7,8 +7,11 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
-### Changed (gate follow-up, 2026-10-15 to 2026-10-18)
+### Changed (gate follow-up, 2026-10-15 to 2026-10-19)
 
+- 2026-10-19: the MUI conformance target now covers all 12 contracts with no not-applicable checks (an AppBar + Toolbar + Menu navigation and a static `Alert` were added): 82 pass, 3 fail. The new failure is genuine: MUI's default primary text (`#1976d2`) on the default AppBar grey (`#f5f5f5`) is 4.22:1, below AA.
+- 2026-10-19: V2 re-run for Codex 0.163.0 and opencode 1.19.3 (still pass, with control projects); Amp and Qwen Code re-tried on current versions, with the exact blockers recorded (Amp's `skill list` starts a login flow; Qwen has no skill-listing command and needs an auth type).
+- 2026-10-19: installation docs give the two-step tarball install (`npm install --no-save` then `node node_modules/@santheesh73/frontend-craft/install.mjs`), both forms checked offline.
 - Ran the paired evaluation on all 12 briefs with 3 repeats each, 36 pairs (`p3-r1`). Automated gates: Slop Lint, axe, and build met; the honesty audit was not met (258/313). The 36 bundles are ready for the human blind ranking.
 - Ran the conformance kit on MUI 9.5.0 (77 pass, 2 fail) and on shadcn/ui at a pinned registry commit (74 pass, 5 fail), Chromium only. Two of the failures look like kit bugs; they are recorded, not fixed.
 
