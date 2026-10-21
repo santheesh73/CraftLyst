@@ -137,9 +137,10 @@ export function tailwindColors(root) {
  * Build a tokens.json draft from the project. Returns null if nothing usable was found.
  * @param {string} root
  * @param {string[]} [ignore]
+ * @param {{ mui?: import('./scan.js').MuiTheme[] }} [extra] theme objects read by craft scan
  * @returns {{ tokens: any | null, summary: string[] }}
  */
-export function extractTokens(root, ignore = []) {
+export function extractTokens(root, ignore = [], extra = {}) {
   const props = collectCustomProps(root, ignore);
   const tw = tailwindColors(root);
   /** @type {Record<string, Record<string, string>>} */
@@ -207,6 +208,23 @@ export function extractTokens(root, ignore = []) {
     const tn = tokenName(c.name);
     if (!primitive.color?.[tn]) set('color', tn, c.value);
   }
+  // MUI palettes: roles the CSS variables did not already provide.
+  const mui = extra.mui ?? [];
+  for (const t of mui) {
+    for (const theme of /** @type {const} */ (['light', 'dark'])) {
+      for (const [role, value] of Object.entries(t[theme])) {
+        const tn = `mui-${role}${theme === 'dark' ? '-dark' : ''}`;
+        if (primitive.color?.[tn]) continue;
+        set('color', tn, value);
+        semanticColor.color ??= {};
+        const entry = semanticColor.color[role] ?? {};
+        entry[theme] ??= `{primitive.color.${tn}}`;
+        semanticColor.color[role] = entry;
+      }
+    }
+    if (t.radius && !primitive.radius?.['mui-radius']) set('radius', 'mui-radius', t.radius);
+    if (t.fontFamily && !primitive.fontFamily?.['mui-body']) set('fontFamily', 'mui-body', t.fontFamily);
+  }
 
   const hasDark = Object.values(semanticColor.color ?? {}).some((t) => t.dark);
   const themes = hasDark ? ['light', 'dark'] : ['light'];
@@ -231,7 +249,7 @@ export function extractTokens(root, ignore = []) {
 
   const count = Object.values(primitive).reduce((n, g) => n + Object.keys(g).length, 0);
   const summary = [
-    `${props.length} custom properties at root/theme scope in ${new Set(props.map((p) => p.file)).size} file(s); ${tw.length} Tailwind config color(s).`,
+    `${props.length} custom properties at root/theme scope in ${new Set(props.map((p) => p.file)).size} file(s); ${tw.length} Tailwind config color(s); ${mui.length} MUI theme(s).`,
     `${count} primitive token(s) in ${Object.keys(primitive).length} group(s): ${Object.entries(primitive).map(([g, v]) => `${g} ${Object.keys(v).length}`).join(', ') || 'none'}.`,
     `Semantic color roles recognized: ${[...roles].sort().join(', ') || 'none'}. Contrast pairs generated: ${pairs.length}.`,
     unclassified.length ? `Not classified (review by hand): ${unclassified.slice(0, 30).join(', ')}${unclassified.length > 30 ? `, and ${unclassified.length - 30} more` : ''}.` : 'Every custom property was classified.'
@@ -241,7 +259,7 @@ export function extractTokens(root, ignore = []) {
     tokens: {
       schemaVersion: '1.0',
       name: 'project-tokens',
-      description: 'Drafted by craft init --from-repo from the project\'s existing custom properties and Tailwind config. Role names are guesses from naming conventions: review every semantic mapping and pair before relying on it.',
+      description: 'Drafted by craft init --from-repo from the project\'s existing custom properties, Tailwind config, and MUI theme. Role names are guesses from naming conventions: review every semantic mapping and pair before relying on it.',
       themes,
       primitive,
       semantic: semanticColor,

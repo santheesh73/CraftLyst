@@ -18,6 +18,15 @@ All notable changes are documented here. The format follows
 - `craft` exits 3 with an "npm install" hint, instead of a stack trace, when a runtime dependency is missing (a git clone without `npm install`).
 - Shorter skill description (593 characters, was about 900). Trigger tests were not re-run.
 
+### Added (design awareness and real-user proof, 2026-10-21)
+
+- `craft scan`: a read-only inventory of the design system a project already has, run before building. It reads CSS custom properties (light and dark), Tailwind v3 config and v4 `@theme`, shadcn/ui `components.json` and its ui folder, MUI, Chakra, Mantine, and Panda theme objects, DTCG or Style Dictionary token files, SCSS variables, loaded fonts, component libraries from `package.json`, and the project's UI component folders. It returns a verdict (`established`, `partial`, `none`) and what to reuse. Everything is parsed, nothing is executed; tests and fixtures are skipped.
+- `craft init --from-repo` now also drafts tokens from an MUI theme palette (including `colorSchemes.dark`) and saves the scan to `.craft/reports/design-scan.md`.
+- SKILL.md: size M and L work, and any new component, run `craft scan` first and extend what it finds instead of adding a parallel palette or scale.
+- `evals/harness/rank.js`: a local ranking app for the blind ranking. It serves the unzipped bundles on 127.0.0.1, opens the next unranked pair, and saves each answer to `~/p3-rankings/`, so raters no longer download 36 files. It never reads `key.json`.
+- `evals/agent-smoke/smoke.js`: `prepare` sets up the V3 project for one agent; `check` pre-checks the five behaviors from the files and an optional transcript, asks the person to confirm each, and with `--record` writes their verdict to `adapters/verification.json` and regenerates the compatibility docs.
+- Outside-tester kit: `node scripts/tester-kit.js` builds `dist/tester-kit/` (release zip, checksum, tester guide, feedback form); see `docs/human-gates/outside-testers.md`.
+
 ### Changed (gate follow-up, 2026-10-15 to 2026-10-19)
 
 - 2026-10-19: Google Antigravity support. Two adapters, because the global skill folders differ: `antigravity` (IDE and the Antigravity 2.0 desktop app, `~/.gemini/config/skills/`) and `antigravity-cli` (alias `agy`, `~/.gemini/antigravity-cli/skills/`); both share the workspace folder `.agents/skills/`. Paths from antigravity.google/docs/skills. V2 not run: neither surface can list skills from a terminal, and the CLI installer host was blocked here. Uninstall now also prunes a parent folder that two skill directories share (such as `~/.gemini/`).

@@ -63,13 +63,20 @@ When unsure, pick the smaller size, and move up only if the change needs new tok
 - Read `.craft/DESIGN.md`, `.craft/tokens.json`, and the last entries of `.craft/decisions.md`.
 - Inspect before editing: framework, styling approach, existing components and tokens,
   `package.json` scripts. Match what exists.
+- For size M or L, and for any new component, run `craft scan --json` (read-only) before
+  building. It reports the design system the project already has: CSS variables, Tailwind
+  config or `@theme`, shadcn/ui, MUI/Chakra/Mantine themes, token files, fonts, and UI
+  components. When the verdict is `established` or `partial`, extend what it lists: reuse its
+  tokens and components, and add new values beside the existing ones, never a parallel
+  palette, type scale, radius, or spacing scale.
 - Product thinking (job, audience, primary task, real content): [references/design-intelligence.md](references/design-intelligence.md).
 
 ### 3. Decide
 
 - **Contract exists**: follow it. Deviations need a reason logged in `decisions.md`.
-- **No contract, existing design system in the repo**: extract a contract that describes it
-  (Direction Engine step 6). Do not restyle.
+- **No contract, existing design system in the repo** (`craft scan` verdict `established`):
+  extract a contract that describes it with `craft init --from-repo` (Direction Engine step 6).
+  Do not restyle.
 - **No contract, no system, size L**: run the Direction Engine:
   ask at most 5 questions (skip what the request or repo answers), set the 8 axes with
   reasons, write two divergent directions, choose one, log the rejected one, apply the
@@ -128,6 +135,7 @@ one that pointer names, usually `.frontend-craft/`. In Review mode, run only `li
 ```bash
 node <skill-dir>/cli/bin/craft.js --version
 node <skill-dir>/cli/bin/craft.js doctor --json        # stack and tooling
+node <skill-dir>/cli/bin/craft.js scan --json          # existing design system (run before building)
 node <skill-dir>/cli/bin/craft.js lint --json          # T0 findings
 node <skill-dir>/cli/bin/craft.js contrast --json      # WCAG AA on token pairs
 node <skill-dir>/cli/bin/craft.js report --json        # the receipt: run last, after the final edit

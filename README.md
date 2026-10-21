@@ -45,7 +45,7 @@ behavior check. See [docs/installation.md](docs/installation.md) for the release
 tarball, user-level installs, `verify`, `update`, and `uninstall`, and [docs/usage.md](docs/usage.md)
 for the CLI.
 
-The CLI ships `doctor`, `init` (with `--from-repo`), `lint` (20 Slop Lint rules, see
+The CLI ships `doctor`, `scan` (reads the project's existing design system), `init` (with `--from-repo`), `lint` (20 Slop Lint rules, see
 [docs/rules.md](docs/rules.md)), `contrast`, `audit` (Tier 1), `shoot` (Tier 2, needs
 Playwright and axe-core), `report`, `catalog validate`, `index build`, `search`, and
 `tokens build`.

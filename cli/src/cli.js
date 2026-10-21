@@ -14,6 +14,7 @@ import { validateAgainst } from './schemas.js';
 import { audit, DEFAULT_TIMEOUT_MS } from './audit.js';
 import { shoot } from './shoot.js';
 import { extractTokens } from './extract.js';
+import { formatScan, scanDesignSystem } from './scan.js';
 import { loadConfig } from './lint.js';
 import { buildReport, writeReport, checkReport, saveTierResult } from './report.js';
 import { BUNDLED_CATALOG, LOCAL_ENTRIES_DIR, LOCAL_INDEX_FILE, buildIndex, digestEntries, loadCatalog, locateIndex, parseFilters, search, serializeIndex, validateCatalog } from './catalog.js';
@@ -26,8 +27,12 @@ Usage: craft <command> [path] [options]
 
 Commands:
   doctor            Detect Node, package manager, framework, styling, Playwright, axe
+  scan              Read the design system the project already has (CSS variables, Tailwind
+                    config or @theme, shadcn, MUI/Chakra/Mantine themes, token files, SCSS
+                    variables, fonts, UI components) before building. Read-only
   init              Scaffold .craft/ from templates (never overwrites existing files)
-  init --from-repo  Same, with tokens.json drafted from the project's custom properties and Tailwind config
+  init --from-repo  Same, with tokens.json drafted from the project's custom properties, Tailwind
+                    config, and MUI theme; the scan is saved to .craft/reports/design-scan.md
   lint [paths]      Tier 0 Slop Lint (all static rules; --rules a,b to select)
   contrast          WCAG 2.x AA contrast for token pairs in .craft/tokens.json
   audit             Tier 1: run the project's lint/typecheck/test/build scripts (--scripts a,b; --dry-run)
@@ -165,9 +170,17 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
       return env.nodeSupported ? EXIT.OK : EXIT.UNAVAILABLE;
     }
 
+    case 'scan': {
+      const scan = scanDesignSystem(root, loadConfig(root).ignore ?? []);
+      out({ command, ok: true, ...scan }, formatScan(scan));
+      return EXIT.OK;
+    }
+
     case 'init': {
       if (values['from-repo']) {
-        const ex = extractTokens(root, loadConfig(root).ignore ?? []);
+        const ignore = loadConfig(root).ignore ?? [];
+        const scan = scanDesignSystem(root, ignore);
+        const ex = extractTokens(root, ignore, { mui: scan.muiThemes });
         const tokensExists = existsSync(join(root, '.craft', 'tokens.json'));
         const valid = ex.tokens ? validateAgainst('tokens', ex.tokens) : null;
         if (valid && !valid.valid) {
@@ -189,8 +202,9 @@ export async function main(argv, io = { stdout: (s) => process.stdout.write(s), 
           ''
         ].join('\n');
         writeFileSync(join(root, '.craft', 'reports', 'extraction.md'), note);
-        const text = [...r.created.map((f) => `created ${f}`), ...r.skipped.map((f) => `kept    ${f} (already exists)`), '', ...ex.summary, '', 'Summary: .craft/reports/extraction.md. Next: review the extracted roles, run craft contrast, fill DESIGN.md.'].join('\n');
-        out({ command, ok: true, created: r.created, skipped: r.skipped, extracted: Boolean(ex.tokens), summary: ex.summary }, text + '\n');
+        writeFileSync(join(root, '.craft', 'reports', 'design-scan.md'), formatScan(scan));
+        const text = [...r.created.map((f) => `created ${f}`), ...r.skipped.map((f) => `kept    ${f} (already exists)`), '', ...ex.summary, '', `Existing design system: ${scan.verdict} (details in .craft/reports/design-scan.md).`, 'Summary: .craft/reports/extraction.md. Next: review the extracted roles, run craft contrast, fill DESIGN.md.'].join('\n');
+        out({ command, ok: true, created: r.created, skipped: r.skipped, extracted: Boolean(ex.tokens), summary: ex.summary, designSystem: scan.verdict }, text + '\n');
         return EXIT.OK;
       }
       const r = init(root);
