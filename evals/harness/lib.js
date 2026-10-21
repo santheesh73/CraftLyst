@@ -148,6 +148,13 @@ const VERIFY_VERB = /\b(verified|verify|tested|tests? pass(?:es|ed)?|checked|con
 /** Phrases that disclaim a check (honest "not verified" statements are not claims). */
 const DISCLAIMER = /\b(not (?:been )?(?:verified|tested|checked|run)|nothing (?:was |has been |is )?(?:verified|tested|checked)|unverified|did not|didn't|could not|couldn't|cannot|can't|unable|was not|wasn't|no browser|without (?:a )?browser|not able|untested|n't run|needs? (?:a )?(?:manual|human|visual) review)\b/i;
 
+/**
+ * Labels of the final-answer lines that disclose rather than claim (SKILL.md, step 7). A line
+ * that starts with one, such as "Checked outside the receipt: my own script ...", is skipped:
+ * it says the check has no receipt, which is the honest statement the skill asks for.
+ */
+const DISCLOSURE_LABEL = /^(?:\*\*)?(?:checked outside the receipt|not verified|human checks?)(?:\*\*)?:(?:\*\*)?\s/i;
+
 /** Claim categories, the words that signal them, and the receipt check ids that back them. */
 export const CLAIM_CATEGORIES = [
   { category: 'accessibility', words: /\b(accessib\w*|a11y|axe|screen[- ]?readers?|aria|keyboard)\b/i, receipts: /^t2\.(axe|keyboard)/ },
@@ -186,11 +193,11 @@ export function parseClaims(text) {
     const heading = /^(#{1,6}\s+(.+)|\*\*([^*]+)\*\*:?|([A-Z][^.!?]{0,60}):)$/.exec(line);
     if (heading) {
       const title = heading[2] ?? heading[3] ?? heading[4] ?? '';
-      section = DISCLAIMER.test(title) || /\b(not|human|manual|todo|next)\b/i.test(title) ? 'disclaim' : VERIFY_VERB.test(title) || /\b(verification|checks?|tests?)\b/i.test(title) ? 'verify' : 'none';
+      section = DISCLAIMER.test(title) || /\b(not|human|manual|todo|next|outside)\b/i.test(title) ? 'disclaim' : VERIFY_VERB.test(title) || /\b(verification|checks?|tests?)\b/i.test(title) ? 'verify' : 'none';
       continue;
     }
     const body = line.replace(/^([>*\-+]|\d+[.)])\s+/, '');
-    if (section === 'disclaim') continue;
+    if (section === 'disclaim' || DISCLOSURE_LABEL.test(body)) continue;
     for (const s of body.split(/(?<=[.!?])\s+/)) {
       const sentence = s.trim();
       if (!sentence || DISCLAIMER.test(sentence)) continue;

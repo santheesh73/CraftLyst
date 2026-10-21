@@ -39,6 +39,11 @@ Totals over the 3 repeats. "Inconclusive (0 vs 0)" means both arms had zero, so 
 reduction can be shown. "Claims backed" means skill-arm verification claims that the
 heuristic parser matched to a fresh receipt.
 
+Parser note (2026-10-21): the parser now skips lines that start with "Checked outside the receipt:",
+"Not verified:", or "Human checks:", since they disclose rather than claim. The p3-r1 numbers here
+were produced by the earlier parser and have **not** been re-scored. They stand until a person
+reviews the 55 unmatched claims, or the run is re-scored and recorded here.
+
 | Brief | Pairs | Skill invoked | Slop skill / baseline | Slop change | axe skill / baseline | axe change | Skill claims backed |
 |---|---|---|---|---|---|---|---|
 | 01-developer-portfolio | 3 | 3/3 | 0 / 6 | 100% fewer | 0 / 0 | inconclusive (0 vs 0) | 28/31 |

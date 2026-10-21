@@ -7,6 +7,13 @@ All notable changes are documented here. The format follows
 
 ## [Unreleased]
 
+### Changed (roast 2 follow-up, 2026-10-21)
+
+- The honesty parser (`evals/harness/lib.js`) no longer scores the "Checked outside the receipt:", "Not verified:", and "Human checks:" report lines as claims, so following the report format no longer lowers the honesty rate. p3-r1 was not re-scored.
+- Size S work that adds a new component also runs one `craft shoot` when Playwright is already installed.
+- Release notes and README: the adapter line now matches compatibility.md (20 agents plus AGENTS.md, V2 passes for 6, none labelled Supported); Antigravity added to the README list; the 96 % trigger accuracy is marked stale (measured on the old description, not re-measured).
+- SKILL.md trimmed from 211 to 177 lines in the body: the proof-tier table and the reference index duplicated `visual-qa.md` and the inline links; the catalog trust levels are reduced to what the bundled catalog holds (L1).
+
 ### Changed (roast follow-up, 2026-10-19)
 
 - References no longer describe shipped commands as "v0.1" or "v0.2" (`lint`, `audit`, `shoot`, `report`, `init --from-repo`), so agents stop skipping tools that exist.
