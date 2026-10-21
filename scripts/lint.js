@@ -21,11 +21,14 @@ const CHILD_PROCESS_ALLOW = new Set([
   'scripts/test/package.test.js',
   'scripts/test/no-network.test.js',
   'scripts/test/installer-e2e.test.js',
-  'installer/main.js'
+  'installer/main.js',
+  'evals/agent-smoke/smoke.js',
+  'evals/test/smoke.test.js',
+  'scripts/tester-kit.js'
 ]);
-/** Files allowed to import network modules: tests that start a loopback server only. */
+/** Files allowed to import network modules: loopback servers only (tests, and the local ranking app). */
 /** @type {Set<string>} */
-const NETWORK_ALLOW = new Set(['cli/test/shoot.test.js', 'scripts/test/no-network-guard.js']);
+const NETWORK_ALLOW = new Set(['cli/test/shoot.test.js', 'scripts/test/no-network-guard.js', 'evals/harness/rank.js']);
 
 /** @type {string[]} */
 const problems = [];

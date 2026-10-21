@@ -15,7 +15,8 @@ npm run package                                   # builds dist/frontend-craft (
 node evals/harness/run.js --repeats 3 --run-id r1 # 12 briefs x 3 = 36 pairs; spawns the agent
 node evals/harness/metrics.js --run-id r1         # Slop Lint, axe + screenshots, build/type, honesty
 node evals/harness/bundle.js --run-id r1          # anonymized A/B bundles + form.html, private key.json
-#   ... raters fill each bundles/<pair>/form.html and return the JSON files ...
+node evals/harness/rank.js --bundles evals/harness/runs/r1/bundles --rater XY   # local ranking app; saves to ~/p3-rankings
+#   (or raters fill each bundles/<pair>/form.html and return the downloaded JSON files)
 node evals/harness/aggregate.js --run-id r1 --rankings <dir>   # results/r1/summary.{md,json}
 ```
 

@@ -19,7 +19,8 @@ Run with `node <skill-dir>/cli/bin/craft.js`, or `craft` if it is on your PATH.
 | Command | What it does | Exit codes |
 |---|---|---|
 | `craft doctor [--json]` | detects Node, package manager, framework, styling, Tier 1 scripts, Playwright, axe, contract | 0, or 3 if Node < 20 |
-| `craft init [--from-repo] [--json]` | writes `.craft/DESIGN.md`, `tokens.json`, `decisions.md`, `craft.config.json`, `.gitignore`; never overwrites. `--from-repo` drafts `tokens.json` from the project's custom properties and Tailwind config | 0 |
+| `craft scan [--json]` | read-only inventory of the design system the project already has: CSS custom properties (light and dark), Tailwind v3 config and v4 `@theme`, shadcn/ui `components.json`, MUI, Chakra, Mantine, and Panda theme objects, DTCG or Style Dictionary token files, SCSS variables, loaded fonts, component libraries, and the project's UI component folders; with no tokens, the literal colors, fonts, and sizes the styles repeat. Verdict `established`, `partial`, or `none`, with what to reuse. Nothing is executed | 0 |
+| `craft init [--from-repo] [--json]` | writes `.craft/DESIGN.md`, `tokens.json`, `decisions.md`, `craft.config.json`, `.gitignore`; never overwrites. `--from-repo` drafts `tokens.json` from the project's custom properties, Tailwind config, and MUI theme palette, and saves the scan to `.craft/reports/design-scan.md` | 0 |
 | `craft lint [paths] [--rules a,b] [--fail-on block\|warn] [--json]` | Tier 0 Slop Lint, all static rules ([docs/rules.md](rules.md)) | 0 ok, 1 findings at or above fail level |
 | `craft contrast [--tokens file] [--json]` | WCAG 2.x AA for every `pairs` entry in every theme | 0 all pass, 1 any fail, 3 no token file |
 | `craft audit [--scripts a,b] [--timeout s] [--dry-run]` | Tier 1: runs the project's lint, typecheck, test, and build scripts with `CI=1`, or `tier1.commands` from config; saves `.craft/reports/audit.json` | 0 all pass, 1 any fail |

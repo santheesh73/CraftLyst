@@ -17,8 +17,8 @@ import { parseHtml, parseJsx, parseSfc } from './parse/markup.js';
  * }} Document
  */
 
-const TEST_FILE = /(^|\/)(__tests__|__mocks__|test|tests|spec|e2e|cypress|playwright)\/|\.(test|spec|stories|story)\.[a-z]+$/;
-const FIXTURE_FILE = /(^|\/)(fixtures?|__fixtures__|mocks?|examples?|demo)\//;
+export const TEST_FILE = /(^|\/)(__tests__|__mocks__|test|tests|spec|e2e|cypress|playwright)\/|\.(test|spec|stories|story)\.[a-z]+$/;
+export const FIXTURE_FILE = /(^|\/)(fixtures?|__fixtures__|mocks?|examples?|demo)\//;
 
 /**
  * @param {string} root

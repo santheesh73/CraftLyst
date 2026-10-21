@@ -43,6 +43,7 @@ Run the bundled CLI with Node: `node <skill-dir>/cli/bin/craft.js <command> --js
 | Command | Purpose |
 |---|---|
 | `craft doctor` | detect Node, package manager, framework, styling, Playwright, axe |
+| `craft scan` | read-only inventory of the existing design system (tokens, themes, libraries, fonts, components) |
 | `craft init` | scaffold `.craft/` from templates, never overwriting (`--from-repo` drafts tokens from the project) |
 | `craft lint` | T0 findings, all static rules |
 | `craft contrast` | WCAG checks for token pairs |

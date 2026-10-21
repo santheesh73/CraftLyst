@@ -99,9 +99,11 @@ When the repo already has a working design system (Tailwind theme, CSS variables
 component library, design tokens):
 
 - Never overwrite or migrate it.
+- Run `craft scan` first: it lists the CSS variables, Tailwind config or `@theme`, shadcn
+  setup, MUI/Chakra/Mantine theme, token files, fonts, and UI components that exist.
 - Extract the contract from it: read the theme/config and components, then write
   `DESIGN.md` and `tokens.json` that describe what exists (`craft init --from-repo`
-  drafts `tokens.json` from custom properties and the Tailwind config; review and complete it). Mark `meta.source` as `extracted`.
+  drafts `tokens.json` from custom properties, the Tailwind config, and an MUI palette; review and complete it). Mark `meta.source` as `extracted`.
 - Infer axis values from what exists and say so; ask the user to confirm.
 - New work follows the extracted contract. Gaps are proposed as additions, not replacements.
 

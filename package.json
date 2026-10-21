@@ -25,7 +25,10 @@
     "eval:run": "node evals/harness/run.js",
     "eval:metrics": "node evals/harness/metrics.js",
     "eval:bundle": "node evals/harness/bundle.js",
-    "eval:aggregate": "node evals/harness/aggregate.js"
+    "eval:aggregate": "node evals/harness/aggregate.js",
+    "eval:rank": "node evals/harness/rank.js",
+    "smoke": "node evals/agent-smoke/smoke.js",
+    "tester-kit": "node scripts/tester-kit.js"
   },
   "devDependencies": {
     "@types/node": "22.10.2",

@@ -4,18 +4,34 @@ V3 checks that an agent actually behaves the way Frontend Craft asks once it is 
 Only a person running the agent can record it. An agent is listed as **Supported** in
 `docs/compatibility.md` only after a V3 pass is recorded here with the agent's version and date.
 
-## Run it, per agent
+## Run it, per agent (about 10 minutes)
 
-1. Copy `project/` to a new, empty folder outside this repository.
-2. Install for the agent you are testing (from a release, the npm package, or a clone after
-   `npm ci && npm run package`):
+From a clone of this repository, after `npm ci`:
 
-       node <frontend-craft>/install.mjs install --agent <agent-id> --target <folder>
+```sh
+node evals/agent-smoke/smoke.js prepare --agent <agent-id>
+```
 
-3. Start the agent in that folder, in a fresh session, and give it exactly the text in
-   [task.md](task.md).
-4. When it finishes, check each expected behavior below by looking at the files and the
-   transcript, then add a row to a copy of [results-template.md](results-template.md).
+`<agent-id>` is one of the ids from `node install.mjs list` (for example `claude-code`, `codex`,
+`copilot`, `cursor`, `gemini`). It copies `project/` to a new folder outside this repository,
+builds the package if needed, installs the skill for that agent, and prints the task.
+
+1. Start the agent in the folder it printed, in a fresh session, and paste the task exactly.
+2. When it finishes, save the transcript to a file if the agent can export one (optional).
+3. Run the check it printed:
+
+       node evals/agent-smoke/smoke.js check --agent <agent-id> --dir <folder> --transcript <file> --agent-version <version> --record
+
+   It shows what it can see for each behavior below (from the files, and from the transcript
+   when given), then asks you to confirm each one. Press Enter to accept what it saw, or answer
+   y/n. With `--record` it writes your verdict as the agent's `v3` entry in
+   `adapters/verification.json` and regenerates `docs/compatibility.md`; commit both. Nothing
+   is recorded without your answers, and nothing at all outside an interactive terminal.
+
+The manual way still works: copy `project/` to an empty folder, run
+`node <frontend-craft>/install.mjs install --agent <agent-id> --target <folder>`, give the
+agent [task.md](task.md), check the behaviors below by hand, and add a row to a copy of
+[results-template.md](results-template.md).
 
 ## Expected behaviors (all must hold for a pass)
 

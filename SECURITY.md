@@ -51,7 +51,8 @@ Done by Claude, not by an independent reviewer. Checked:
 | `scripts/test/installer.test.js` | installer, adapters | temp dirs | `verify` runs a stand-in `craft.js` with Node | no |
 | `scripts/test/installer-e2e.test.js` | the package built into a temp dir | temp dirs | `node scripts/package.js`, the packaged installer and CLI, `npm pack`, `npm install --offline --ignore-scripts` of the tarball | no (`--offline`) |
 | `cli/bin/craft.js` (`doctor`, `lint`, `contrast`) | project files, `.craft/` | nothing | no | no |
-| `cli/bin/craft.js init` (`--from-repo`) | templates; with `--from-repo`, project CSS and Tailwind config (parsed as AST, never executed) | `.craft/` only, never overwrites | no | no |
+| `cli/bin/craft.js scan` | project CSS, SCSS, HTML, JS/TS theme files, token JSON, `components.json`, `package.json` (parsed as AST or text, never executed) | nothing | no | no |
+| `cli/bin/craft.js init` (`--from-repo`) | templates; with `--from-repo`, the same files as `scan` (parsed as AST, never executed) | `.craft/` only, never overwrites | no | no |
 | `cli/bin/craft.js audit` | `package.json`, `.craft/craft.config.json` | `.craft/reports/audit.json` | the project's own scripts via its package manager, or `tier1.commands` through a shell; `--dry-run` spawns nothing | only what the project's scripts do |
 | `cli/bin/craft.js shoot` | the given URLs or files | `.craft/reports/shoot.json`, `.craft/reports/shots/` | Chromium via Playwright, if installed | loopback only; other origins blocked unless `--allow-network` |
 | `cli/bin/craft.js report` (`--check`) | `.craft/`, project files (content hash) | `.craft/reports/latest.json`, `latest.md`; `--check` writes nothing | no | no |
@@ -60,6 +61,7 @@ Done by Claude, not by an independent reviewer. Checked:
 | `scripts/test/no-network-guard.js` | nothing | the log file named in `CRAFT_NET_GUARD_LOG` | no | patches `net`, `dgram`, and `dns` to refuse |
 | `scripts/eval/sample.js` | a `craft lint --json` report | nothing | no | no |
 | `cli/test/shoot.test.js` | test fixtures | temp dirs | Chromium via Playwright | a loopback test server only |
+| `evals/test/rank.test.js` | generated bundles | temp dirs | Chromium via Playwright (skipped when missing) | the ranking app on loopback only |
 | `evals/triggers/run.js` | prompt list, packaged skill | a temp project and `evals/triggers/results/` | `claude -p` (headless Claude Code), run manually, not in CI | via Claude Code only |
 | `craft tokens build` | `.craft/tokens.json` or `--tokens <file>` | `.craft/build/` (or `--out`, refused with exit 2 unless inside `.craft/`) | nothing | none |
 | `node contracts/conformance/run.js` | the adapter JSON and the page it names; Playwright and axe-core from the project or the CLI's install location | nothing (stdout only) | Chromium via Playwright | `file://` and loopback only; every other request is aborted unless `--allow-network` |
@@ -76,6 +78,10 @@ Done by Claude, not by an independent reviewer. Checked:
 | `evals/harness/metrics.js` | `evals/harness/runs/<runId>/` | `<arm>/metrics.json` and `<arm>/eval/` (incl. `.craft/reports/` from `craft shoot`/`audit`) under the run | `node cli/bin/craft.js` (`lint`, `report --check`, `shoot`, `audit`); `audit` runs the generated project's own scripts | no; `shoot` is loopback-only |
 | `evals/harness/bundle.js` | `evals/harness/runs/<runId>/`, briefs | `runs/<runId>/bundles/`, `runs/<runId>/key.json` | no | no |
 | `evals/harness/aggregate.js` | `runs/<runId>/` metrics and key, ranking JSON files | `evals/harness/results/<runId>/summary.{md,json}` | no | no |
+| `evals/harness/rank.js` | the unzipped `bundles/` folder; never `key.json` | one ranking JSON per pair and rater in the answers folder (default `~/p3-rankings/`) | no | an HTTP server bound to 127.0.0.1 only; serves files inside the bundles folder |
+| `evals/agent-smoke/smoke.js` | `evals/agent-smoke/project/`, `task.md`; `check`: the test folder and an optional transcript | `prepare`: a new folder (default under the OS temp dir); `check --record`: `adapters/verification.json` after the person answers | `node scripts/package.js` (if `dist/` is missing), `node install.mjs install`, `node scripts/generate-agent-docs.js` | no |
+| `evals/test/smoke.test.js` | the smoke helper | temp dirs | `smoke.js check` (non-interactive) and `smoke.js prepare` | no |
+| `scripts/tester-kit.js` | `dist/`, `docs/human-gates/tester-kit/` | `dist/tester-kit/` | `node scripts/package.js` (unless `--no-build`) | no |
 | `evals/test/harness.test.js` | harness, stub agent fixture | temp dirs | the harness scripts and the stub agent (`evals/fixtures/stub-agent.js`), never a real agent | no |
 
 CI installs Playwright's Chromium (`npx playwright install --with-deps chromium`, version pinned

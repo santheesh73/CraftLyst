@@ -5,6 +5,8 @@ which. Claude cannot do this step. Status: **PENDING**.
 
 ## 1. Generate at least 30 pairs (unattended, about 1 to 3 hours)
 
+Already done for run `p3-r1` (36 pairs, 2026-10-18): skip to step 2. This step is only for a new run.
+
 From the repository root, on a machine where `claude -p` works:
 
 ```sh
@@ -19,23 +21,42 @@ node evals/harness/bundle.js --run-id p3-r1
 `run.js` command: finished runs are skipped. Do not open `evals/harness/runs/p3-r1/key.json`
 until all rankings are in.
 
-## 2. Rank (about 3 to 5 minutes per pair)
+## 2. Rank (about 3 to 5 minutes per pair, about 2 to 3 hours for 36)
 
-For each folder in `evals/harness/runs/p3-r1/bundles/`:
+The p3-r1 bundles are already built: `p3-r1-bundles.zip` in the project files. From a clone of
+this repository (no `npm install` needed for this step):
 
-1. Open `form.html` in a browser.
-2. Look at both outputs: the screenshots, and "Open output A/B" for the live page (resize the
+```sh
+unzip p3-r1-bundles.zip -d ~/p3                         # creates ~/p3/bundles/<36 pair folders>
+node evals/harness/rank.js --bundles ~/p3/bundles --rater SK
+```
+
+Open the address it prints (`http://127.0.0.1:4417/?rater=SK`) and press **Start ranking**. For
+each pair:
+
+1. Look at both outputs: the screenshots, and "Open output A/B" for the live page (resize the
    window, tab through it).
-3. For each of the ten dimensions and Overall, pick A, B, or tie, using the anchors in
+2. For each of the ten dimensions and Overall, pick A, B, or tie, using the anchors in
    `evals/rubric.md`. Choose tie when you cannot judge.
-4. Click "Download answers (JSON)" and keep the file.
+3. Press **Save and go to the next pair**. The answer is saved to `~/p3-rankings/` and the
+   next unranked pair opens.
 
-Ideally use two or more raters; each rater ranks every pair independently. Put all returned
-JSON files into one folder, for example `~/p3-rankings/`.
+You can stop at any time (Ctrl+C) and run the same command later: the progress page shows
+what is left, and any ranked pair can be reopened and changed. Pairs come in a fixed order
+per rater, shuffled so the three repeats of a brief are not back to back. The app only
+serves the bundles folder on 127.0.0.1 and never reads `key.json`.
+
+A second rater (recommended) runs the same command with their own initials, on their own
+machine or the same one; each rater's answers are separate files. To collect answers from
+someone who only has the zip, they can also open each `form.html` directly and use
+"Download answers (JSON)" as before.
+
+Do not open the PRIVATE archive until every rater is done.
 
 ## 3. Aggregate
 
 ```sh
+tar xzf p3-r1-run-PRIVATE-do-not-open-before-ranking.tgz -C evals/harness/runs/   # creates evals/harness/runs/p3-r1/
 node evals/harness/aggregate.js --run-id p3-r1 --rankings ~/p3-rankings
 ```
 
