@@ -93,6 +93,18 @@ test('claims parser: verified sections, disclaimers, categories', () => {
   assert.equal(parseClaims('Nothing was verified in a browser.').length, 0);
 });
 
+test('claims parser: the report lines that disclose are not claims', () => {
+  const text = [
+    'Highest tier reached: T1 (static)',
+    'Verified: craft lint (0 block, 2 warn), craft contrast (26/26 AA)',
+    'Not verified: rendered checks (Playwright not installed)',
+    'Checked outside the receipt: my own Playwright script checked overflow at 320px.',
+    '**Human checks:** open it at 320px and tab through with a keyboard.',
+    'I checked overflow at 320px myself.'
+  ].join('\n');
+  assert.deepEqual(parseClaims(text).map((c) => c.categories), [['contrast', 'lint'], ['responsive']]);
+});
+
 test('redaction: code comments with markers are dropped, prose is marked', () => {
   const code = redact('/* Tokens mirror .craft/tokens.json */\nbody { color: red; }\n', 'code');
   assert.equal(code.text.trim(), 'body { color: red; }');

@@ -19,7 +19,7 @@ This project is built in gated phases. Nothing below is claimed beyond what is m
 | Phase | Scope | State |
 |---|---|---|
 | P0 Foundation | plan, ADRs, schemas, CI skeleton | done (CI green on Node 20 and 22) |
-| P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | built; trigger accuracy 96 %; the human gate (3 real projects) was waived by the user for lack of time, not run |
+| P1 Skill core (v0.1) | `SKILL.md`, references, templates, packaging, trigger tests | built; trigger accuracy 96 % on the old description (2026-10-14), not re-measured since the description changed; the human gate (3 real projects) was waived by the user for lack of time, not run |
 | P2 CLI (v0.2) | all `craft` commands and lint rules, proof reports | built, CI green; false-positive rate 9.4 % on held-out repos (judged by Claude) |
 | P3 Evaluation (v0.3) | 12 briefs, rubric, paired harness | built; two-brief dry run with the real agent; **blind human ranking pending** |
 | P4 Catalog (v0.4) | 30 entries, validation, offline search | built; precision on 20 queries judged by Claude (top-1 relevant 18/20) |
@@ -36,9 +36,9 @@ node dist/frontend-craft/install.mjs install --agent auto --target ./my-app   # 
 node dist/frontend-craft/install.mjs list                                     # all supported agents
 ```
 
-One installer covers Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI, Windsurf, Cline,
-Roo Code, Kilo Code, opencode, Zed, Amp, Junie, Goose, Augment, Qwen Code, Continue, Aider, and
-any agent that reads `AGENTS.md`. Every agent's status, the official doc its install path comes
+One installer covers Claude Code, Codex, Cursor, GitHub Copilot, Gemini CLI, Google Antigravity
+(IDE, app, and the agy CLI), Windsurf, Cline, Roo Code, Kilo Code, opencode, Zed, Amp, Junie, Goose,
+Augment, Qwen Code, Continue, Aider, and any agent that reads `AGENTS.md`. Every agent's status, the official doc its install path comes
 from, and what has been verified are in [docs/compatibility.md](docs/compatibility.md). Only
 installation is checked automatically; no agent is marked Supported until a person runs the
 behavior check. See [docs/installation.md](docs/installation.md) for the release zip, the npm
